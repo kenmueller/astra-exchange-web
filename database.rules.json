@@ -15,8 +15,8 @@
 		"invoices": {
 			"$uid": {
 				".read": "$uid === auth.uid",
+				".write": "$uid === auth.uid",
 				"$invoiceId": {
-					".write": "$uid === auth.uid",
 					"status": {
 						".validate": "newData.val() === 'pending' || newData.val() === 'declined' || newData.val() === 'accepted'"
 					}
