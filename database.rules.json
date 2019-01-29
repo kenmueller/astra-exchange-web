@@ -1,6 +1,34 @@
 {
-  "rules": {
-    ".read":true,
-    ".write":true
-  }
+	"rules": {
+		"transactions": {
+			"$uid": {
+				".read": "$uid === auth.uid",
+				".write": "$uid === auth.uid",
+        "$transactionId": {
+          ".write": false,
+          "amount": {
+            ".validate": "newData.isNumber() && newData.val() < root.child('users/$uid/balance').val()"
+          }
+        }
+      }
+		},
+		"invoices": {
+			"$uid": {
+				".read": "$uid === auth.uid",
+				"$invoiceId": {
+					".write": "$uid === auth.uid",
+					"status": {
+						".write": "$uid === auth.uid",
+						".validate": "newData.val() === 'pending' || newData.val() === 'declined' || newData.val() === 'accepted'"
+					}
+				}
+			}
+		},
+		"users": {
+			".read": true,
+			"$uid": {
+				".write": false
+			}
+		}
+	}
 }
