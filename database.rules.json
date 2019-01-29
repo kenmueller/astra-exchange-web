@@ -23,13 +23,13 @@
 			"$uid": {
 				".read": "$uid === auth.uid",
 				".write": "$uid === auth.uid",
-        "$transactionId": {
-          ".write": false,
-          "amount": {
-            ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= root.child('users/$uid/balance').val()"
-          }
-        }
-      }
+		"$transactionId": {
+			".write": false,
+		  	"amount": {
+				".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= root.child('users/$uid/balance').val()"
+		  	}
+		}
+	  }
 		},
 		"invoices": {
 			"$uid": {

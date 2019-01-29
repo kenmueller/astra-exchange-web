@@ -4,9 +4,9 @@ admin.initializeApp();
 
 exports.transact = functions.database.ref('transactions/{uid}').onCreate((snapshot, context) => {
     const root = snapshot.ref.parent.parent
+    const to = snapshot.val().to
     return root.child(`users/${to}/balance`).once('value').then(balanceSnapshot => {
 	    const from = context.params.uid
-	    const to = snapshot.val().to
         const toBalance = balanceSnapshot.val() + amount
         return Promise.all([
             root.child(`transactions/${to}/${snapshot.key}`).set({time: snapshot.val().time, from: from, to: to, amount: snapshot.val().amount, balance: toBalance, message: snapshot.val().message}),
