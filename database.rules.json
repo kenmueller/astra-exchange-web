@@ -1,5 +1,24 @@
 {
 	"rules": {
+		"companies": {
+			".read": true,
+			"$uid": {
+				".write": "$uid === auth.uid",
+				"products": {
+					"$productId": {
+						"cost": {
+							".validate": "newData.isNumber() && newData.val() > 0"
+						},
+						"inStock": {
+							".validate": "newData.isBool()"
+						},
+						"name": {
+							".validate": "newData.isString()"
+						}
+					}
+				}
+			}
+		},
 		"transactions": {
 			"$uid": {
 				".read": "$uid === auth.uid",
