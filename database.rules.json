@@ -10,7 +10,7 @@
 							".validate": "newData.isNumber() && newData.val() > 0"
 						},
 						"inStock": {
-							".validate": "newData.isBool()"
+							".validate": "newData.isBoolean()"
 						},
 						"name": {
 							".validate": "newData.isString()"
