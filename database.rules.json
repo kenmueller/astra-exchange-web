@@ -7,7 +7,7 @@
         "$transactionId": {
           ".write": false,
           "amount": {
-            ".validate": "newData.isNumber() && newData.val() < root.child('users/$uid/balance').val()"
+            ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= root.child('users/$uid/balance').val()"
           }
         }
       }
@@ -18,7 +18,6 @@
 				"$invoiceId": {
 					".write": "$uid === auth.uid",
 					"status": {
-						".write": "$uid === auth.uid",
 						".validate": "newData.val() === 'pending' || newData.val() === 'declined' || newData.val() === 'accepted'"
 					}
 				}
