@@ -322,16 +322,16 @@
       function loadReceiverData() {
         let userData = firebase.database().ref('users');
         userData.on('child_added', function(snapshot) {
-        receiverName = snapshot.val().name;
-        receiverId = snapshot.key;
-        if (receiverId != id) {
-          user.push(name);
-          let newReceiverOption = document.createElement("option");
-          newReceiverOption.value = receiverId;
-          newReceiverOption.innerHTML = receiverName;
-          document.getElementById("receiver").appendChild(newReceiverOption);
-        }
-      });
+          receiverName = snapshot.val().name;
+          receiverId = snapshot.key;
+          if (receiverId != id) {
+            user.push(name);
+            let newReceiverOption = document.createElement("option");
+            newReceiverOption.value = receiverId;
+            newReceiverOption.innerHTML = receiverName;
+            document.getElementById("receiver").appendChild(newReceiverOption);
+          }
+        });
       }
       function getDate() {
         const dateList = Date().split(" ")
@@ -346,7 +346,7 @@
         const amount = Number(document.getElementById("astrasToExchange").value)
         if (userBalance < amount) {
           alert("Insufficient balance");
-        } else if (astrasInvolved <= 0) {
+        } else if (amount <= 0) {
           alert("Invalid amount");
         } else {
           firebase.database().ref('transactions/' + id).push({

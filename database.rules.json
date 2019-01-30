@@ -84,6 +84,9 @@
 				},
 				"balance": {
 					".validate": "newData.val() === 0"
+				},
+				"pin": {
+					".validate": "newData.isNumber() && newData.val().length === 4"
 				}
 			}
 		}
