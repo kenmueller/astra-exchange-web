@@ -9,7 +9,6 @@ exports.transaction = functions.database.ref('transactions/{uid}/{transactionId}
         const from = context.params.uid
         const amount = snapshot.val().amount
         const toBalance = balanceSnapshot.val() + amount / 2
-        console.log('From, to, amount, toBalance', from, to, amount, toBalance)
         return Promise.all([
             root.child(`transactions/${to}/${context.params.transactionId}`).set({time: snapshot.val().time, from: from, to: to, amount: amount, balance: toBalance, message: snapshot.val().message}),
             root.child(`users/${from}/balance`).set(snapshot.val().balance),
