@@ -6,14 +6,14 @@
 				".write": "$uid === auth.uid",
 				"products": {
 					"$productId": {
+						"name": {
+							".validate": "newData.isString() && newData.val() != ''"
+						},
 						"cost": {
 							".validate": "newData.isNumber() && newData.val() > 0"
 						},
 						"inStock": {
 							".validate": "newData.isBoolean()"
-						},
-						"name": {
-							".validate": "newData.isString()"
 						}
 					}
 				}
@@ -29,10 +29,10 @@
 						".validate": "newData.isString()"
 					},
 					"from": {
-						".validate": "newData.isString()"
+						".validate": "newData.isString() && root.child('users/' + newData.val()).exists()"
 					},
 					"to": {
-						".validate": "newData.isString()"
+						".validate": "newData.isString() && root.child('users/' + newData.val()).exists()"
 					},
 		  			"amount": {
 						".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= root.child('users/' + $uid + '/balance').val()"
@@ -58,10 +58,10 @@
 						".validate": "newData.val() === 'pending' || newData.val() === 'declined' || newData.val() === 'accepted'"
 					},
 					"from": {
-						".validate": "newData.isString()"
+						".validate": "newData.isString() && root.child('users/' + newData.val()).exists()"
 					},
 					"to": {
-						".validate": "newData.isString()"
+						".validate": "newData.isString() && root.child('users/' + newData.val()).exists()"
 					},
 					"amount": {
 						".validate": "newData.isNumber() && newData.val() > 0"
@@ -80,7 +80,7 @@
 					".validate": "newData.isString() && newData.val() != ''"
 				},
 				"email": {
-					".validate": "newData.isString() && /[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}/.test(newData)"
+					".validate": "newData.isString() && newData.val() != ''"
 				},
 				"balance": {
 					".validate": "newData.val() === 0"
