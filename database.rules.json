@@ -26,7 +26,7 @@
 		"$transactionId": {
 			".write": false,
 		  	"amount": {
-				".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= root.child('users/$uid/balance').val()"
+				".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= root.child('users/' + $uid + '/balance').val()"
 		  	}
 		}
 	  }
