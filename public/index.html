@@ -9,12 +9,10 @@
     <script src="https://www.gstatic.com/firebasejs/5.7.3/firebase.js"></script>
     <script defer src="/__/firebase/init.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Nunito:600,700" rel="stylesheet">
-    <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
     <title>Astra Exchange</title>
@@ -61,7 +59,7 @@
     <div id="headerBox" class="flexContainer">
       <img id="logo" src="https://i.imgur.com/ufHYGd9.png"/>
     </div>
-    <h1 id="title">Astra Exchange Network</h1>
+    <h1 id="title">Astra Exchange</h1>
     <h2>Welcome to Astra Exchange!</h2>
     <div id="accountCreationForm">
       <input class="form-control" placeholder="Name" id="nameInput"/>
@@ -71,7 +69,6 @@
         <button id="accountCreationButton" onclick="createNewAccount()" class="btn btn-secondary">Create New Account</button>
       </div>
     </div>
-    
     <div id="loginBox">
       <input class="form-control" placeholder="Email" id="emailSignInInput"/>
       <input class="form-control" placeholder="Password" type="password" id="passwordSignInInput"/>
@@ -178,7 +175,6 @@
         email = document.getElementById("emailInput").value;
         name = document.getElementById("nameInput").value;
         userExist = false;
-
         if (password && email && name) {
           if (email.split("@")[1] == "adastraschool.org") {
             firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {

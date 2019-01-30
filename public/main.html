@@ -10,12 +10,10 @@
     <script src="https://www.gstatic.com/firebasejs/5.7.3/firebase.js"></script>
     <script defer src="/__/firebase/init.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Nunito:600,700" rel="stylesheet">
-
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
@@ -51,7 +49,6 @@
         margin: auto;
         margin-top: 30px;
       }
-
       #deHeader {
         margin-top: 10px;
         margin-bottom: 20px;
@@ -74,13 +71,6 @@
       img {
         margin: auto;
       }
-      /*
-      #profileImage {
-        margin: auto;
-        height: 100px;
-        margin-bottom: 20px;
-      }
-      */
       .flexContainer {
         display: flex;
         justify-content: center;
@@ -169,7 +159,6 @@
       .menuIcon:hover {
         outline: solid;
         outline-color: rgba(0, 0, 250, 0.1);
-
       }
       #iconBar {
         margin-top: -52px;
@@ -189,7 +178,7 @@
   </head>
   <body>
     <div id="headerBox" class="flexContainer">
-      <img id="logo" src="https://i.imgur.com/ufHYGd9.png"/>
+    <img id="logo" src="https://i.imgur.com/ufHYGd9.png"/>
     </div>
     <div id="iconBar">
       <img id="debitCardConfigure" onclick="showPin()" class="menuIcon" src="https://i.imgur.com/2kCccpj.png">
@@ -220,7 +209,6 @@
         </div>
         <!--<h6 id="copyright"><i>Copyright © 2019 TechnoBank</i></h6>-->
       </div>
-
   </div>
     <div class="modal fade" id="transactionHistory" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -266,11 +254,6 @@
       let change;
       let userExist = true;
       let transHistItems=[];
-
-      const d = new Date();
-      const n = d.getFullYear();
-      //document.getElementById("copyright").innerHTML = "<i>Copyright © "+n+" TechnoBank</i>";
-      // Configurate Firebase
       let config = {
         apiKey: "AIzaSyDOfmd3fntDblft3mhjccRiEggWu_t5fW0",
         authDomain: "astra-exchange.firebaseapp.com",
@@ -281,12 +264,9 @@
       };
       firebase.initializeApp(config);
       let defaultDatabase = firebase.database();
-      // End of Config
-
       function loadTransHist() {
           let transHist = firebase.database().ref('transactions/'+id);
           transHist.on('child_added', function(snapshot) {
-
           const receiverId = snapshot.val().to;
           const payerId = snapshot.val().from;
           const astrasInvolved = snapshot.val().amount;
@@ -313,14 +293,9 @@
         let userData = firebase.database().ref('users/' + id);
         userData.on('value', function(snapshot) {
           name = snapshot.val().name;
-          if (parseInt(userBalance) > parseInt(snapshot.val().balance)) {
-            change = false;
-          } else {
-            change = true;
-          }
+          change = !(parseInt(userBalance) > parseInt(snapshot.val().balance))
           userBalance = snapshot.val().balance;
           email = snapshot.val().email;
-          //document.getElementById("profileImage").src = profileImage;
           document.getElementById("userDisplay").innerHTML = name;
           document.getElementById("wealthLabel").innerHTML = "Wealth: ";
           document.getElementById("wealthDisplay").innerHTML = userBalance;
@@ -344,11 +319,9 @@
           recievedBalance = true;
         });
       }
-
       function loadReceiverData() {
         let userData = firebase.database().ref('users');
         userData.on('child_added', function(snapshot) {
-
         receiverName = snapshot.val().name;
         receiverId = snapshot.key;
         if (receiverId != id) {
@@ -360,88 +333,44 @@
         }
       });
       }
-
-      let provider = new firebase.auth.GoogleAuthProvider();
-
+      function getDate() {
+        const dateList = Date().split(" ")
+        let timeOfDay = " AM";
+        const dateTime = (dateList[4].split(":")[0] % 12)+":"+dateList[4].split(":")[1];
+        if (dateList[4].split(":")[0] > 11) {
+          timeOfDay = " PM";
+        }
+        return dateList[1]+" "+dateList[2]+", "+dateList[3]+" @ "+dateTime+timeOfDay;
+      }
       function makeDirectExchange() {
-        console.log("Making exchange...");
-        const receiverId = document.getElementById("receiver").value;
-        const astrasInvolved = Number(document.getElementById("astrasToExchange").value);
-        const decPoints = findDecPoints(astrasInvolved+"");
-
-        if (userBalance >= astrasInvolved) {
-        if (astrasInvolved > 0) {
-          if (decPoints < 3) {
-              console.log("Valid exchange!");
-              return firebase.database().ref('users/' + receiverId).once('value').then(function(snapshot) {
-                const receiverBalance = snapshot.val().balance;
-
-                firebase.database().ref('users/' + receiverId + "/balance").set(
-                  (parseInt(receiverBalance)+astrasInvolved)+""
-                );
-                firebase.database().ref('users/' + id + "/balance").set(
-                  (parseInt(userBalance)-astrasInvolved)+""
-                );
-                const dateList = Date().split(" ")
-                let timeOfDay = " AM";
-                const dateTime = (dateList[4].split(":")[0] % 12)+":"+dateList[4].split(":")[1];
-                if (dateList[4].split(":")[0] > 11) {
-                  timeOfDay = " PM";
-                }
-                const formattedDate = dateList[1]+" "+dateList[2]+", "+dateList[3]+" @ "+dateTime+timeOfDay;
-
-                let transId = Date.now();
-                const note = document.getElementById("noteInput").value;
-
-                firebase.database().ref('transactions/' + id + "/" + transId).set({
-                  amount: astrasInvolved,
-                  to: receiverId,
-                  from: id,
-                  message: note,
-                  time: formattedDate
-                });
-                transId = Date.now()*100;
-                firebase.database().ref('transactions/' + receiverId).push({
-                  amount: astrasInvolved,
-                  to: receiverId,
-                  from: id,
-                  message: note,
-                  time: formattedDate
-                });
-                $("#receiver").val("nullSelected").change();
-                document.getElementById("astrasToExchange").value = "";
-                document.getElementById("noteInput").value = "";
-              });
-            } else {
-              alert("Don't fudge with decimals, you ruffian!");
-            }
-          } else {
-            alert("You can't send negative astras, (or no astras) you fool!");
-          }
+        const amount = Number(document.getElementById("astrasToExchange").value)
+        if (userBalance < amount) {
+          alert("Insufficient balance");
+        } else if (astrasInvolved <= 0) {
+          alert("Invalid amount");
         } else {
-          alert("You have insufficient funds to complete this transaction!");
+          firebase.database().ref('transactions/' + id).push({
+            time: getDate(),
+            from: id,
+            to: document.getElementById("receiver").value,
+            amount: amount,
+            balance: userBalance - amount,
+            message: document.getElementById("noteInput").value,
+          });
         }
       }
-
       function loginUser() {
-        console.log("Logging in...");
         email = document.getElementById("emailInput").value;
         const passwordInput = document.getElementById("passwordInput").value;
-
         firebase.auth().signInWithEmailAndPassword(email, passwordInput).catch(function(error) {
-          // Handle Errors here.
           var errorCode = error.code;
           var errorMessage = error.message;
           firebase.auth().createUserWithEmailAndPassword(email, passwordInput).catch(function(error) {
-          // Handle Errors here.
           var errorCode = error.code;
           var errorMessage = error.message;
-          // ...
         });
         userExist=false;
-          // ...
         });
-
       }
       function viewTransactions() {
         $("#transactionHistory").modal("show");

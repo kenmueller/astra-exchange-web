@@ -11,12 +11,10 @@
     <script src="https://www.gstatic.com/firebasejs/5.7.3/firebase.js"></script>
     <script defer src="/__/firebase/init.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Nunito:600,700" rel="stylesheet">
-
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
@@ -58,7 +56,6 @@
         margin: auto;
         margin-top: 30px;
       }
-
       #deHeader {
         margin-top: 10px;
         margin-bottom: 20px;
@@ -81,13 +78,6 @@
       img {
         margin: auto;
       }
-      /*
-      #profileImage {
-        margin: auto;
-        height: 100px;
-        margin-bottom: 20px;
-      }
-      */
       .flexContainer {
         margin-top: -20px;
         display: flex;
@@ -414,11 +404,9 @@
       let lastProductId = 1;
       let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
       let currentSetting = 0;
-
       $("#companyInterface").hide();
       $("#currentCNameDisplay").hide();
       $("#currentPidDisplay").hide();
-      
       let config = {
         apiKey: "AIzaSyDOfmd3fntDblft3mhjccRiEggWu_t5fW0",
         authDomain: "astra-exchange.firebaseapp.com",
@@ -429,7 +417,6 @@
       };
       firebase.initializeApp(config);
       let defaultDatabase = firebase.database();
-      // End of Config
       function deleteProduct(pId) {
         firebase.database().ref('companies/' + id + "/products/" + pId).remove().then(function() {
           loadCompData();
@@ -439,7 +426,6 @@
         const newProdName = document.getElementById("productNameInput").value;
         const newProdCost = document.getElementById("productCostInput").value;
         const newProdQuant = document.getElementById("productQuantityInput").value;
-
         firebase.database().ref('companies/' + id + "/products").push({
           name: newProdName,
           cost: newProdCost,
@@ -477,7 +463,6 @@
                     const productQuant = currentProduct.quantity;
                     const newProductSave = [productName, productCost, productQuant];
                     productSaves[lastProductId] = newProductSave;
-
                     const newProductDisplay = document.createElement("tr");
                     const productIdDisplay = document.createElement("th");
                     const productNameDisplay = document.createElement("th");
@@ -485,7 +470,6 @@
                     const productQuantDisplay = document.createElement("th");
                     const buttonContainer = document.createElement("th");
                     const deleteButton = document.createElement("button");
-
                     productIdDisplay.innerHTML = lastProductId;
                     productNameDisplay.innerHTML = productName;
                     productCostDisplay.innerHTML = productCost+"A";
@@ -498,27 +482,22 @@
                     deleteButton.id = target;
                     deleteButton.setAttribute('onclick','deleteProduct(this.id)');
                     deleteButton.style.width = "100%";
-
                     buttonContainer.appendChild(deleteButton);
                     newProductDisplay.appendChild(productIdDisplay);
                     newProductDisplay.appendChild(productNameDisplay);
                     newProductDisplay.appendChild(productCostDisplay);
                     newProductDisplay.appendChild(productQuantDisplay);
-
                     const modalList = newProductDisplay.cloneNode(true);
                     modalList.appendChild(buttonContainer)
                     document.getElementById("productListConfig").appendChild(modalList);
                     document.getElementById("productList").appendChild(newProductDisplay);
-
                     lastProductId += 1;
                 }
               } catch(error) {
                 alert("There has been an error!");
               }
-              
               $("#companyInterface").show();
               $("#loadingData").hide();
-              
               lastProductId += 1;
               recievedBalance = true;
               } else {
@@ -526,8 +505,6 @@
               }
             });  
         }
-
-
       Instascan.Camera.getCameras().then(function (cameras) {
         if (cameras.length > 0) {
           scanner.start(cameras[0]);
@@ -538,9 +515,6 @@
       }).catch(function (e) {
         console.error(e);
       });
-
-      // -- //
-
       scanner.addListener('scan', function (content) {
         customerId = content;
         const enteredPin = prompt("Enter your PIN:");
