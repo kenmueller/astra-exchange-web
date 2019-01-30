@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link rel="shortcut icon" href="https://i.imgur.com/ufHYGd9.png">
+    <script defer src="/__/firebase/5.7.3/firebase-app.js"></script>
+    <script defer src="/__/firebase/5.7.3/firebase-auth.js"></script>
+    <script defer src="/__/firebase/5.7.3/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.7.3/firebase.js"></script>
+    <script defer src="/__/firebase/init.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:600,700" rel="stylesheet">
+    <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <title>Astra Exchange</title>
+    <style>
+      *, h1, h2, h3, h4, h5 {
+        font-family: Nunito;
+        text-align: center;
+      }
+      h1 {
+        font-size: 50px;
+        margin-top: 20px;
+      }
+      #logo {
+        margin-top: 20px;
+      }
+      .flexContainer {
+        display: flex;
+        justify-content: center;
+      }
+      #nameInput, #emailInput, #passwordInput, #emailSignInInput, #passwordSignInInput {
+        font-family: Nunito;
+        width: 300px;
+        margin: auto;
+        margin-top: 20px;
+      }
+      #passwordSignInInput {
+        margin-top: 30px;
+      }
+      #emailSignInInput {
+        margin-top: 30px;
+      }
+      button {
+        margin-top: 20px;
+      }
+      #accountSignInButton, #accountCreationButton, #switchCurrentInputForm {
+        width: 250px;
+      }
+      #switchCurrentInputForm {
+        font-size: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="headerBox" class="flexContainer">
+      <img id="logo" src="https://i.imgur.com/ufHYGd9.png"/>
+    </div>
+    <h1 id="title">Astra Exchange Network</h1>
+    <h2>Welcome to Astra Exchange!</h2>
+    <div id="accountCreationForm">
+      <input class="form-control" placeholder="Name" id="nameInput"/>
+      <input class="form-control" placeholder="Email" id="emailInput"/>
+      <input class="form-control" placeholder="Password" type="password" id="passwordInput"/>
+      <div class="flexContainer">
+        <button id="accountCreationButton" onclick="createNewAccount()" class="btn btn-secondary">Create New Account</button>
+      </div>
+    </div>
+    
+    <div id="loginBox">
+      <input class="form-control" placeholder="Email" id="emailSignInInput"/>
+      <input class="form-control" placeholder="Password" type="password" id="passwordSignInInput"/>
+      <div class="flexContainer">
+        <button id="accountSignInButton" onclick="signInAccount()" class="btn btn-secondary">Log In</button>
+      </div>
+  </div>
+  <div class="flexContainer">
+    <button class="btn btn-light" id="switchCurrentInputForm" onclick="changeForm()">Create An Account Instead!</button>
+  </div>
+  <div class="modal fade" id="creationFailure" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ceModalLabel">Account Creation Error</h5>
+        </div>
+        <div class="modal-body" id="errorMessage">
+          There has been an error in creating your account! This is caused by either an invalid email or insufficient account data! Please try again! Error Code:
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    <script>
+      let name;
+      let id;
+      let userExist = true;
+      let email;
+      let currentForm = 0;
+
+      $("#accountCreationForm").hide()
+      let config = {
+        apiKey: "AIzaSyDOfmd3fntDblft3mhjccRiEggWu_t5fW0",
+        authDomain: "astra-exchange.firebaseapp.com",
+        databaseURL: "https://astra-exchange.firebaseio.com",
+        projectId: "astra-exchange",
+        storageBucket: "astra-exchange.appspot.com",
+        messagingSenderId: "946665066699"
+      };
+      firebase.initializeApp(config);
+      let defaultDatabase = firebase.database();
+      let provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().onAuthStateChanged(function(user) {
+        console.log("Authorized!")
+        if (user) {
+          id = user.uid;
+          if (!userExist) {
+            const newPin = Math.floor(Math.random()*9)+""+Math.floor(Math.random()*9)+Math.floor(Math.random()*9)+Math.floor(Math.random()*9);
+            firebase.database().ref('users/' + id).set({
+              balance: "0",
+              email: email,
+              name: name,
+              pin: newPin
+            }).then(function() {
+              const compName = "The "+name+" Company";
+              const firstProduct = "The "+name+" Brand Product";
+              const industryOC = "Unnamed";
+              firebase.database().ref('companies/' + id).set({
+                pv: "Start-Up",
+                name: compName,
+                industry: industryOC
+              }).then(function() {
+                  const firstProdId = Date.now();
+                  firebase.database().ref('companies/' + id + "/products/" + firstProdId).set({
+                    name: firstProduct,
+                    quantity: 10,
+                    cost: 1
+                  }).then(function() {
+                    document.cookie = id;
+                    window.location = "main.html";
+                  });
+              })
+            });
+          } else {
+            document.cookie = id;
+            window.location = "main.html";
+          }
+        }
+      })
+      function changeForm() {
+        if (currentForm == 0) {
+          $("#loginBox").hide();
+          $("#accountCreationForm").show();
+          currentForm = 1;
+        } else {
+          $("#loginBox").show();
+          $("#accountCreationForm").hide();
+          currentForm = 0;
+        }
+      }
+      function signInAccount() {
+        const password = document.getElementById("passwordSignInInput").value;
+        email = document.getElementById("emailSignInInput").value;
+        firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          alert("You lack an Astra Exchange account! Please create one first!");
+        });
+      }
+      function createNewAccount() {
+        const password = document.getElementById("passwordInput").value;
+        email = document.getElementById("emailInput").value;
+        name = document.getElementById("nameInput").value;
+        userExist = false;
+
+        if (password && email && name) {
+          if (email.split("@")[1] == "adastraschool.org") {
+            firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+              // Handle Errors here.
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              document.getElementById("errorMessage").innerHTML = "Your account has failed to be created! Error Code: "+errorMessage;
+              // ...
+            }).then(function() {
+              firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+              });
+            })
+          } else {
+            alert("Your email is invalid! It must be an Ad Astra account!")
+          }
+        } else {
+          document.getElementById("errorMessage").innerHTML = "Your account has failed to be created due to not all of the input fields being filled! Please do so and try again!"
+          $("#creationFailure").modal("show");
+        }
+      }
+    </script>
+  </body>
+</html>

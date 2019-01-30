@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link rel="shortcut icon" href="https://i.imgur.com/ufHYGd9.png">
+    <script defer src="/__/firebase/5.7.3/firebase-app.js"></script>
+    <script defer src="/__/firebase/5.7.3/firebase-auth.js"></script>
+    <script defer src="/__/firebase/5.7.3/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.7.3/firebase.js"></script>
+    <script defer src="/__/firebase/init.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:600,700" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <title>Astra Exchange</title>
+    <style>
+      *,h1,h2 {
+        font-family: Nunito;
+        text-align: center;
+        color: rgba(0, 0, 0, 0.8);
+      }
+      h2 {
+        margin-top: 20px;
+      }
+      body {
+        overflow: scroll;
+      }
+      button {
+        width: 280px;
+        margin-top: 30px;
+        margin-bottom: 13px;
+        background: lightgray;
+      }
+      #exchangeBox {
+        height: 320px;
+        width: 500px;
+        margin: auto;
+        margin-top: 30px;
+      }
+      #title {
+        margin: auto;
+        margin-top: 10px;
+        margin-bottom: 30px;
+        font-size: 50px;
+        width: 60%;
+      }
+      #astrasToExchange {
+        text-align: center;
+        width: 300px;
+        margin: auto;
+        margin-top: 30px;
+      }
+
+      #deHeader {
+        margin-top: 10px;
+        margin-bottom: 20px;
+      }
+      #userDisplay, #wealthDisplay, #wealthLabel {
+        font-size: 35px;
+        font-weight: 700;
+      }
+      #wealthLabel, #wealthDisplay {
+        margin-top: 10px;
+        margin-right: 5px;
+      }
+      #userDisplay {
+        margin-top: 20px;
+      }
+      #receiver {
+        margin-top: -20px;
+        width: 300px;
+      }
+      img {
+        margin: auto;
+      }
+      /*
+      #profileImage {
+        margin: auto;
+        height: 100px;
+        margin-bottom: 20px;
+      }
+      */
+      .flexContainer {
+        margin-top: -20px;
+        display: flex;
+        margin-bottom: -20px;
+        justify-content: space-around;
+      }
+      #headerBox {
+        margin-top: 10px;
+        height: 150px;
+      }
+      #logo {
+        margin-top: 20px;
+      }
+      #copyright {
+        text-align: right;
+        vertical-align: bottom;
+        margin-right: 20px;
+        font: Nunito;
+      }
+      #exchangeHistBox {
+        height: 350px;
+        width: 650px;
+        border-style: solid;
+        border-color: lightgray;
+        margin-right: 80px;
+        overflow: scroll;
+      }
+      #mainContainer {
+        display: flex;
+        justify-content: space-around;
+      }
+      #ehbLabel {
+        margin-top: -400px;
+        margin-left: 740px;
+        border-style: solid;
+        border-color: lightgray;
+        width: 400px;
+      }
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+      #noteInput {
+        width: 300px;
+        margin: auto;
+        margin-top: 30px;
+      }
+      #mainPage {
+        display: flex;
+        justify-content: space-around;
+      }
+      #ceModalLabel {
+        font-size: 40px;
+      }
+      #modalContainer {
+        position: absolute;
+        top: 24vw;
+        left: 50%;
+        width: 700px;
+        transform: translate(-50%, -50%);
+      }
+      #closeButton {
+        margin-top: 5px;
+        height: 40px;
+        margin-bottom: 5px;
+      }
+      #vtButton {
+        margin-top: 10px;
+        width: 250px;
+        display: block;
+        text-align: center;
+        margin: 0 auto;
+      }
+      .menuIcon {
+        width: 80px;
+        margin-left: 0px;
+        margin-right: 0px;
+        transition: outline-color 0.2s ease-out;
+        outline-color: rgba(0, 0, 250, 0);
+      }
+      .menuIcon:hover {
+        outline: solid;
+        outline-color: rgba(0, 0, 250, 0.1);
+      }
+      #iconBar {
+        margin-top: -66px;
+        margin-left: 400px;
+      }
+      #pinInput {
+        width: 280px;
+        margin: auto;
+      }
+      #currentPin {
+        margin-bottom: 20px;
+      }
+      #savePinButton {
+        margin-top: 20px;
+      }
+      #userInterface {
+        width: 70px;
+        margin-bottom: 18px;
+        margin-right: 10px;
+      }
+      .table {
+        width: 480px;
+      }
+      #currentPV {
+        margin-top: 20px;
+        margin-bottom: 40px;
+      }
+      .midContainer {
+        width: 10px;
+        margin-top: -130px;
+      }
+      #preview {
+        border-style: solid;
+        border-color: lightgray;
+      }
+      #saleButton {
+        margin-left: -125px;
+        margin-bottom: 100px;
+        height: 40px;
+      }
+      #configureButton {
+        margin-top: 85px;
+      }
+      button {
+        font-family: Nunito;
+        width: 120px;
+      }
+      #configureSale {
+        margin-right: 350px;
+        margin-top: -165px;
+      }
+      input {
+        margin-right: 10px;
+        margin: auto;
+        font-family: Nunito;
+      }
+      #compNameInput {
+        margin-top: 15px;
+        width: 300px;
+      }
+      #saveName {
+        margin-bottom: 20px;
+      }
+      #selectIndustry {
+        margin-top: 10px;
+        width: 300px;
+        font-family: Nunito;
+      }
+      .centerBox {
+        width: 100%;
+        align: center;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+      }
+      #sdButton {
+        width: 200px;
+      }
+      #eProducts {
+        width: 300px;
+        margin-top: 0px;
+      }
+      #plModalLabel {
+        font-size: 40px;
+      }
+      #productTableConfig {
+        width: 100%;
+      }
+      #plModalContent {
+        position: absolute;
+        top: 24vw;
+        left: 50%;
+        width: 700px;
+        transform: translate(-50%, -50%);
+      }
+      #sellingContainer {
+        margin-top: 70px;
+      }
+      #productNameInput, #productQuantityInput, #productCostInput {
+        width: 30%;
+        display: inline;
+      }
+      #saveProductButton {
+        width: 80%;
+        margin-top: 20px;
+      }
+      #tableContainer {
+        overflow: scroll;
+        height: 500px;
+      }
+      #customerDataDisplay {
+        margin-top: -5px;
+      }
+      #currentCNameDisplay {
+        margin-top: -41px;
+        margin-left: 500px;
+      }
+      #currentPidDisplay {
+        margin-right: 500px;
+      }
+      #loadingData {
+        text-align: left;
+      }
+      #companyInterface {
+        opacity: 0;
+        animation-name: appear;
+        animation-duration: 3s;
+        animation-fill-mode: forwards;
+      }
+      @keyframes appear {
+        0% { opacity: 0; }
+        30% { opacity: 0; }
+        100% { opacity: 1; }
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="loadingData">Loading Company Data...</h1>
+    <div id="companyInterface">
+      <div id="headerBox" class="flexContainer">
+        <img id="logo" src="https://i.imgur.com/aLgqM1V.png"/>
+      </div>
+      <div id="iconBar">
+        <img id="userInterface" onclick="window.location.href='main.html'" class="menuIcon" src="https://i.imgur.com/ufHYGd9.png">
+        <img id="graphWorksIcon" class="menuIcon" src="https://i.imgur.com/OM7iXc9.png">
+      </div>
+      <div id="configureSale"/>
+        <button class="btn btn-light configureSale" id="configureButton" onclick="closeSellingMenu()">Configuring</button>
+        <button class="btn btn-light configureSale" id="saleButton" onclick="openSellingMenu()">Selling</button>
+      </div>
+      <h1 id="title">Company Interface</h1>
+      <h3 id="customerDataDisplay">
+        <h3 id="currentPidDisplay"><i>No Product Selected!</i></h3>
+        <h3 id="currentCNameDisplay"><i>No Customer Active!</i></h3>
+      </h3>
+      <h2 id="compTitle"></h2>
+      <input class="form-control" id="compNameInput" placeholder="Change Company Name"/>
+      <h2 id="compIndustry"></h2>
+      <div class="centerBox">
+        <select class="custom-select mr-sm-2" id="selectIndustry">
+          <option value="Baked Pastries">Baked Pastries</option>
+          <option value="Technology">Technology</option>
+          <option value="Savory Foods">Savory Foods</option>
+          <option value="Non-Tech Materialistic Products">Non-Tech Materialistic Products</option>
+          <option value="Non-Baked Sweets">Non-Baked Sweets</option>
+          <option value="Unnamed">Unnamed : If your company's industry is unnamed, please inform Kai!</option>
+        </select>
+      </div>
+      <div class="centerBox">
+        <button onclick="saveData()" id="sdButton" class="btn btn-primary">Save Configuration</button>
+      </div>
+      <h2 id="currentPV"></h2>
+      <div class="flexContainer">
+        <button class="btn btn-secondary" id="eProducts" onclick="openProductsConfig()">View And Edit Product List</button>
+      </div>
+      <div id="sellingContainer" class="flexContainer">
+        <table id="productTable" class="table">
+          <thead>
+            <tr>
+              <th scope="col">Product ID</th>
+              <th scope="col">Name</th>
+              <th scope="col">Price</th>
+              <th scope="col">Quantity</th>
+            </tr>
+          </thead>
+          <tbody id="productList">
+          </tbody>
+        </table>    
+        <video autoplay="autoplay" class="active" id="preview"></video>
+      </div>
+      </div>
+      <div class="modal fade" id="productsConfig" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content" id="plModalContent">
+            <div class="modal-header">
+              <h5 class="modal-title" id="plModalLabel">Product Table</h5>
+            </div>
+            <div class="modal-body" id="tableContainer">
+              <table id="productTableConfig" class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Product ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                  </tr>
+                </thead>
+                <tbody id="productListConfig">
+                </tbody>
+              </table>
+              <input placeholder="Product Name" class="form-control" id="productNameInput">
+              <input placeholder="Product Quantity" class="form-control" type="Number" id="productQuantityInput">
+              <input placeholder="Product Cost" class="form-control" type="Number" id="productCostInput">
+              <button onclick="saveNewProduct()" class="btn btn-primary" id="saveProductButton">Save Product</button>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      let id = document.cookie;
+      let name;
+      let compBalance;
+      let user = [];
+      let productSaves = {};
+      let industryOC;
+      let customerId;
+      let compPv;
+      let idOfCurrentProduct;
+      let lastProductId = 1;
+      let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+      let currentSetting = 0;
+
+      $("#companyInterface").hide();
+      $("#currentCNameDisplay").hide();
+      $("#currentPidDisplay").hide();
+      
+      let config = {
+        apiKey: "AIzaSyDOfmd3fntDblft3mhjccRiEggWu_t5fW0",
+        authDomain: "astra-exchange.firebaseapp.com",
+        databaseURL: "https://astra-exchange.firebaseio.com",
+        projectId: "astra-exchange",
+        storageBucket: "astra-exchange.appspot.com",
+        messagingSenderId: "946665066699"
+      };
+      firebase.initializeApp(config);
+      let defaultDatabase = firebase.database();
+      // End of Config
+      function deleteProduct(pId) {
+        firebase.database().ref('companies/' + id + "/products/" + pId).remove().then(function() {
+          loadCompData();
+        });
+      }
+      function saveNewProduct() {
+        const newProdName = document.getElementById("productNameInput").value;
+        const newProdCost = document.getElementById("productCostInput").value;
+        const newProdQuant = document.getElementById("productQuantityInput").value;
+
+        firebase.database().ref('companies/' + id + "/products").push({
+          name: newProdName,
+          cost: newProdCost,
+          quantity: newProdQuant
+        }).then(function() {
+          alert("Product Addition Successful!");
+        });
+      }
+      function loadCompData() {
+        let compData = firebase.database().ref('companies/' + id);
+        compData.on('value', function(snapshot) {
+            if (snapshot.val()) {
+              for (target of document.getElementById("productListConfig").children) {
+                target.remove();
+              }
+              for (target of document.getElementById("productList").children) {
+                target.remove();
+              }
+              name = snapshot.val().name;
+              compPv = snapshot.val().pv;
+              products = snapshot.val().products;
+              industryOC = snapshot.val().industry;
+              $("#selectIndustry").val(industryOC).select();
+              //document.getElementById("profileImage").src = profileImage;
+              document.getElementById("compTitle").innerHTML = name;
+              document.getElementById("currentPV").innerHTML = "Current PV: "+compPv;
+              document.getElementById("compIndustry").innerHTML = "Industry: "+industryOC;
+              productSaves = {};
+              lastProductId = 1;
+              try {
+                for (target of Object.keys(products)) {
+                    const currentProduct = products[target];
+                    const productName = currentProduct.name;
+                    const productCost = currentProduct.cost;
+                    const productQuant = currentProduct.quantity;
+                    const newProductSave = [productName, productCost, productQuant];
+                    productSaves[lastProductId] = newProductSave;
+
+                    const newProductDisplay = document.createElement("tr");
+                    const productIdDisplay = document.createElement("th");
+                    const productNameDisplay = document.createElement("th");
+                    const productCostDisplay = document.createElement("th");
+                    const productQuantDisplay = document.createElement("th");
+                    const buttonContainer = document.createElement("th");
+                    const deleteButton = document.createElement("button");
+
+                    productIdDisplay.innerHTML = lastProductId;
+                    productNameDisplay.innerHTML = productName;
+                    productCostDisplay.innerHTML = productCost+"A";
+                    productQuantDisplay.innerHTML = productQuant;
+                    deleteButton.innerHTML = "X";
+                    deleteButton.style.marginBottom = "0px";
+                    deleteButton.style.marginTop = "0px";
+                    deleteButton.style.height = "40px";
+                    deleteButton.className = "btn btn-danger";
+                    deleteButton.id = target;
+                    deleteButton.setAttribute('onclick','deleteProduct(this.id)');
+                    deleteButton.style.width = "100%";
+
+                    buttonContainer.appendChild(deleteButton);
+                    newProductDisplay.appendChild(productIdDisplay);
+                    newProductDisplay.appendChild(productNameDisplay);
+                    newProductDisplay.appendChild(productCostDisplay);
+                    newProductDisplay.appendChild(productQuantDisplay);
+
+                    const modalList = newProductDisplay.cloneNode(true);
+                    modalList.appendChild(buttonContainer)
+                    document.getElementById("productListConfig").appendChild(modalList);
+                    document.getElementById("productList").appendChild(newProductDisplay);
+
+                    lastProductId += 1;
+                }
+              } catch(error) {
+                alert("There has been an error!");
+              }
+              
+              $("#companyInterface").show();
+              $("#loadingData").hide();
+              
+              lastProductId += 1;
+              recievedBalance = true;
+              } else {
+                document.getElementById("loadingData").innerHTML = "No Company Data Exists! Go and Alert Ken that He Fudged With The Database!";
+              }
+            });  
+        }
+
+
+      Instascan.Camera.getCameras().then(function (cameras) {
+        if (cameras.length > 0) {
+          scanner.start(cameras[0]);
+          document.getElementById("preview").style.background = "";
+        } else {
+          console.error('No cameras found.');
+        }
+      }).catch(function (e) {
+        console.error(e);
+      });
+
+      // -- //
+
+      scanner.addListener('scan', function (content) {
+        customerId = content;
+        const enteredPin = prompt("Enter your PIN:");
+        let userPin;
+        return firebase.database().ref('users/' + customerId).once('value').then(function(snapshot) {
+          userPin = snapshot.val().pin;
+          const customerWealth = Number(snapshot.val().balance);
+          const customerName = snapshot.val().name;
+          document.getElementById("currentCNameDisplay").innerHTML = customerName;
+          const productPrice = Number(productSaves[idOfCurrentProduct][1]);
+          const confirmConfidence = confirm("Are you sure you would like to purchase a \""+productSaves[idOfCurrentProduct][0]+"\" for "+productPrice+"A?");
+          document.getElementById("currentCNameDisplay").innerHTML = customerName;
+          if (idOfCurrentProduct) {
+            if (enteredPin == userPin) {
+                if (confirmConfidence) {
+                  return firebase.database().ref('users/' + id + "/balance").once('value').then(function(snapshot) {
+                    const companyWealth = Number(snapshot.val());
+                    const newCompWealth = customerWealth+productPrice;
+                    const newCustomerWealth = companyWealth+productPrice;
+                    firebase.database().ref('users/' + customerId + "/balance").set({
+                      newCustomerWealth
+                    });
+                    firebase.database().ref('users/' + id + "/balance").set({
+                      newCompWealth
+                    });
+                    alert("Your transaction was successful! Thank you very much!");
+                  });
+                }
+            }
+          } else {
+            alert("A product has yet to be selected!")
+          }
+        });
+      });
+      function closeSellingMenu() {
+        currentSetting = 0;
+        console.log("Closing Down...");
+        document.getElementById("title").innerHTML = "Company Configurations";
+        $("#currentCNameDisplay").hide();
+        $("#currentPidDisplay").hide();
+        $("#compTitle").show();
+        $("#selectIndustry").show();
+        $("#compTitle").show();
+        $("#sdButton").show();
+        $("#compNameInput").show();
+        $("#currentPV").show();
+        $("#compIndustry").show();
+        $("#preview").hide();
+        $("#productTable").hide();
+        $("#eProducts").show();
+      }
+      function openSellingMenu() {
+        currentSetting = 1;
+        document.getElementById("title").innerHTML = name;
+        console.log("Selling!");
+        $("#currentCNameDisplay").show();
+        $("#currentPidDisplay").show();
+        $("#customerDataDisplay").show();
+        $("#compNameInput").hide();
+        $("#selectIndustry").hide();
+        $("#compTitle").hide();
+        $("#currentPV").hide();
+        $("#compIndustry").hide();
+        $("#preview").show();
+        $("#sdButton").hide();
+        $("#productTable").show();
+        $("#eProducts").hide();
+      }
+      function saveData() {
+        let newIndustry = document.getElementById("selectIndustry").value;
+        let newName = document.getElementById("compNameInput").value;
+        if (newName) {
+          name = newName;
+        }
+        firebase.database().ref('companies/' + id).set({
+          industry: newIndustry,
+          name: name,
+          products: products,
+          pv: compPv
+        });
+      }
+      function openProductsConfig() {
+        $("#productsConfig").modal("show");
+      }
+      document.onkeydown = function(e){
+          e = e || window.event;
+          let selected = false;
+          let key = e.which || e.keyCode;
+          key = key - 48;
+          //48 (0) to 57 (9)
+          console.log("Key: "+key);
+          if (Object.keys(productSaves).includes(key+"") && currentSetting == 1) {
+            idOfCurrentProduct = key;
+            document.getElementById("currentPidDisplay").innerHTML = "<i>"+productSaves[idOfCurrentProduct][0]+"</i>";
+          }
+      }
+      closeSellingMenu();
+      loadCompData();
+    </script>
+  </body>
+</html>

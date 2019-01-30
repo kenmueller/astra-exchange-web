@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link rel="shortcut icon" href="https://i.imgur.com/ufHYGd9.png">
+    <script defer src="/__/firebase/5.7.3/firebase-app.js"></script>
+    <script defer src="/__/firebase/5.7.3/firebase-auth.js"></script>
+    <script defer src="/__/firebase/5.7.3/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.7.3/firebase.js"></script>
+    <script defer src="/__/firebase/init.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:600,700" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <title>Astra Exchange</title>
+    <style>
+      *,h1,h2 {
+        font-family: Nunito;
+        text-align: center;
+        color: rgba(0, 0, 0, 0.8);
+      }
+      body {
+        overflow: scroll;
+      }
+      button {
+        width: 280px;
+        margin-top: 30px;
+        margin-bottom: 13px;
+        background: lightgray;
+      }
+      #exchangeBox {
+        height: 320px;
+        width: 500px;
+        margin: auto;
+        margin-top: 30px;
+      }
+      #title {
+        margin-top: 30px;
+        font-size: 50px;
+      }
+      #astrasToExchange {
+        text-align: center;
+        width: 300px;
+        margin: auto;
+        margin-top: 30px;
+      }
+
+      #deHeader {
+        margin-top: 10px;
+        margin-bottom: 20px;
+      }
+      #userDisplay, #wealthDisplay, #wealthLabel {
+        font-size: 35px;
+        font-weight: 700;
+      }
+      #wealthLabel, #wealthDisplay {
+        margin-top: 10px;
+        margin-right: 5px;
+      }
+      #userDisplay {
+        margin-top: 20px;
+      }
+      #receiver {
+        margin-top: -20px;
+        width: 300px;
+      }
+      img {
+        margin: auto;
+      }
+      /*
+      #profileImage {
+        margin: auto;
+        height: 100px;
+        margin-bottom: 20px;
+      }
+      */
+      .flexContainer {
+        display: flex;
+        justify-content: center;
+      }
+      #headerBox {
+        height: 150px;
+      }
+      #logo {
+        margin-top: 20px;
+      }
+      #copyright {
+        text-align: right;
+        vertical-align: bottom;
+        margin-right: 20px;
+        font: Nunito;
+      }
+      #exchangeHistBox {
+        height: 350px;
+        width: 650px;
+        border-style: solid;
+        border-color: lightgray;
+        margin-right: 80px;
+        overflow: scroll;
+      }
+      #mainContainer {
+        display: flex;
+        justify-content: space-around;
+      }
+      #ehbLabel {
+        margin-top: -400px;
+        margin-left: 740px;
+        border-style: solid;
+        border-color: lightgray;
+        width: 400px;
+      }
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+      #noteInput {
+        width: 300px;
+        margin: auto;
+        margin-top: 30px;
+      }
+      #mainPage {
+        display: flex;
+        justify-content: space-around;
+      }
+      #ceModalLabel {
+        font-size: 40px;
+      }
+      #modalContainer {
+        position: absolute;
+        top: 24vw;
+        left: 50%;
+        width: 700px;
+        transform: translate(-50%, -50%);
+      }
+      #closeButton {
+        margin-top: 5px;
+        height: 40px;
+        margin-bottom: 5px;
+      }
+      #vtButton {
+        margin-top: 10px;
+        width: 250px;
+        display: block;
+        text-align: center;
+        margin: 0 auto;
+      }
+      .menuIcon {
+        width: 80px;
+        margin-left: 0px;
+        margin-right: 0px;
+        transition: outline-color 0.2s ease-out;
+        outline-color: rgba(0, 0, 250, 0);
+      }
+      .menuIcon:hover {
+        outline: solid;
+        outline-color: rgba(0, 0, 250, 0.1);
+
+      }
+      #iconBar {
+        margin-top: -52px;
+        margin-left: 420px;
+      }
+      #pinInput {
+        width: 280px;
+        margin: auto;
+      }
+      #currentPin {
+        margin-bottom: 20px;
+      }
+      #savePinButton {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="headerBox" class="flexContainer">
+      <img id="logo" src="https://i.imgur.com/ufHYGd9.png"/>
+    </div>
+    <div id="iconBar">
+      <img id="debitCardConfigure" onclick="showPin()" class="menuIcon" src="https://i.imgur.com/2kCccpj.png">
+      <img id="companyInterface" onclick="window.location.href='company.html'" class="menuIcon" src="https://i.imgur.com/aLgqM1V.png">
+      <img id="graphWorksIcon" class="menuIcon" src="https://i.imgur.com/OM7iXc9.png">
+    </div>
+    <h1 id="title">Astra Exchange Network</h1>
+    <div class="flexContainer">
+      <img id="profileImage" />
+    </div>
+    <div id="mainPage">
+      <div id="mainUserInterface">
+        <h2 id="userDisplay"></h1>
+        <div class="flexContainer">
+          <h2 id="wealthLabel"><h2 id="wealthDisplay"></h2></h2>
+        </div>
+        <div id="mainContainer" class="flexContainer">
+          <div id="exchangeBox">
+            <select class="custom-select mr-sm-2" id="receiver">
+              <option value="nullSelected" selected disabled>Receiver</option>
+            </select>
+            <input id="astrasToExchange" class="form-control" placeholder="Astras To Exchange" type="number"/>
+            <input id="noteInput" class="form-control" placeholder="Exchange Note (Optional)"/>
+            <button class="btn btn-primary" onclick="makeDirectExchange()">Make Exchange</button>
+            <button class="btn btn-secondary" onclick="viewTransactions()" id="vtButton">View Transaction History</button>
+          </div>
+          <!--<div id="exchangeHistBox"></div>-->
+        </div>
+        <!--<h6 id="copyright"><i>Copyright © 2019 TechnoBank</i></h6>-->
+      </div>
+
+  </div>
+    <div class="modal fade" id="transactionHistory" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content" id="modalContainer">
+          <div class="modal-header">
+            <h5 class="modal-title" id="ceModalLabel">Exchange History</h5>
+          </div>
+          <div class="modal-body" id="transModalMain">
+            <div id="exchangeHistBox">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeButton">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="modal fade" id="debitCardSettings" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content" id="modalContainer">
+          <div class="modal-header">
+            <h5 class="modal-title" id="ceModalLabel">Debit Card Configuration</h5>
+          </div>
+          <div class="modal-body" id="transModalMain">
+            <h2 id="currentPin">Current PIN: </h2>
+            <input id="pinInput" class="form-control" type="number" placeholder="Change PIN"/>
+            <button class="btn btn-primary" id="savePinButton" onclick="savePin()">Save</button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeButton">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      let id = document.cookie;
+      let name;
+      let email;
+      let userBalance;
+      let user = [];
+      let recievedBalance = false;
+      let change;
+      let userExist = true;
+      let transHistItems=[];
+
+      const d = new Date();
+      const n = d.getFullYear();
+      //document.getElementById("copyright").innerHTML = "<i>Copyright © "+n+" TechnoBank</i>";
+      // Configurate Firebase
+      let config = {
+        apiKey: "AIzaSyDOfmd3fntDblft3mhjccRiEggWu_t5fW0",
+        authDomain: "astra-exchange.firebaseapp.com",
+        databaseURL: "https://astra-exchange.firebaseio.com",
+        projectId: "astra-exchange",
+        storageBucket: "astra-exchange.appspot.com",
+        messagingSenderId: "946665066699"
+      };
+      firebase.initializeApp(config);
+      let defaultDatabase = firebase.database();
+      // End of Config
+
+      function loadTransHist() {
+          let transHist = firebase.database().ref('transactions/'+id);
+          transHist.on('child_added', function(snapshot) {
+
+          const receiverId = snapshot.val().to;
+          const payerId = snapshot.val().from;
+          const astrasInvolved = snapshot.val().amount;
+          const dateOfTrans = snapshot.val().time;
+          const transNote = snapshot.val().message;
+          const newTrans = document.createElement("h4");
+          let transNoteAddOn = "";
+          if (transNote) {
+            transNoteAddOn = " [ "+transNote+" ]";
+          }
+          return firebase.database().ref('users/' + receiverId + "/name").once('value').then(function(snapshot) {
+            const receiverName = snapshot.val();
+            return firebase.database().ref('users/' + payerId + "/name").once('value').then(function(snapshot) {
+              const payerName = snapshot.val();
+              newTrans.innerHTML = astrasInvolved+"A : "+payerName+" -> "+receiverName + " | "+dateOfTrans + transNoteAddOn;
+              newTrans.style.borderStyle = "solid";
+              newTrans.style.borderColor = "lightgray";
+              document.getElementById("exchangeHistBox").appendChild(newTrans);
+            })
+          })
+        });
+      }
+      function loadUserData() {
+        let userData = firebase.database().ref('users/' + id);
+        userData.on('value', function(snapshot) {
+          name = snapshot.val().name;
+          if (parseInt(userBalance) > parseInt(snapshot.val().balance)) {
+            change = false;
+          } else {
+            change = true;
+          }
+          userBalance = snapshot.val().balance;
+          email = snapshot.val().email;
+          //document.getElementById("profileImage").src = profileImage;
+          document.getElementById("userDisplay").innerHTML = name;
+          document.getElementById("wealthLabel").innerHTML = "Wealth: ";
+          document.getElementById("wealthDisplay").innerHTML = userBalance;
+          if (recievedBalance && change) {
+            $( "#wealthDisplay" ).animate({
+              color: "#98FB98"
+            }, 200);
+            $( "#wealthDisplay" ).animate({
+              color: "rgba(0, 0, 0, 0.8)"
+            }, 700);
+          } else {
+            if (recievedBalance) {
+              $("#wealthDisplay").animate({
+                color: "#ff6961"
+              }, 200);
+              $("#wealthDisplay").animate({
+                color: "rgba(0, 0, 0, 0.8)"
+              }, 700);
+            }
+          }
+          recievedBalance = true;
+        });
+      }
+
+      function loadReceiverData() {
+        let userData = firebase.database().ref('users');
+        userData.on('child_added', function(snapshot) {
+
+        receiverName = snapshot.val().name;
+        receiverId = snapshot.key;
+        if (receiverId != id) {
+          user.push(name);
+          let newReceiverOption = document.createElement("option");
+          newReceiverOption.value = receiverId;
+          newReceiverOption.innerHTML = receiverName;
+          document.getElementById("receiver").appendChild(newReceiverOption);
+        }
+      });
+      }
+
+      let provider = new firebase.auth.GoogleAuthProvider();
+
+      function makeDirectExchange() {
+        console.log("Making exchange...");
+        const receiverId = document.getElementById("receiver").value;
+        const astrasInvolved = Number(document.getElementById("astrasToExchange").value);
+        const decPoints = findDecPoints(astrasInvolved+"");
+
+        if (userBalance >= astrasInvolved) {
+        if (astrasInvolved > 0) {
+          if (decPoints < 3) {
+              console.log("Valid exchange!");
+              return firebase.database().ref('users/' + receiverId).once('value').then(function(snapshot) {
+                const receiverBalance = snapshot.val().balance;
+
+                firebase.database().ref('users/' + receiverId + "/balance").set(
+                  (parseInt(receiverBalance)+astrasInvolved)+""
+                );
+                firebase.database().ref('users/' + id + "/balance").set(
+                  (parseInt(userBalance)-astrasInvolved)+""
+                );
+                const dateList = Date().split(" ")
+                let timeOfDay = " AM";
+                const dateTime = (dateList[4].split(":")[0] % 12)+":"+dateList[4].split(":")[1];
+                if (dateList[4].split(":")[0] > 11) {
+                  timeOfDay = " PM";
+                }
+                const formattedDate = dateList[1]+" "+dateList[2]+", "+dateList[3]+" @ "+dateTime+timeOfDay;
+
+                let transId = Date.now();
+                const note = document.getElementById("noteInput").value;
+
+                firebase.database().ref('transactions/' + id + "/" + transId).set({
+                  amount: astrasInvolved,
+                  to: receiverId,
+                  from: id,
+                  message: note,
+                  time: formattedDate
+                });
+                transId = Date.now()*100;
+                firebase.database().ref('transactions/' + receiverId).push({
+                  amount: astrasInvolved,
+                  to: receiverId,
+                  from: id,
+                  message: note,
+                  time: formattedDate
+                });
+                $("#receiver").val("nullSelected").change();
+                document.getElementById("astrasToExchange").value = "";
+                document.getElementById("noteInput").value = "";
+              });
+            } else {
+              alert("Don't fudge with decimals, you ruffian!");
+            }
+          } else {
+            alert("You can't send negative astras, (or no astras) you fool!");
+          }
+        } else {
+          alert("You have insufficient funds to complete this transaction!");
+        }
+      }
+
+      function loginUser() {
+        console.log("Logging in...");
+        email = document.getElementById("emailInput").value;
+        const passwordInput = document.getElementById("passwordInput").value;
+
+        firebase.auth().signInWithEmailAndPassword(email, passwordInput).catch(function(error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          firebase.auth().createUserWithEmailAndPassword(email, passwordInput).catch(function(error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // ...
+        });
+        userExist=false;
+          // ...
+        });
+
+      }
+      function viewTransactions() {
+        $("#transactionHistory").modal("show");
+      }
+      function showPin() {
+        $("#debitCardSettings").modal("show");
+        return firebase.database().ref('users/' + id + "/pin").once('value').then(function(snapshot) {
+          const pinNum = snapshot.val();
+          document.getElementById("currentPin").innerHTML = "PIN: "+pinNum;
+        });
+      }
+      function savePin() {
+        const newPin = document.getElementById("pinInput").value;
+        firebase.database().ref('users/' + id).set({
+          balance: userBalance,
+          email: email,
+          name: name,
+          pin: newPin
+        });
+        document.getElementById("pinInput").value = "";
+        $("#debitCardSettings").modal("hide");
+      }
+      function findDecPoints(num) {
+        if (num.includes(".")) {
+          return num.split(".")[1].length;
+        } else {
+          return 0;
+        }
+      }      
+      loadTransHist();
+      loadUserData();
+      loadReceiverData();
+    </script>
+  </body>
+</html>
