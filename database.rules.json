@@ -25,8 +25,23 @@
 				".write": "$uid === auth.uid",
 				"$transactionId": {
 					".write": false,
+					"time": {
+						".validate": "newData.isString()"
+					},
+					"from": {
+						".validate": "newData.isString()"
+					},
+					"to": {
+						".validate": "newData.isString()"
+					},
 		  			"amount": {
 						".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= root.child('users/' + $uid + '/balance').val()"
+					},
+					"balance": {
+						".validate": "newData.isNumber() && newData.val() >= 0"
+					},
+					"message": {
+						".validate": "newData.isString()"
 					}
 				}
 			}
@@ -34,10 +49,25 @@
 		"invoices": {
 			"$uid": {
 				".read": "$uid === auth.uid",
-				".write": "$uid === auth.uid",
+				".write": "auth != null",
 				"$invoiceId": {
+					"time": {
+						".validate": "newData.isString()"
+					},
 					"status": {
 						".validate": "newData.val() === 'pending' || newData.val() === 'declined' || newData.val() === 'accepted'"
+					},
+					"from": {
+						".validate": "newData.isString()"
+					},
+					"to": {
+						".validate": "newData.isString()"
+					},
+					"amount": {
+						".validate": "newData.isNumber() && newData.val() > 0"
+					},
+					"message": {
+						".validate": "newData.isString()"
 					}
 				}
 			}
@@ -45,7 +75,16 @@
 		"users": {
 			".read": true,
 			"$uid": {
-				".write": false
+				".write": false,
+				"name": {
+					".validate": "newData.isString()"
+				},
+				"email": {
+					".validate": "newData.isString() && /[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}/.test(newData)"
+				},
+				"balance": {
+					".validate": "newData.val() === 0"
+				}
 			}
 		}
 	}
