@@ -3,7 +3,7 @@ const admin = require('firebase-admin');
 admin.initializeApp();
 
 exports.transaction = functions.database.ref('transactions/{uid}/{transactionId}').onCreate((snapshot, context) => {
-    const root = snapshot.ref.parent.parent
+    const root = snapshot.ref.parent.parent.parent
     const to = snapshot.val().to
     return root.child(`users/${to}/balance`).once('value').then(balanceSnapshot => {
         const from = context.params.uid
