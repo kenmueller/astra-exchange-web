@@ -74,13 +74,14 @@
 		},
 		"users": {
 			".read": true,
+			".create"
 			"$uid": {
-				".write": false,
+				".write": "!data.exists()",
 				"name": {
 					".validate": "newData.isString() && newData.val() != ''"
 				},
 				"email": {
-					".validate": "newData.isString() && newData.val() != ''"
+					".validate": "newData.isString() && newData.val().matches(/[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}/)"
 				},
 				"balance": {
 					".validate": "newData.val() === 0"
