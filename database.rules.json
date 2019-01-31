@@ -24,7 +24,7 @@
 				".read": "$uid === auth.uid",
 				".write": "$uid === auth.uid",
 				"$transactionId": {
-					".write": false,
+					".write": "!data.exists()",
 					"time": {
 						".validate": "newData.isString()"
 					},
