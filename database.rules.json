@@ -74,7 +74,6 @@
 		},
 		"users": {
 			".read": true,
-			".create"
 			"$uid": {
 				".write": "!data.exists()",
 				"name": {
