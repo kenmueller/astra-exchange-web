@@ -68,18 +68,18 @@
 	<h1 id="title">Astra Exchange</h1>
 	<h2>Welcome to Astra Exchange!</h2>
 	<div id="accountCreationForm">
-		<input class="form-control" placeholder="Name" id="nameInput" />
-		<input class="form-control" placeholder="Email" id="emailInput" />
-		<input class="form-control" placeholder="Password" type="password" id="passwordInput" />
+		<input class="form-control" onKeyUp="registerInput(this.id)" placeholder="Name" id="nameInput" />
+		<input class="form-control" onKeyUp="registerInput(this.id)" placeholder="Email" id="emailInput" />
+		<input class="form-control" onKeyUp="registerInput(this.id)" placeholder="Password" type="password" id="passwordInput" />
 		<div class="flexContainer">
-			<button id="accountCreationButton" onclick="createUser()" class="btn btn-secondary">Create New Account</button>
+			<button id="accountCreationButton" onclick="createUser()" class="btn btn-secondary" disabled="true">Create New Account</button>
 		</div>
 	</div>
 	<div id="loginBox">
-		<input class="form-control" placeholder="Email" id="emailSignInInput" />
-		<input class="form-control" placeholder="Password" type="password" id="passwordSignInInput" />
+		<input class="form-control" placeholder="Email" onKeyUp="registerInput(this.id)" id="emailSignInInput" />
+		<input class="form-control" placeholder="Password" onKeyUp="registerInput(this.id)" type="password" id="passwordSignInInput" />
 		<div class="flexContainer">
-			<button id="accountSignInButton" onclick="signIn()" class="btn btn-secondary">Log In</button>
+			<button id="accountSignInButton" onclick="signIn()" class="btn btn-secondary" disabled="true">Log In</button>
 		</div>
 	</div>
 	<div class="flexContainer">
@@ -105,6 +105,7 @@
 		let id;
 		let email;
 		let isSignIn = true;
+		let inputActiveObject = {"emailSignInInput":false, "passwordSignInInput":false, "nameInput":false, "emailInput":false, "passwordInput":false}
 		$("#accountCreationForm").hide()
 		let config = {
 			apiKey: "AIzaSyDOfmd3fntDblft3mhjccRiEggWu_t5fW0",
@@ -134,22 +135,44 @@
 					}).then(function() {
 						firebase.database().ref('companies/' + id).set({
 							pv: 0,
-							name: name + "\'s Company",
+							name: `The ${name} Company`,
 							industry: "Unspecified"
 						}).then(function() {
 							firebase.database().ref('companies/' + id + "/products").push({
-								name: name + "\'s First Product",
+								name: name + `The ${name} Brand Product`,
 								quantity: 10,
 								cost: 1
 							}).then(function() {
-								goToMain()
+								goToMain();
 							});
 						});
 					});
 				};
 			};
 		});
+		function registerInput(idOfInput) {
+			console.log(idOfInput)
+			let newInputVal = document.getElementById(idOfInput).value;
+			
+			inputActiveObject[idOfInput] = (newInputVal != "");
+			
+			let determDisabledACB;
+			let determDisabledSIB;
 
+			if (inputActiveObject["nameInput"] && inputActiveObject["emailInput"] && inputActiveObject["passwordInput"]) {
+				determDisabledACB = "";
+			} else {
+				determDisabledACB = "true";
+			}
+			if (inputActiveObject["emailSignInInput"] && inputActiveObject["passwordSignInInput"]) {
+				determDisabledSIB = "";
+			} else {
+				determDisabledSIB = "true";
+			}
+			
+			document.getElementById("accountCreationButton").disabled = determDisabledACB;
+			document.getElementById("accountSignInButton").disabled = determDisabledSIB;
+		}
 		function goToMain() {
 			document.cookie = id;
 			window.location = "main.html";
@@ -159,17 +182,22 @@
 			if (isSignIn) {
 				$("#loginBox").hide();
 				$("#accountCreationForm").show();
+				
+				document.getElementById("switchCurrentInputForm").innerHTML = "Sign In Instead!";
 			} else {
 				$("#loginBox").show();
 				$("#accountCreationForm").hide();
+
+				document.getElementById("switchCurrentInputForm").innerHTML = "Create An Account Instead!";
 			}
 			isSignIn = !isSignIn
 		}
 
 		function signIn() {
 			email = document.getElementById("emailSignInInput").value;
+
 			firebase.auth().signInWithEmailAndPassword(email, document.getElementById("passwordSignInInput").value).catch(function (error) {
-				alert("Invalid email/password");
+				alert("Your email or password in invalid! Please try again!");
 			});
 		}
 
@@ -179,15 +207,15 @@
 			name = document.getElementById("nameInput").value;
 			userExist = false;
 			if (name && email && password) {
-				if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+				if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) && email.split("@")[1]=="adastraschool.org") {
 					firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
-						document.getElementById("errorMessage").innerHTML = "There was a problem creating a new account";
+						document.getElementById("errorMessage").innerHTML = "There was an error in attempting to create your account!";
 					})
 				} else {
-					alert("Invalid email");
+					alert("Your email is invalid or is not registered with adastraschool.org! Please try again!");
 				}
 			} else {
-				document.getElementById("errorMessage").innerHTML = "Fill in fields"
+				document.getElementById("errorMessage").innerHTML = "All input fields must be filled to create an account!"
 				$("#creationFailure").modal("show");
 			}
 		}
