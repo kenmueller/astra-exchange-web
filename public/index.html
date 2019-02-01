@@ -58,6 +58,14 @@
 			#switchCurrentInputForm {
 				font-size: 15px;
 			}
+			#downloadIosAppButton {
+				margin: auto;
+				margin-top: 40px;
+				display: block;
+				height: 60px;
+				width: 300px;
+				font-size: 25px;
+			}
 		</style>
 </head>
 
@@ -84,6 +92,11 @@
 	</div>
 	<div class="flexContainer">
 		<button class="btn btn-light" id="switchCurrentInputForm" onclick="changeForm()">Create An Account Instead!</button>
+	</div>
+	<div class="flexContainer"></div>
+		<form action="app.ipa" method="GET">
+			<button class="btn btn-primary" id="downloadIosAppButton">Download iOS App</button>
+		</form>
 	</div>
 	<div class="modal fade" id="creationFailure" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
 	 aria-hidden="true">
