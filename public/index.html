@@ -124,7 +124,7 @@
 						name = snapshot.val()
 					}).then(function() {
 						goToMain()
-					});
+					})
 				} else {
 					firebase.database().ref('users/' + id).set({
 						balance: 0,
@@ -132,23 +132,11 @@
 						name: name,
 						pin: (Math.floor(Math.random() * 10000) + 10000).toString().substring(1)
 					}).then(function() {
-						firebase.database().ref('companies/' + id).set({
-							pv: 0,
-							name: name + "\'s Company",
-							industry: "Unspecified"
-						}).then(function() {
-							firebase.database().ref('companies/' + id + "/products").push({
-								name: name + "\'s First Product",
-								quantity: 10,
-								cost: 1
-							}).then(function() {
-								goToMain()
-							});
-						});
-					});
-				};
-			};
-		});
+						goToMain()
+					})
+				}
+			}
+		})
 
 		function goToMain() {
 			document.cookie = id;
