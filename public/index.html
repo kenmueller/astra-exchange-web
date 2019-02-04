@@ -138,7 +138,11 @@
 				}
 			}
 		})
-
+		function registerInput(idOfInput) {
+			inputActiveObject[idOfInput] = (document.getElementById(idOfInput).value != "");
+			let determDisabledACB;
+			let determDisabledSIB;
+			 
 			if (inputActiveObject["nameInput"] && inputActiveObject["emailInput"] && inputActiveObject["passwordInput"]) {
 				determDisabledACB = "";
 			} else {
