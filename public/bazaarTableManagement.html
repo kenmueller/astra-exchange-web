@@ -1,0 +1,193 @@
+<html lang="en" class="gr__bazaartablemanagement_000webhostapp_com"><head>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,700" rel="stylesheet">
+    <script defer src="/__/firebase/5.7.3/firebase-app.js"></script>
+    <script defer src="/__/firebase/5.7.3/firebase-auth.js"></script>
+    <script defer src="/__/firebase/5.7.3/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.7.3/firebase.js"></script>
+    <script defer src="/__/firebase/init.js"></script>
+    <title>Bazaar Table Order Management</title>
+    <meta name="google-signin-scope" content="profile email">
+    <style>
+      body {
+        overflow: scroll;
+      }
+      * {
+        font-family: Nunito;
+        font-weight: 200;
+        text-align: center;
+      }
+      h1 {
+        font-size: 50px;
+        margin-top: 15px;
+        margin-bottom: -10px;
+      }
+      h2 {
+        margin-bottom: 40px;
+      }
+      .table {
+        height: 100px;
+        width: 100px;
+        background: white;
+        border-style: solid;
+        border-color: gray;
+        vertical-align: middle;
+        line-height: 100px;
+        font-size: 30px;
+        transition: background-color 0.1s ease-out;
+      }
+      .table:hover {
+        background: gray;
+        cursor: pointer;
+      }
+      #EnglishRoom:hover {
+        background: white;
+        cursor: default;
+      }
+      #Kitchen:hover {
+        background: white;
+        cursor: default;
+      }
+      #selectedTable:hover {
+        background: white;
+        cursor: default;
+      }
+      #tableOwnership:hover {
+        background: white;
+        cursor: default;
+      }
+      #tableCost:hover {
+        background: white;
+        cursor: default;
+      }
+      #iTradeContainer:hover {
+        background: white;
+        cursor: default;
+      }
+      input, button {
+        font-family: Lato;
+        width: 400px;
+        height: 100px;
+        font-size: 30px;
+        border-style: solid;
+        border-color: gray;
+        opacity: 0.8;
+        transition: opacity 0.2s ease-out;
+      }
+      input:focus {
+        outline: none;
+        opacity: 1;
+      }
+      button:focus {
+        outline-color: gray;
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body data-gr-c-s-loaded="true" style="">
+
+    <!--<div id="cover" style="background:#D3D3D3;height:100%;width:100%;position:absolute;z-index:10000;"></div>-->
+    <h1>Bazaar Table Order Management</h1>
+    <h2>Spring Bazaar</h2>
+      <div class="table" style="position:absolute;margin-left:1050px;z-index:-1;height:510px;width:220px;margin-top:-5px;"></div>
+      <h3 style="margin-bottom:-60px;margin-left:1070px;margin-top:30px;text-align:left;font-size:28px;font-weight: 400;">Selected Table</h3>
+      <div class="table" id="selectedTable" style="position:absolute;margin-left:1060px;margin-top:80px;width:200px;opacity:0.7;font-size:25px;"></div>
+      <h3 style="font-size:20px;margin-bottom:-60px;margin-left:1090px;margin-top:30px;text-align:left;font-size:28px;font-weight: 400;margin-top:200px;position:absolute;">Ownership</h3>
+      <div class="table" id="tableOwnership" style="position:absolute;margin-left:1060px;margin-top:80px;width:200px;opacity:0.7;font-size:25px;margin-top:250px;"></div>
+      <h3 style="font-size:20px;margin-bottom:-60px;margin-left:1130px;margin-top:30px;text-align:left;font-size:28px;font-weight: 400;margin-top:370px;position:absolute;">Cost</h3>
+      <div class="table" id="tableCost" style="position:absolute;margin-left:1060px;margin-top:80px;width:200px;opacity:0.7;font-size:25px;margin-top:420px;"></div>
+    <button style="margin-left:-47.5%;position:absolute;margin-top:300px;" onclick="purchaseItemSetUp()">Reserve Table</button>
+    <section id="tables">
+      <div id="Lobby" class="table" style="width:200px;margin-left:800px;" onclick="submit(this.id)">Lobby</div>
+      <div id="conferenceRoom" class="table" style="font-size:20px;line-height:100px;width:200px;height:100px;margin-left:800px;margin-top:10px;" onclick="submit(this.id)">Conference Room</div>
+      <div id="EnglishRoom" class="table" style="font-size:20px;line-height:200px;width:200px;height:200px;margin-left:540px;transition: none;margin-top: -210px;transition: background-color 0s ease-out;">English Room</div>
+      <div id="T1" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:530px;margin-top:20px;" onclick="submit(this.id)">T1</div>
+      <div id="T12" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:600px;margin-top:-36px;" onclick="submit(this.id)">T12</div>
+      <div id="T2" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:470px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">T2</div>
+      <div id="T3" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:470px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">T3</div>
+      <div id="T4" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:470px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">T4</div>
+      <div id="T5" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:470px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">T5</div>
+      <div id="T6" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:470px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">T6</div>
+      <div id="T7" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:470px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">T7</div>
+      <div id="T8" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:530px;margin-top:20px;" onclick="submit(this.id)">T8</div>
+      <div id="T9" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:600px;margin-top:-36px;" onclick="submit(this.id)">T9</div>
+      <div id="K1" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:670px;margin-top:-300px;transform: rotate(90deg);" onclick="submit(this.id)">K1</div>
+      <div id="K6" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:705px;margin-top:-36px;transform: rotate(90deg);" onclick="submit(this.id)">K6</div>
+      <div id="K2" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:670px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">K2</div>
+      <div id="K3" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:670px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">K3</div>
+      <div id="K4" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:670px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">K4</div>
+      <div id="K5" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:670px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">K5</div>
+       <div id="K7" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:705px;margin-top:-36px;transform: rotate(90deg);" onclick="submit(this.id)">K7</div>
+      <div class="table" id="Kitchen" style="font-size:20px;line-height:200px;width:200px;height:200px;margin-left:750px;transition: none;margin-top: -230px;transition: background-color 0s ease-out;">Kitchen</div>
+      <div id="T10" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:730px;margin-top:-270px;" onclick="submit(this.id)">T10</div>
+      <div id="T11" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:800px;margin-top:-36px;" onclick="submit(this.id)">T11</div>
+      <div class="table" id="antarcticTable" style="font-size:20px;line-height:80px;width:200px;height:80px;margin-left:750px;margin-top: 240px;" onclick="submit(this.id)">Antarctica Table</div>
+    </section>
+    <script>
+      let tableCost;
+      let tableOwner;
+      let selectedTableName;
+      let payerUsername;
+      const id = document.cookie;
+      let userBalance;
+      let config = {
+        apiKey: "AIzaSyDOfmd3fntDblft3mhjccRiEggWu_t5fW0",
+        authDomain: "astra-exchange.firebaseapp.com",
+        databaseURL: "https://astra-exchange.firebaseio.com",
+        projectId: "astra-exchange",
+        storageBucket: "astra-exchange.appspot.com",
+        messagingSenderId: "946665066699"
+      };
+      firebase.initializeApp(config);
+      let defaultDatabase = firebase.database();
+      function loadUserData() {
+        return firebase.database().ref('users/' + id).once('value').then(function(snapshot) {
+          userBalance = snapshot.val().balance;
+          payerUsername = snapshot.val().name;
+        });
+      }
+      function submit(tableId) {
+        return firebase.database().ref('bazaarData/bazaarTables/' + tableId).once('value').then(function(snapshot) {
+          tableCost = snapshot.val().cost;
+          tableOwner =  snapshot.val().owner ? snapshot.val().owner : "Unreserved!";
+          selectedTableName = tableId;
+
+          document.getElementById("selectedTable").innerHTML = tableId;
+          document.getElementById("tableCost").innerHTML = tableCost+"A";
+          document.getElementById("tableOwnership").innerHTML = tableOwner;
+        });
+      }
+      function purchaseItemSetUp() {
+        if (tableCost && tableOwner) {
+          if (userBalance >= tableCost) {
+            const confirmPurchase = confirm("Are you sure that you would like to purchase "+selectedTableName+" for "+tableCost+"A?");
+            if (confirmPurchase) {
+              firebase.database().ref("users/" + id + "/bazaarTableOrders/").push({
+        				time: getDate(),
+                username: payerUsername,
+                table: selectedTableName,
+        				amount: tableCost,
+        				balance: userBalance - tableCost,
+        			}).then(function() {
+        				submit(selectedTableName)
+        			})
+            }
+          } else {
+            alert("You lack sufficient funding!");
+          }
+        } else {
+          alert("You haven't selected a table yet!");
+        }
+      }
+      function getDate() {
+    		const dateList = Date().split(" ")
+    		let timeOfDay = " AM"
+    		const dateTime = (dateList[4].split(":")[0] % 12)+":"+dateList[4].split(":")[1]
+    		if (dateList[4].split(":")[0] > 11) {
+    		timeOfDay = " PM"
+    		}
+    		return dateList[1]+" "+dateList[2]+", "+dateList[3]+" @ "+dateTime+timeOfDay
+    	}
+      loadUserData();
+    </script>
+  </body>
+</html>

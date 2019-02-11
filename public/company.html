@@ -246,6 +246,7 @@
       }
       #sdButton {
         width: 200px;
+        margin-top: 10px;
       }
       #eProducts {
         width: 300px;
@@ -262,10 +263,11 @@
         top: 24vw;
         left: 50%;
         width: 700px;
+        margin-top: 20px;
         transform: translate(-50%, -50%);
       }
       #sellingContainer {
-        margin-top: 70px;
+        margin-top: 46px;
       }
       #productNameInput, #productQuantityInput, #productCostInput {
         width: 30%;
@@ -303,6 +305,79 @@
         30% { opacity: 0; }
         100% { opacity: 1; }
       }
+      #alertDeveloper {
+        margin-bottom: 10px;
+        margin-top: 20px;
+      }
+
+      /* Checkbox Styling */
+      .container {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      /* Hide the browser's default checkbox */
+      .container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+      }
+
+      /* Create a custom checkbox */
+      .checkmark {
+        position: absolute;
+        top: 0;
+        margin-left: 5px;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+      }
+
+      /* On mouse-over, add a grey background color */
+      .container:hover input ~ .checkmark {
+        background-color: #ccc;
+      }
+
+      /* When the checkbox is checked, add a blue background */
+      .container input:checked ~ .checkmark {
+        background-color: #2196F3;
+      }
+
+      /* Create the checkmark/indicator (hidden when not checked) */
+      .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+      }
+
+      /* Show the checkmark when checked */
+      .container input:checked ~ .checkmark:after {
+        display: block;
+      }
+
+      /* Style the checkmark/indicator */
+      .container .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+      }
     </style>
   </head>
   <body>
@@ -334,9 +409,10 @@
           <option value="Savory Foods">Savory Foods</option>
           <option value="Non-Tech Materialistic Products">Non-Tech Materialistic Products</option>
           <option value="Non-Baked Sweets">Non-Baked Sweets</option>
-          <option value="Unnamed">Unnamed : If your company's industry is unnamed, please inform Kai!</option>
+          <option value="Unspecified">Unspecified</option>
         </select>
       </div>
+      <h5 id="alertDeveloper"></h5>
       <div class="centerBox">
         <button onclick="saveData()" id="sdButton" class="btn btn-primary">Save Configuration</button>
       </div>
@@ -356,7 +432,7 @@
           </thead>
           <tbody id="productList">
           </tbody>
-        </table>    
+        </table>
         <video autoplay="autoplay" class="active" id="preview"></video>
       </div>
       </div>
@@ -380,7 +456,6 @@
                 </tbody>
               </table>
               <input placeholder="Product Name" class="form-control" id="productNameInput">
-              <input placeholder="Product Quantity" class="form-control" type="Number" id="productQuantityInput">
               <input placeholder="Product Cost" class="form-control" type="Number" id="productCostInput">
               <button onclick="saveNewProduct()" class="btn btn-primary" id="saveProductButton">Save Product</button>
             </div>
@@ -401,6 +476,7 @@
       let customerId;
       let compPv;
       let idOfCurrentProduct;
+      let productData = {};
       let lastProductId = 1;
       let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
       let currentSetting = 0;
@@ -424,26 +500,41 @@
       }
       function saveNewProduct() {
         const newProdName = document.getElementById("productNameInput").value;
-        const newProdCost = document.getElementById("productCostInput").value;
-        const newProdQuant = document.getElementById("productQuantityInput").value;
+        const newProdCost = Number(document.getElementById("productCostInput").value);
         firebase.database().ref('companies/' + id + "/products").push({
           name: newProdName,
           cost: newProdCost,
-          quantity: newProdQuant
+          inStock: true
         }).then(function() {
           alert("Product Addition Successful!");
         });
       }
+      function changeStock(pId) {
+        const productDBId = pId.split("|")[0];
+        const productNumId = pId.split("|")[1];
+        const productDataList = productSaves[productNumId];
+        const productName = productDataList[0];
+        const productCost = productDataList[1];
+        const productInStock = !productDataList[2];
+        const checkValue = !document.getElementById(pId).checked;
+        console.log(checkValue)
+        firebase.database().ref('companies/' + id + '/products/' + productDBId).set({
+          name: productName,
+          cost: productCost,
+          inStock: !checkValue
+        }).then(function() {
+          console.log("Successful inStock change!")
+        })
+      }
       function loadCompData() {
+        console.log("Loading Company Data...")
         let compData = firebase.database().ref('companies/' + id);
         compData.on('value', function(snapshot) {
             if (snapshot.val()) {
-              for (target of document.getElementById("productListConfig").children) {
-                target.remove();
-              }
-              for (target of document.getElementById("productList").children) {
-                target.remove();
-              }
+              document.getElementById("compNameInput").value = "";
+              document.getElementById("productListConfig").innerHTML = "";
+              document.getElementById("productList").innerHTML = "";
+
               name = snapshot.val().name;
               compPv = snapshot.val().pv;
               products = snapshot.val().products;
@@ -451,50 +542,75 @@
               $("#selectIndustry").val(industryOC).select();
               //document.getElementById("profileImage").src = profileImage;
               document.getElementById("compTitle").innerHTML = name;
-              document.getElementById("currentPV").innerHTML = "Current PV: "+compPv;
+              document.getElementById("currentPV").innerHTML = "Current PV: "+compPv+"A";
               document.getElementById("compIndustry").innerHTML = "Industry: "+industryOC;
+              if (industryOC == "Unspecified") {
+                document.getElementById("alertDeveloper").innerHTML = "<i>If your company's industry isn't listed, please inform Kai!</i>"
+              } else {
+                document.getElementById("alertDeveloper").innerHTML = "";
+              }
               productSaves = {};
               lastProductId = 1;
               try {
-                for (target of Object.keys(products)) {
-                    const currentProduct = products[target];
-                    const productName = currentProduct.name;
-                    const productCost = currentProduct.cost;
-                    const productQuant = currentProduct.quantity;
-                    const newProductSave = [productName, productCost, productQuant];
-                    productSaves[lastProductId] = newProductSave;
-                    const newProductDisplay = document.createElement("tr");
-                    const productIdDisplay = document.createElement("th");
-                    const productNameDisplay = document.createElement("th");
-                    const productCostDisplay = document.createElement("th");
-                    const productQuantDisplay = document.createElement("th");
-                    const buttonContainer = document.createElement("th");
-                    const deleteButton = document.createElement("button");
-                    productIdDisplay.innerHTML = lastProductId;
-                    productNameDisplay.innerHTML = productName;
-                    productCostDisplay.innerHTML = productCost+"A";
-                    productQuantDisplay.innerHTML = productQuant;
-                    deleteButton.innerHTML = "X";
-                    deleteButton.style.marginBottom = "0px";
-                    deleteButton.style.marginTop = "0px";
-                    deleteButton.style.height = "40px";
-                    deleteButton.className = "btn btn-danger";
-                    deleteButton.id = target;
-                    deleteButton.setAttribute('onclick','deleteProduct(this.id)');
-                    deleteButton.style.width = "100%";
-                    buttonContainer.appendChild(deleteButton);
-                    newProductDisplay.appendChild(productIdDisplay);
-                    newProductDisplay.appendChild(productNameDisplay);
-                    newProductDisplay.appendChild(productCostDisplay);
-                    newProductDisplay.appendChild(productQuantDisplay);
-                    const modalList = newProductDisplay.cloneNode(true);
-                    modalList.appendChild(buttonContainer)
-                    document.getElementById("productListConfig").appendChild(modalList);
-                    document.getElementById("productList").appendChild(newProductDisplay);
-                    lastProductId += 1;
+                if (products) {
+                  for (target of Object.keys(products)) {
+                      const currentProduct = products[target];
+                      const productName = currentProduct.name;
+                      const productCost = currentProduct.cost;
+                      const productInStock = currentProduct.inStock;
+                      const newProductSave = [productName, productCost, productInStock];
+                      productSaves[lastProductId] = newProductSave;
+                      const newProductDisplay = document.createElement("tr");
+                      const productIdDisplay = document.createElement("th");
+                      const productNameDisplay = document.createElement("th");
+                      const productCostDisplay = document.createElement("th");
+                      const productInStockDisplay = document.createElement("th");
+                      const buttonContainer = document.createElement("th");
+                      const deleteButton = document.createElement("button");
+
+                      const newCheckBoxContainer = document.createElement("label");
+                      const newCheckBox = document.createElement("input");
+                      const newCheckMark = document.createElement("span");
+
+                      newCheckBoxContainer.className = "container";
+                      newCheckBox.type = "checkbox";
+                      newCheckMark.className = "checkmark";
+                      newCheckBox.id = target+"|"+lastProductId;
+                      newCheckBox.onclick = function() { changeStock(this.id) };
+
+                      newCheckBoxContainer.appendChild(newCheckBox);
+                      newCheckBoxContainer.appendChild(newCheckMark);
+
+                      productIdDisplay.innerHTML = lastProductId;
+                      productNameDisplay.innerHTML = productName;
+                      productCostDisplay.innerHTML = productCost+"A";
+                      newCheckBox.checked = productInStock;
+                      productInStockDisplay.innerHTML = productInStock ? "In Stock" : "Sold Out";
+                      newProductDisplay.style.textDecoration = productInStock ? "" : "line-through";
+                      deleteButton.innerHTML = "X";
+                      deleteButton.style.marginBottom = "0px";
+                      deleteButton.style.marginTop = "0px";
+                      deleteButton.style.height = "40px";
+                      deleteButton.className = "btn btn-danger";
+                      deleteButton.id = target;
+                      deleteButton.setAttribute('onclick','deleteProduct(this.id)');
+                      deleteButton.style.width = "100%";
+                      buttonContainer.appendChild(deleteButton);
+
+                      newProductDisplay.appendChild(productIdDisplay);
+                      newProductDisplay.appendChild(productNameDisplay);
+                      newProductDisplay.appendChild(productCostDisplay);
+                      newProductDisplay.appendChild(productInStockDisplay);
+                      const modalList = newProductDisplay.cloneNode(true);
+                      modalList.appendChild(newCheckBoxContainer);
+                      modalList.appendChild(buttonContainer)
+                      document.getElementById("productListConfig").appendChild(modalList);
+                      document.getElementById("productList").appendChild(newProductDisplay);
+                      lastProductId += 1;
+                  }
                 }
               } catch(error) {
-                alert("There has been an error!");
+                alert("There has been an error! '" + error + "'");
               }
               $("#companyInterface").show();
               $("#loadingData").hide();
@@ -503,7 +619,7 @@
               } else {
                 document.getElementById("loadingData").innerHTML = "No Company Data Exists! Go and Alert Ken that He Fudged With The Database!";
               }
-            });  
+            });
         }
       Instascan.Camera.getCameras().then(function (cameras) {
         if (cameras.length > 0) {
@@ -534,12 +650,14 @@
                     const companyWealth = Number(snapshot.val());
                     const newCompWealth = customerWealth+productPrice;
                     const newCustomerWealth = companyWealth+productPrice;
-                    firebase.database().ref('users/' + customerId + "/balance").set({
-                      newCustomerWealth
-                    });
-                    firebase.database().ref('users/' + id + "/balance").set({
-                      newCompWealth
-                    });
+                    firebase.database().ref('transactions/' + id).push({
+              				time: getDate(),
+              				from: customerId,
+              				to: id,
+              				amount: productPrice,
+              				balance: id + productPrice,
+              				message: document.getElementById("noteInput").value,
+              			})
                     alert("Your transaction was successful! Thank you very much!");
                   });
                 }
@@ -608,7 +726,9 @@
           console.log("Key: "+key);
           if (Object.keys(productSaves).includes(key+"") && currentSetting == 1) {
             idOfCurrentProduct = key;
-            document.getElementById("currentPidDisplay").innerHTML = "<i>"+productSaves[idOfCurrentProduct][0]+"</i>";
+            if (productSaves[idOfCurrentProduct][2]) {
+              document.getElementById("currentPidDisplay").innerHTML = "<i>"+productSaves[idOfCurrentProduct][0]+" : "+productSaves[idOfCurrentProduct][1]+"A"+"</i>";
+            }
           }
       }
       closeSellingMenu();

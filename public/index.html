@@ -60,11 +60,13 @@
 			}
 			#downloadIosAppButton {
 				margin: auto;
-				margin-top: 40px;
+				margin-top: 20px;
 				display: block;
-				height: 60px;
-				width: 300px;
-				font-size: 25px;
+				height: 30px;
+				width: 250px;
+				font-size: 15px;
+				line-height: 17px;
+				vertical-align: middle;
 			}
 		</style>
 </head>
@@ -155,7 +157,7 @@
 			inputActiveObject[idOfInput] = (document.getElementById(idOfInput).value != "");
 			let determDisabledACB;
 			let determDisabledSIB;
-			 
+
 			if (inputActiveObject["nameInput"] && inputActiveObject["emailInput"] && inputActiveObject["passwordInput"]) {
 				determDisabledACB = "";
 			} else {
@@ -166,7 +168,7 @@
 			} else {
 				determDisabledSIB = "true";
 			}
-			
+
 			document.getElementById("accountCreationButton").disabled = determDisabledACB;
 			document.getElementById("accountSignInButton").disabled = determDisabledSIB;
 		}
@@ -179,7 +181,7 @@
 			if (isSignIn) {
 				$("#loginBox").hide();
 				$("#accountCreationForm").show();
-				
+
 				document.getElementById("switchCurrentInputForm").innerHTML = "Sign In Instead!";
 			} else {
 				$("#loginBox").show();
@@ -187,7 +189,7 @@
 
 				document.getElementById("switchCurrentInputForm").innerHTML = "Create An Account Instead!";
 			}
-			isSignIn = !isSignIn
+			isSignIn = !isSignIn;
 		}
 
 		function signIn() {
