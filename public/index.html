@@ -94,9 +94,10 @@
 		<button class="btn btn-light" id="switchCurrentInputForm" onclick="changeForm()">Create An Account Instead!</button>
 	</div>
 	<div class="flexContainer"></div>
-		<form action="app.ipa" method="GET">
+		<!-- <form action="itms-services://?action=download-manifest&url=manifest.plist">
 			<button class="btn btn-primary" id="downloadIosAppButton">Download iOS App</button>
-		</form>
+		</form> -->
+		<a href="itms-services://?action=download-manifest&url=manifest.plist" id="text"> Download App </a> 
 	</div>
 	<div class="modal fade" id="creationFailure" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
 	 aria-hidden="true">
