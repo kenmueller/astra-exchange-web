@@ -1,5 +1,9 @@
 {
 	"rules": {
+		"bazaarData": {
+			".read": true,
+			".write": false
+		},
 		"companies": {
 			".read": "auth != null",
 			"$uid": {

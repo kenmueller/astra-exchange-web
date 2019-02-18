@@ -176,7 +176,7 @@
 </head>
 <body>
 	<div id="headerBox" class="flexContainer">
-	<img id="logo" src="https://i.imgur.com/ufHYGd9.png"/>
+		<img id="logo" src="https://i.imgur.com/ufHYGd9.png"/>
 	</div>
 	<div id="iconBar">
 	<img id="debitCardConfigure" onclick="showPin()" class="menuIcon" src="https://i.imgur.com/2kCccpj.png">
@@ -292,7 +292,7 @@
 		email = snapshot.val().email
 		document.getElementById("userDisplay").innerHTML = name
 		document.getElementById("wealthLabel").innerHTML = "Wealth: "
-		document.getElementById("wealthDisplay").innerHTML = userBalance
+		document.getElementById("wealthDisplay").innerHTML = userBalance + "A";
 		if (recievedBalance && change) {
 			$( "#wealthDisplay" ).animate({
 			color: "#98FB98"
@@ -343,14 +343,18 @@
 		} else if (amount <= 0) {
 		alert("Invalid amount")
 		} else {
-		firebase.database().ref('transactions/' + id).push({
-			time: getDate(),
-			from: id,
-			to: document.getElementById("receiver").value,
-			amount: amount,
-			balance: userBalance - amount,
-			message: document.getElementById("noteInput").value,
-		})
+			firebase.database().ref('transactions/' + id).push({
+				time: getDate(),
+				from: id,
+				to: document.getElementById("receiver").value,
+				amount: amount,
+				balance: userBalance - amount,
+				message: document.getElementById("noteInput").value,
+			}).then(function() {
+				document.getElementById("receiver").value = "";
+				document.getElementById("astrasToExchange").value = "";
+				document.getElementById("noteInput").value = "";
+			})
 		}
 	}
 	function loginUser() {
@@ -393,7 +397,7 @@
 		} else {
 		return 0
 		}
-	}      
+	}
 	loadTransHist()
 	loadUserData()
 	loadReceiverData()
