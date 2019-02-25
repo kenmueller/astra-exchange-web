@@ -162,16 +162,6 @@
 		margin-top: -52px;
 		margin-left: 420px;
 	}
-	#pinInput {
-		width: 280px;
-		margin: auto;
-	}
-	#currentPin {
-		margin-bottom: 20px;
-	}
-	#savePinButton {
-		margin-top: 20px;
-	}
 	</style>
 </head>
 <body>
@@ -179,7 +169,6 @@
 		<img id="logo" src="https://i.imgur.com/ufHYGd9.png"/>
 	</div>
 	<div id="iconBar">
-	<img id="debitCardConfigure" onclick="showPin()" class="menuIcon" src="https://i.imgur.com/2kCccpj.png">
 	<img id="companyInterface" onclick="window.location.href='company.html'" class="menuIcon" src="https://i.imgur.com/aLgqM1V.png">
 	<img id="graphWorksIcon" class="menuIcon" src="https://i.imgur.com/OM7iXc9.png">
 	</div>
@@ -223,21 +212,6 @@
 	</div>
 	</div>
 </div>
-	<div class="modal fade" id="debitCardSettings" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content" id="modalContainer">
-		<div class="modal-header">
-			<h5 class="modal-title" id="ceModalLabel">Debit Card Configuration</h5>
-		</div>
-		<div class="modal-body" id="transModalMain">
-			<h2 id="currentPin">Current PIN: </h2>
-			<input id="pinInput" class="form-control" type="number" placeholder="Change PIN"/>
-			<button class="btn btn-primary" id="savePinButton" onclick="savePin()">Save</button>
-		</div>
-		<div class="modal-footer">
-			<button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeButton">Close</button>
-		</div>
-		</div>
 	</div>
 	</div>
 	<script>
@@ -259,9 +233,9 @@
 		messagingSenderId: "946665066699"
 	};
 	firebase.initializeApp(config)
-	let defaultDatabase = firebase.database()
+	let db = firebase.database()
 	function loadTransHist() {
-		firebase.database().ref('transactions/'+id).on('child_added', function(snapshot) {
+		db.ref('transactions/'+id).on('child_added', function(snapshot) {
 			const receiverId = snapshot.val().to
 			const payerId = snapshot.val().from
 			const astrasInvolved = snapshot.val().amount
@@ -272,9 +246,9 @@
 			if (transNote) {
 				transNoteAddOn = " [ "+transNote+" ]"
 			}
-			return firebase.database().ref('users/' + receiverId + '/name').once('value').then(function(snapshot) {
+			return db.ref('users/' + receiverId + '/name').once('value').then(function(snapshot) {
 				const receiverName = snapshot.val()
-				return firebase.database().ref('users/' + payerId + '/name').once('value').then(function(snapshot) {
+				return db.ref('users/' + payerId + '/name').once('value').then(function(snapshot) {
 					const payerName = snapshot.val()
 					newTrans.innerHTML = astrasInvolved+"A : "+payerName+" -> "+receiverName + " | "+dateOfTrans + transNoteAddOn
 					newTrans.style.borderStyle = "solid"
@@ -285,7 +259,7 @@
 		})
 	}
 	function loadUserData() {
-		firebase.database().ref('users/' + id).on('value', function(snapshot) {
+		db.ref('users/' + id).on('value', function(snapshot) {
 		name = snapshot.val().name
 		change = !(userBalance > snapshot.val().balance)
 		userBalance = snapshot.val().balance
@@ -314,7 +288,7 @@
 		})
 	}
 	function loadReceiverData() {
-		let userData = firebase.database().ref('users')
+		let userData = db.ref('users')
 		userData.on('child_added', function(snapshot) {
 		receiverName = snapshot.val().name
 		receiverId = snapshot.key
@@ -343,7 +317,7 @@
 		} else if (amount <= 0) {
 		alert("Invalid amount")
 		} else {
-			firebase.database().ref('transactions/' + id).push({
+			db.ref('transactions/' + id).push({
 				time: getDate(),
 				from: id,
 				to: document.getElementById("receiver").value,
@@ -372,24 +346,6 @@
 	}
 	function viewTransactions() {
 		$("#transactionHistory").modal("show")
-	}
-	function showPin() {
-		$("#debitCardSettings").modal("show")
-		return firebase.database().ref('users/' + id + "/pin").once('value').then(function(snapshot) {
-		const pinNum = snapshot.val()
-		document.getElementById("currentPin").innerHTML = "PIN: "+pinNum
-		})
-	}
-	function savePin() {
-		const newPin = document.getElementById("pinInput").value
-		firebase.database().ref('users/' + id).set({
-		balance: userBalance,
-		email: email,
-		name: name,
-		pin: newPin
-		})
-		document.getElementById("pinInput").value = ""
-		$("#debitCardSettings").modal("hide")
 	}
 	function findDecPoints(num) {
 		if (num.includes(".")) {
