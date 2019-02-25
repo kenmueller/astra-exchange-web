@@ -26,7 +26,7 @@
 		"transactions": {
 			"$uid": {
 				".read": "$uid === auth.uid",
-				".write": "$uid === auth.uid",
+				".write": "$uid === auth.uid || (root.child('cards/' + $uid).exists() && root.child('users/' + root.child('cards/' + $uid).val() + '/cards/' + $uid).val())",
 				"$transactionId": {
 					".write": "!data.exists()",
 					"time": {
@@ -36,7 +36,7 @@
 						".validate": "newData.isString() && root.child('users/' + newData.val()).exists()"
 					},
 					"to": {
-						".validate": "newData.isString() && root.child('users/' + newData.val()).exists()"
+						".validate": "newData.isString() && newData.val() != $uid && root.child('users/' + newData.val()).exists()"
 					},
 		  			"amount": {
 						".validate": "newData.isNumber() && ((newData.val() > 0 && newData.val() <= root.child('users/' + $uid + '/balance').val()) || auth.uid === 'h621pgey1vPfxrmoW5LUkZaHkhT2')"
@@ -76,10 +76,14 @@
 				}
 			}
 		},
+		"cards": {
+			"$cardId": {
+				".read": "newData.val() === auth.uid"
+			}
+		},
 		"users": {
-			".read": true,
-			".write": true,
 			"$uid": {
+				".read": true,
 				".write": "!data.exists()",
 				"name": {
 					".validate": "newData.isString() && newData.val() != ''"
@@ -90,8 +94,10 @@
 				"balance": {
 					".validate": "newData.val() === 0"
 				},
-				"pin": {
-					".validate": "newData.isString() && newData.val().length === 4"
+				"cards": {
+					"$cardId": {
+						".validate": "newData.isBoolean()"
+					}
 				}
 			}
 		}
