@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
     <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
@@ -15,7 +16,6 @@
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Nunito:600,700" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
     <title>Astra Exchange</title>
@@ -90,6 +90,10 @@
       }
       #logo {
         margin-top: 20px;
+        width: 150px;
+        height: 150px;
+        border-style: solid;
+        border-color: lightgray;
       }
       #copyright {
         text-align: right;
@@ -172,7 +176,7 @@
       }
       #iconBar {
         margin-top: -66px;
-        margin-left: 400px;
+        margin-left: 350px;
       }
       #pinInput {
         width: 280px;
@@ -217,7 +221,7 @@
         width: 120px;
       }
       #configureSale {
-        margin-right: 350px;
+        margin-right: 315px;
         margin-top: -165px;
       }
       input {
@@ -378,6 +382,23 @@
         -ms-transform: rotate(45deg);
         transform: rotate(45deg);
       }
+      #openClModalButton {
+        width: 200px;
+        margin-top: -20px;
+        vertical-align: middle;
+      }
+      #clModalContent {
+        height: 600px;
+        overflow: visible;
+      }
+      #displayInput {
+        border-style: solid;
+        border-color: lightgray;
+        margin-top: 20px;
+      }
+      #saveLogoButton {
+        width: 400px;
+      }
     </style>
   </head>
   <body>
@@ -388,13 +409,14 @@
       </div>
       <div id="iconBar">
         <img id="userInterface" onclick="window.location.href='main.html'" class="menuIcon" src="https://i.imgur.com/ufHYGd9.png">
-        <img id="graphWorksIcon" class="menuIcon" src="https://i.imgur.com/OM7iXc9.png">
+        <img id="graphWorksIcon" onclick="window.location.href='investData.html?comp=index'" class="menuIcon" src="https://i.imgur.com/OM7iXc9.png">
       </div>
       <div id="configureSale"/>
         <button class="btn btn-light configureSale" id="configureButton" onclick="closeSellingMenu()">Configuring</button>
         <button class="btn btn-light configureSale" id="saleButton" onclick="openSellingMenu()">Selling</button>
       </div>
       <h1 id="title">Company Interface</h1>
+      <button class="btn btn-primary" id="openClModalButton" onclick="openChangeLogoModal()">Change Logo</button>
       <h3 id="customerDataDisplay">
         <h3 id="currentPidDisplay"><i>No Product Selected!</i></h3>
         <h3 id="currentCNameDisplay"><i>No Customer Active!</i></h3>
@@ -466,18 +488,38 @@
         </div>
       </div>
     </div>
+    <div class="modal fade" id="changeLogo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content" id="clModalContent">
+          <div class="modal-header">
+            <h5 class="modal-title" id="plModalLabel">Change Company Logo</h5>
+          </div>
+          <div class="modal-body" id="tableContainer">
+            <input type="file" id="logoInput" class="form-control-file" onchange="previewFile()">
+            <img id="displayInput">
+            <button onclick="saveLogo()" class="btn btn-primary" id="saveLogoButton">Save Logo</button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="closeClModal" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <script>
       let id = document.cookie;
+      const d = new Date();
       let name;
       let compBalance;
       let user = [];
       let productSaves = {};
       let industryOC;
-      let customerId;
-      let compPv;
+      let compLogo;
+      let currentNewLogoData;
       let idOfCurrentProduct;
       let productData = {};
       let lastProductId = 1;
+      let cameraPermitted = false;
+      let reader = new FileReader();
       let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
       let currentSetting = 0;
       $("#companyInterface").hide();
@@ -493,6 +535,7 @@
       };
       firebase.initializeApp(config);
       let defaultDatabase = firebase.database();
+      let storage = firebase.storage();
       function deleteProduct(pId) {
         firebase.database().ref('companies/' + id + "/products/" + pId).remove().then(function() {
           loadCompData();
@@ -506,6 +549,8 @@
           cost: newProdCost,
           inStock: true
         }).then(function() {
+          document.getElementById("productNameInput").value = "";
+          document.getElementById("productCostInput").value = "";
           alert("Product Addition Successful!");
         });
       }
@@ -527,7 +572,7 @@
         })
       }
       function loadCompData() {
-        console.log("Loading Company Data...")
+        console.log("Loading Company Data...");
         let compData = firebase.database().ref('companies/' + id);
         compData.on('value', function(snapshot) {
             if (snapshot.val()) {
@@ -536,13 +581,13 @@
               document.getElementById("productList").innerHTML = "";
 
               name = snapshot.val().name;
-              compPv = snapshot.val().pv;
+              compLogo = snapshot.val().logo ? snapshot.val().logo : "https://i.imgur.com/lBJXFA9.png";
               products = snapshot.val().products;
               industryOC = snapshot.val().industry;
+
+              document.getElementById("logo").src = compLogo;
               $("#selectIndustry").val(industryOC).select();
-              //document.getElementById("profileImage").src = profileImage;
               document.getElementById("compTitle").innerHTML = name;
-              document.getElementById("currentPV").innerHTML = "Current PV: "+compPv+"A";
               document.getElementById("compIndustry").innerHTML = "Industry: "+industryOC;
               if (industryOC == "Unspecified") {
                 document.getElementById("alertDeveloper").innerHTML = "<i>If your company's industry isn't listed, please inform Kai!</i>"
@@ -621,46 +666,41 @@
               }
             });
         }
-      Instascan.Camera.getCameras().then(function (cameras) {
-        if (cameras.length > 0) {
-          scanner.start(cameras[0]);
-          document.getElementById("preview").style.background = "";
-        } else {
-          console.error('No cameras found.');
-        }
-      }).catch(function (e) {
-        console.error(e);
-      });
       scanner.addListener('scan', function (content) {
-        customerId = content;
-        const enteredPin = prompt("Enter your PIN:");
+        const newContent = CryptoJS.AES.decrypt(content, "1r80823f8u2380r0h82f0hdobufhaw-qji2edjqwidnbq39r02qbf").toString(CryptoJS.enc.Utf8);
+        const cardId = newContent.split("|")[1];
+        const customerId = newContent.split("|")[0];
         let userPin;
         return firebase.database().ref('users/' + customerId).once('value').then(function(snapshot) {
-          userPin = snapshot.val().pin;
-          const customerWealth = Number(snapshot.val().balance);
-          const customerName = snapshot.val().name;
-          document.getElementById("currentCNameDisplay").innerHTML = customerName;
-          const productPrice = Number(productSaves[idOfCurrentProduct][1]);
-          const confirmConfidence = confirm("Are you sure you would like to purchase a \""+productSaves[idOfCurrentProduct][0]+"\" for "+productPrice+"A?");
-          document.getElementById("currentCNameDisplay").innerHTML = customerName;
           if (idOfCurrentProduct) {
-            if (enteredPin == userPin) {
-                if (confirmConfidence) {
-                  return firebase.database().ref('users/' + id + "/balance").once('value').then(function(snapshot) {
-                    const companyWealth = Number(snapshot.val());
-                    const newCompWealth = customerWealth+productPrice;
-                    const newCustomerWealth = companyWealth+productPrice;
-                    firebase.database().ref('transactions/' + id).push({
-              				time: getDate(),
-              				from: customerId,
-              				to: id,
-              				amount: productPrice,
-              				balance: id + productPrice,
-              				message: document.getElementById("noteInput").value,
-              			})
-                    alert("Your transaction was successful! Thank you very much!");
-                  });
-                }
+            const customerWealth = snapshot.val().balance;
+            const productPrice = Number(productSaves[idOfCurrentProduct][1]);
+
+            if (customerWealth >= productPrice) {
+              const customerWealth = Number(snapshot.val().balance);
+              const customerName = snapshot.val().name;
+              document.getElementById("currentCNameDisplay").innerHTML = customerName;
+
+              const confirmConfidence = confirm("Are you sure you would like to purchase a \""+productSaves[idOfCurrentProduct][0]+"\" for "+productPrice+"A?");
+              document.getElementById("currentCNameDisplay").innerHTML = customerName;
+              if (confirmConfidence) {
+                return firebase.database().ref('users/' + id + "/balance").once('value').then(function(snapshot) {
+                  const companyWealth = Number(snapshot.val());
+                  const newCompWealth = customerWealth+productPrice;
+                  const newCustomerWealth = companyWealth+productPrice;
+                  firebase.database().ref('transactions/' + id).push({
+            				time: getDate(),
+            				from: cardId,
+            				to: id,
+            				amount: productPrice,
+            				balance: companyWealth + productPrice,
+            				message: "Product Purchase"
+            			})
+                  alert("Your transaction was successful! You now have " + (customerWealth - productPrice) + " Astras!");
+                });
+              }
+            } else {
+              alert("You lack sufficient funds to purchase this product! Wealth : " + customerWealth + "A")
             }
           } else {
             alert("A product has yet to be selected!")
@@ -671,6 +711,7 @@
         currentSetting = 0;
         console.log("Closing Down...");
         document.getElementById("title").innerHTML = "Company Configurations";
+        $("#openClModalButton").show();
         $("#currentCNameDisplay").hide();
         $("#currentPidDisplay").hide();
         $("#compTitle").show();
@@ -685,9 +726,29 @@
         $("#eProducts").show();
       }
       function openSellingMenu() {
-        currentSetting = 1;
-        document.getElementById("title").innerHTML = name;
+        if (!cameraPermitted) {
+          Instascan.Camera.getCameras().then(function (cameras) {
+            if (cameras.length > 0) {
+              cameraPermitted = true;
+              scanner.start(cameras[0]);
+              document.getElementById("preview").style.background = "";
+              currentSetting = 1;
+              document.getElementById("title").innerHTML = name;
+              openSellingMenuDisplays();
+            } else {
+              alert("No cameras found!");
+            }
+          }).catch(function (e) {
+            closeSellingMenu();
+          });
+        }
+        if (cameraPermitted) {
+          openSellingMenuDisplays();
+        }
+      }
+      function openSellingMenuDisplays() {
         console.log("Selling!");
+        $("#openClModalButton").hide();
         $("#currentCNameDisplay").show();
         $("#currentPidDisplay").show();
         $("#customerDataDisplay").show();
@@ -704,18 +765,23 @@
       function saveData() {
         let newIndustry = document.getElementById("selectIndustry").value;
         let newName = document.getElementById("compNameInput").value;
+
         if (newName) {
           name = newName;
         }
+        products = products ? products : "";
         firebase.database().ref('companies/' + id).set({
           industry: newIndustry,
           name: name,
           products: products,
-          pv: compPv
+          logo: compLogo
         });
       }
       function openProductsConfig() {
         $("#productsConfig").modal("show");
+      }
+      function openChangeLogoModal() {
+        $("#changeLogo").modal("show");
       }
       document.onkeydown = function(e){
           e = e || window.event;
@@ -731,6 +797,46 @@
             }
           }
       }
+      function previewFile() {
+        let preview = document.createElement("img");
+        let file = document.getElementById("logoInput").files[0];
+
+        const imgData = reader.readAsDataURL(file);
+
+        reader.onload = function(e) {
+
+          currentNewLogoData = e.target.result;
+          document.getElementById("displayInput").src = currentNewLogoData;
+        };
+      }
+      function saveLogo() {
+        if (currentNewLogoData) {
+          let file = document.getElementById("logoInput").files[0];
+
+          products = products ? products : "";
+          firebase.database().ref("companies/" + id).set({
+            logo: currentNewLogoData,
+            industry: industryOC,
+            name: name,
+            products: products
+          }).then(function() {
+            alert("Success!");
+            document.getElementById("logo").src = currentNewLogoData;
+            document.getElementById("closeClModal").click();
+          });
+        } else {
+          alert("No file data exists!");
+        }
+      }
+      function getDate() {
+    		const dateList = Date().split(" ")
+    		let timeOfDay = " AM"
+    		const dateTime = (dateList[4].split(":")[0] % 12)+":"+dateList[4].split(":")[1]
+    		if (dateList[4].split(":")[0] > 11) {
+    		timeOfDay = " PM"
+    		}
+    		return dateList[1]+" "+dateList[2]+", "+dateList[3]+" @ "+dateTime+timeOfDay
+    	}
       closeSellingMenu();
       loadCompData();
     </script>

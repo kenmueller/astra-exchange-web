@@ -89,16 +89,17 @@
 		<input class="form-control" placeholder="Email" onKeyUp="registerInput(this.id)" id="emailSignInInput" />
 		<input class="form-control" placeholder="Password" onKeyUp="registerInput(this.id)" type="password" id="passwordSignInInput" />
 		<div class="flexContainer">
-			<button id="accountSignInButton" onclick="signIn()" class="btn btn-secondary" disabled="true">Log In</button>
+			<button id="accountSignInButton" onclick="signIn()" class="btn btn-secondary">Log In</button>
 		</div>
 	</div>
 	<div class="flexContainer">
 		<button class="btn btn-light" id="switchCurrentInputForm" onclick="changeForm()">Create An Account Instead!</button>
 	</div>
 	<div class="flexContainer"></div>
-		<form action="app.ipa" method="GET">
+		<!-- <form action="itms-services://?action=download-manifest&url=manifest.plist">
 			<button class="btn btn-primary" id="downloadIosAppButton">Download iOS App</button>
-		</form>
+		</form> -->
+		<a href="itms-services://?action=download-manifest&url=manifest.plist" id="text"> Download App </a> 
 	</div>
 	<div class="modal fade" id="creationFailure" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
 	 aria-hidden="true">
@@ -196,7 +197,7 @@
 			email = document.getElementById("emailSignInInput").value;
 
 			firebase.auth().signInWithEmailAndPassword(email, document.getElementById("passwordSignInInput").value).catch(function (error) {
-				alert("Your email or password in invalid! Please try again!");
+				alert("Your email or password in invalid and you can't log in! Make sure you entered your email and password correctly!");
 			});
 		}
 

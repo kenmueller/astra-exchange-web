@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link rel="shortcut icon" href="https://i.imgur.com/OM7iXc9.png">
+    <script defer src="/__/firebase/5.7.3/firebase-app.js"></script>
+    <script defer src="/__/firebase/5.7.3/firebase-auth.js"></script>
+    <script defer src="/__/firebase/5.7.3/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.7.3/firebase.js"></script>
+    <script defer src="/__/firebase/init.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:600,700" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <title id="documentTitle">GraphWorks</title>
+    <style>
+      *,h1,h2,h3 {
+        font-family: Nunito;
+      }
+      #scrollInvestData {
+        border-bottom-style: solid;
+        border-top-style: solid;
+        width: 80%;
+        border-color: lightgray;
+        margin-left: 200px;
+      }
+      #aasdaqLogo {
+        margin-bottom: -50px;
+      }
+      .compEntry {
+        border-style: solid;
+        border-color: lightgray;
+        width: 380px;
+        margin-left: 10px;
+        margin-right: 10px;
+        height: 300px;
+        margin-top: 15px;
+        margin-bottom: 10px;
+        margin-bottom: 100px;
+        display: table-cell;
+        vertical-align: middle;
+      }
+      .logoImg {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 150px;
+        height: 150px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border-style: solid;
+        border-color: lightgray;
+      }
+      .compRowOne {
+      }
+      .compRow, .compRowOne {
+        height: 340px;
+        width: 1050px;
+        margin: auto;
+        background: rgba(0, 0, 0, 0.01);
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+        border-style: solid;
+        border-color: rgba(0, 0, 0, 0.02);
+      }
+      h5,h6 {
+        text-align: center;
+      }
+      h5 {
+        height: 48px;
+        text-align: center;
+        margin: auto;
+        position: relative;
+      }
+      h6 {
+        color: rgba(0, 0, 0, 0.7);
+      }
+      .pvDisplay {
+        margin-top: 10px;
+      }
+      #iconBar {
+        margin-top: -65px;
+        margin-left: 380px;
+        margin-bottom: 13px;
+      }
+      .menuIcon {
+    		width: 80px;
+    		margin-left: 0px;
+    		margin-right: 10px;
+    		transition: outline-color 0.2s ease-out;
+    		outline-color: rgba(0, 0, 250, 0);
+    	}
+      .menuIcon:hover {
+    		outline: solid;
+    		outline-color: rgba(0, 0, 250, 0.1);
+    	}
+      #exitIcon {
+    		height: 40px;
+    		width: 42px;
+    		margin-top: 10px;
+    		margin-left: 20px;
+    	}
+      #btmIcon {
+    		height: 57px;
+    		margin-bottom: 1.1px;
+    	}
+      #userInterface {
+        width: 57px;
+      }
+      .pvDisplay {
+        margin-top: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="mainDiv">
+      <img src="https://i.imgur.com/J1iAIOw.png" id="aasdaqLogo">
+      <div id="iconBar">
+        <img id="userInterface" onclick="window.location.href='main.html'" class="menuIcon" src="https://i.imgur.com/ufHYGd9.png">
+      	<img id="companyInterface" onclick="window.location.href='company.html'" class="menuIcon" src="https://i.imgur.com/aLgqM1V.png">
+      	<a href="bazaarTableManagement.html"><img id="btmIcon" class="menuIcon" src="https://imgur.com/6t3kyqw.png"></a>
+      </div>
+      <marquee behavior="scroll" direction="left" id="scrollInvestData">Cinnamon Creamery <span style="color:lightgreen">^20%</span> </marquee>
+      <div id="compList">
+      </div>
+    </div>
+    <div id="dataDiv">
+      <h1 id="pageHeader">Financial Data</h1>
+      <h2 id="invCompanyName"></h2>
+      <canvas id="pvGraph" width="800" height="400" style="border:3px solid lightgray; background:rgba(0,0,0,0.01)"
+    </div>
+    <script>
+      let compName;
+      let pvHistObject;
+      let defaultImageLink = "https://i.imgur.com/lBJXFA9.png"
+      let config = {
+    		apiKey: "AIzaSyDOfmd3fntDblft3mhjccRiEggWu_t5fW0",
+    		authDomain: "astra-exchange.firebaseapp.com",
+    		databaseURL: "https://astra-exchange.firebaseio.com",
+    		projectId: "astra-exchange",
+    		storageBucket: "astra-exchange.appspot.com",
+    		messagingSenderId: "946665066699"
+    	};
+    	firebase.initializeApp(config)
+      const monthObject = {1:"Janurary",2:"Feburary",3:"March",4:"April",5:"May",6:"June",7:"July",8:"August",9:"September",10:"October",11:"November",12:"December"};
+
+      $("#dataDiv").hide();
+      function loadInvestmentData(url) {
+          let invCompanyId = decodeURIComponent(url.split('?comp=')[1]);
+          if (invCompanyId!="index") {
+            if (invCompanyId) {
+              $("#dataDiv").show();
+              $("#mainDiv").hide();
+              loadCompInvestData(invCompanyId);
+            } else {
+              document.getElementById("pageHeader").innerHTML = "The Company You're Searching For Doesn't Exist!"
+            }
+          } else {
+            loadIndexData();
+          }
+      }
+      function loadCompInvestData(invCompanyId) {
+        return firebase.database().ref('companies/'+invCompanyId).once('value').then(function(snapshot) {
+          const compLogo = snapshot.val().logo;
+          const compPvHist = pvHistObject[invCompanyId];
+          compName = snapshot.val().name;
+
+          let c = document.getElementById("pvGraph");
+          let ctx = c.getContext("2d");
+          ctx.lineWidth = 6;
+          ctx.strokeStyle = "lightgray";
+          ctx.fillStyle = "rgba(0,0,0,0.1)";
+          ctx.globalCompositeOperation='destination-over';
+
+          let currentLineX = 1;
+          let currentLineY = c.height;
+          for (target of Object.keys(compPvHist)) {
+            const bazaarPv = compPvHist[target].pv;
+
+            //(currentLineX/Object.keys(compPvHist).length)*c.width
+            ctx.moveTo(500, currentLineY);
+            ctx.lineTo(0, (bazaarPv*(c.height/6))+(c.height/2));
+            ctx.stroke();
+            /*ctx.font = "30px Nunito";
+            ctx.fillText();
+            ctx.fillRect();
+            ctx.stroke();*/
+
+            currentLineX += 1;
+            currentLineY -= c.height - (bazaarPv*(c.height/6))+(c.height/2);
+            console.log("Iter: "+currentLineX);
+          }
+          document.getElementById("invCompanyName").innerHTML = compName;
+          document.getElementById("documentTitle").innerHTML = "GraphWorks - "+compName;
+        });
+      }
+      function loadPvHistData() {
+        return firebase.database().ref('pvHist/').once('value').then(function(snapshot) {
+            pvHistObject = snapshot.val();
+
+            let calculatedDates = [];
+            for (target of Object.keys(pvHistObject)) {
+              for (dateData of Object.keys(pvHistObject[target])) {
+                if (!calculatedDates.includes(dateData)) {
+                  let pvDataItems = [];
+                  let pvDataSum = 0;
+
+                  // Sum up all pvs for that date
+                  for (compId of Object.keys(pvHistObject)) {
+                    for (dateOfItem of Object.keys(pvHistObject[compId])) {
+                      if (dateOfItem == dateData) {
+                        const pvHistList = pvHistObject[compId][dateOfItem];
+
+                        pvDataSum += pvHistList.sales;
+                        pvDataItems.push(pvHistList.sales);
+                      }
+                    }
+                  }
+                  const stdPvDev = standardDev(pvDataItems);
+                  const averageSales = pvDataSum / (pvDataItems.length)
+
+                  // Actually edit 'pvHistObject' and add percentages based on sum data
+                  for (compId of Object.keys(pvHistObject)) {
+                    for (dateOfToEditItem of Object.keys(pvHistObject[compId])) {
+                      if (dateOfToEditItem == dateData) {
+                        const pvHistList = pvHistObject[compId][dateOfToEditItem];
+                        pvHistObject[compId][dateOfToEditItem]["pv"] = (pvHistList.sales - averageSales)/stdPvDev;
+                      }
+                    }
+                  }
+                  calculatedDates.push(dateData);
+                }
+              }
+            }
+        })
+      }
+      function countIfPvExist(input) {
+        let counter = 0;
+        for (target of input) {
+          if (Object.keys(pvHistObject).includes(target)) {
+            counter += 1;
+          }
+        }
+        return counter;
+      }
+      function loadIndexData() {
+
+        return firebase.database().ref('companies/').once('value').then(function(snapshot) {
+          compDataExist = false;
+          secTicker = 0;
+          newCompRow = document.createElement("div");
+          newCompRow.className = "compRow";
+          let compCount = countIfPvExist(Object.keys(snapshot.val()))
+        	for (target of Object.keys(snapshot.val())) {
+
+            if (Object.keys(pvHistObject).includes(target)) {
+              const compData = snapshot.val()[target];
+              let currentCompPv;
+              let newCompEntryDisplay = document.createElement("div");
+              let newCompLogo = document.createElement("img");
+              let compNameDisplay = document.createElement("h5");
+              let compLatestPvDisplay = document.createElement("h6");
+              let compIndustryDisplay = document.createElement("h6");
+
+
+              currentCompPv = pvHistObject[target][Object.keys(pvHistObject[target])[Object.keys(pvHistObject[target]).length - 1]].pv + "A";
+
+              newCompLogo.id = target;
+              newCompLogo.onclick = function() { window.location.href = `?comp=${this.id}` }
+              compLatestPvDisplay.className = "pvDisplay";
+              compIndustryDisplay.className = "industryDisplay";
+              newCompLogo.className = "logoImg";
+              newCompEntryDisplay.className = "compEntry";
+              compNameDisplay.innerHTML = compData.name;
+              compLatestPvDisplay.innerHTML = currentCompPv ? currentCompPv : "Start-Up";
+              newCompLogo.src = compData.logo ? compData.logo : defaultImageLink;
+              compIndustryDisplay.innerHTML = compData.industry;
+              if (compData.logo == "companyInterfaceIcon.png") {
+                newCompLogo.src = defaultImageLink;
+              }
+              if (compData.name <= 18) {
+                compNameDisplay.style.marginTop = "10px";
+              }
+              newCompEntryDisplay.style.display = "inline-block";
+
+              console.log(compData.name + " : "+target)
+
+              newCompEntryDisplay.appendChild(newCompLogo)
+              newCompEntryDisplay.appendChild(compNameDisplay);
+              newCompEntryDisplay.appendChild(compLatestPvDisplay);
+              newCompEntryDisplay.appendChild(compIndustryDisplay);
+              newCompRow.appendChild(newCompEntryDisplay);
+
+              secTicker += 1;
+              compCount -= 1;
+              console.log(compCount)
+              if (secTicker == 3 || compCount == 0) {
+                secTicker = 0;
+              }
+              if (secTicker == 0) {
+                const secToAppend = newCompRow;
+                document.getElementById("compList").appendChild(secToAppend);
+                newCompRow = document.createElement("div");
+                newCompRow.className = "compRow";
+              }
+            }
+          }
+        })
+      }
+      function getMonth() {
+        const DateObj = new Date();
+        const currentMonth = DateObj.getMonth();
+        return monthObject[currentMonth+1];
+      }
+      function getInvestDate() {
+    		const dateList = Date().split(" ");
+    		return `${dateList[2]},${getSeason()},${dateList[3]}`;
+      }
+      function toPercent(x) {
+        const sigFigures = x.split(".")[1];
+        return `${sigFigures.substring(0,2)}.${sigFigures.substring(2,3)}%`;
+      }
+      function standardDev(data) {
+        let sum = 0;
+        const count = data.length;
+
+        for (target of data) {
+          sum += target;
+        }
+
+        const average = sum / count;
+        console.log("Avg : " + average)
+
+        let squareDiffSum = 0;
+
+        for (target of data) {
+          squareDiffSum += Math.pow((target - average), 2);
+        }
+        console.log("squareDiffSum : ", squareDiffSum)
+        return Math.sqrt(squareDiffSum);
+      }
+      loadPvHistData();
+      loadInvestmentData(window.location.href);
+    </script>
+  </body>
+</html>

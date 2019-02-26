@@ -160,7 +160,7 @@
 	}
 	#iconBar {
 		margin-top: -52px;
-		margin-left: 420px;
+		margin-left: 560px;
 	}
 	#pinInput {
 		width: 280px;
@@ -172,6 +172,20 @@
 	#savePinButton {
 		margin-top: 20px;
 	}
+	#btmIcon {
+		height: 57px;
+		margin-bottom: 1.1px;
+	}
+	#soButton {
+		margin-top: 20px;
+		width: 250px;
+	}
+	#exitIcon {
+		height: 40px;
+		width: 42px;
+		margin-top: 10px;
+		margin-left: 5px;
+	}
 	</style>
 </head>
 <body>
@@ -179,9 +193,10 @@
 		<img id="logo" src="https://i.imgur.com/ufHYGd9.png"/>
 	</div>
 	<div id="iconBar">
-	<img id="debitCardConfigure" onclick="showPin()" class="menuIcon" src="https://i.imgur.com/2kCccpj.png">
 	<img id="companyInterface" onclick="window.location.href='company.html'" class="menuIcon" src="https://i.imgur.com/aLgqM1V.png">
-	<img id="graphWorksIcon" class="menuIcon" src="https://i.imgur.com/OM7iXc9.png">
+	<img id="graphWorksIcon" onclick="window.location.href='investData.html?comp=index'" class="menuIcon" src="https://i.imgur.com/OM7iXc9.png">
+	<a href="bazaarTableManagement.html"><img id="btmIcon" class="menuIcon" src="https://imgur.com/6t3kyqw.png"></a>
+	<img id="exitIcon" class="menuIcon" src="https://i.imgur.com/N5tesXB.png" onclick="signOutUser()">
 	</div>
 	<h1 id="title">Astra Exchange Network</h1>
 	<div class="flexContainer">
@@ -223,21 +238,6 @@
 	</div>
 	</div>
 </div>
-	<div class="modal fade" id="debitCardSettings" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content" id="modalContainer">
-		<div class="modal-header">
-			<h5 class="modal-title" id="ceModalLabel">Debit Card Configuration</h5>
-		</div>
-		<div class="modal-body" id="transModalMain">
-			<h2 id="currentPin">Current PIN: </h2>
-			<input id="pinInput" class="form-control" type="number" placeholder="Change PIN"/>
-			<button class="btn btn-primary" id="savePinButton" onclick="savePin()">Save</button>
-		</div>
-		<div class="modal-footer">
-			<button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeButton">Close</button>
-		</div>
-		</div>
 	</div>
 	</div>
 	<script>
@@ -260,8 +260,16 @@
 	};
 	firebase.initializeApp(config)
 	let defaultDatabase = firebase.database()
+	function signOutUser() {
+		firebase.auth().signOut().then(function() {
+		  console.log('Signed Out');
+			window.location.href = "index.html";
+		}, function(error) {
+		  console.error('Sign Out Error', error);
+		});
+	}
 	function loadTransHist() {
-		firebase.database().ref('transactions/'+id).on('child_added', function(snapshot) {
+		db.ref('transactions/'+id).on('child_added', function(snapshot) {
 			const receiverId = snapshot.val().to
 			const payerId = snapshot.val().from
 			const astrasInvolved = snapshot.val().amount
@@ -272,9 +280,9 @@
 			if (transNote) {
 				transNoteAddOn = " [ "+transNote+" ]"
 			}
-			return firebase.database().ref('users/' + receiverId + '/name').once('value').then(function(snapshot) {
+			return db.ref('users/' + receiverId + '/name').once('value').then(function(snapshot) {
 				const receiverName = snapshot.val()
-				return firebase.database().ref('users/' + payerId + '/name').once('value').then(function(snapshot) {
+				return db.ref('users/' + payerId + '/name').once('value').then(function(snapshot) {
 					const payerName = snapshot.val()
 					newTrans.innerHTML = astrasInvolved+"A : "+payerName+" -> "+receiverName + " | "+dateOfTrans + transNoteAddOn
 					newTrans.style.borderStyle = "solid"
@@ -285,7 +293,7 @@
 		})
 	}
 	function loadUserData() {
-		firebase.database().ref('users/' + id).on('value', function(snapshot) {
+		db.ref('users/' + id).on('value', function(snapshot) {
 		name = snapshot.val().name
 		change = !(userBalance > snapshot.val().balance)
 		userBalance = snapshot.val().balance
@@ -314,7 +322,7 @@
 		})
 	}
 	function loadReceiverData() {
-		let userData = firebase.database().ref('users')
+		let userData = db.ref('users')
 		userData.on('child_added', function(snapshot) {
 		receiverName = snapshot.val().name
 		receiverId = snapshot.key
@@ -339,10 +347,8 @@
 	function makeDirectExchange() {
 		const amount = Number(document.getElementById("astrasToExchange").value)
 		if (userBalance < amount) {
-		alert("Insufficient balance")
-		} else if (amount <= 0) {
-		alert("Invalid amount")
-		} else {
+			alert("You have insufficient wealth to complete this transaction!");
+		} else if (amount > 0 || id=="h621pgey1vPfxrmoW5LUkZaHkhT2") {
 			firebase.database().ref('transactions/' + id).push({
 				time: getDate(),
 				from: id,
@@ -355,6 +361,8 @@
 				document.getElementById("astrasToExchange").value = "";
 				document.getElementById("noteInput").value = "";
 			})
+		} else {
+			alert("You can't transact negative (or non-existent) astras, you fool!");
 		}
 	}
 	function loginUser() {
@@ -372,24 +380,6 @@
 	}
 	function viewTransactions() {
 		$("#transactionHistory").modal("show")
-	}
-	function showPin() {
-		$("#debitCardSettings").modal("show")
-		return firebase.database().ref('users/' + id + "/pin").once('value').then(function(snapshot) {
-		const pinNum = snapshot.val()
-		document.getElementById("currentPin").innerHTML = "PIN: "+pinNum
-		})
-	}
-	function savePin() {
-		const newPin = document.getElementById("pinInput").value
-		firebase.database().ref('users/' + id).set({
-		balance: userBalance,
-		email: email,
-		name: name,
-		pin: newPin
-		})
-		document.getElementById("pinInput").value = ""
-		$("#debitCardSettings").modal("hide")
 	}
 	function findDecPoints(num) {
 		if (num.includes(".")) {
