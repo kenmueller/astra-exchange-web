@@ -1,12 +1,11 @@
 {
 	"rules": {
 		"bazaarData": {
-			".read": true,
-			".write": false
+			".read": true
 		},
 		"companies": {
-			".read": "auth != null",
 			"$uid": {
+				".read": "auth != null",
 				".write": "$uid === auth.uid",
 				"products": {
 					"$productId": {
@@ -26,7 +25,7 @@
 		"transactions": {
 			"$uid": {
 				".read": "$uid === auth.uid",
-				".write": "$uid === auth.uid || (root.child('cards/' + $uid).exists() && root.child('users/' + root.child('cards/' + $uid).val() + '/cards/' + $uid).val())",
+				".write": "$uid === auth.uid || root.child('cards/' + $uid).exists()",
 				"$transactionId": {
 					".write": "!data.exists()",
 					"time": {
@@ -39,7 +38,7 @@
 						".validate": "newData.isString() && newData.val() != $uid && root.child('users/' + newData.val()).exists()"
 					},
 		  			"amount": {
-						".validate": "newData.isNumber() && ((newData.val() > 0 && newData.val() <= root.child('users/' + $uid + '/balance').val()) || auth.uid === 'h621pgey1vPfxrmoW5LUkZaHkhT2')"
+						".validate": "(newData.isNumber() && ((newData.val() > 0 && newData.val() <= root.child('users/' + $uid + '/balance').val()) || auth.uid === 'h621pgey1vPfxrmoW5LUkZaHkhT2')) || (newData.isString() && newData.val().length === 2 && auth.uid === 'h621pgey1vPfxrmoW5LUkZaHkhT2')"
 					},
 					"balance": {
 						".validate": "newData.isNumber() && newData.val() >= 0"
@@ -78,7 +77,7 @@
 		},
 		"cards": {
 			"$cardId": {
-				".read": "newData.val() === auth.uid"
+				".read": "data.val() === auth.uid"
 			}
 		},
 		"users": {
@@ -94,9 +93,13 @@
 				"balance": {
 					".validate": "newData.val() === 0"
 				},
+				"independence": {
+					".read": "$uid === auth.uid"
+				},
 				"cards": {
+					".read": "$uid === auth.uid",
 					"$cardId": {
-						".validate": "newData.isBoolean()"
+						".validate": "newData.isString() && newData.val() != ''"
 					}
 				}
 			}
