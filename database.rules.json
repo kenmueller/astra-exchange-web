@@ -125,7 +125,6 @@
 					".read": "$uid === auth.uid"
 				},
 				"cards": {
-					".read": "$uid === auth.uid",
 					"$cardId": {
 						"name": {
 							".validate": "newData.isString() && newData.val() != ''"
@@ -139,4 +138,3 @@
 		}
 	}
 }
-
