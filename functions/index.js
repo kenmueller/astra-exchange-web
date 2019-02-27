@@ -3,7 +3,7 @@ const admin = require('firebase-admin')
 const request = require('request')
 admin.initializeApp()
 
-exports.tableorder = functions.database.ref('users/{uid}/bazaarTableOrders/{bazaarTableOrder}').onCreate((snapshot, context) => {
+exports.tableOrderCreated = functions.database.ref('users/{uid}/bazaarTableOrders/{bazaarTableOrder}').onCreate((snapshot, context) => {
 	const root = snapshot.ref.parent.parent.parent
 	const to = "SEC"
 	const tableOfOrder = snapshot.val().table
@@ -21,7 +21,7 @@ exports.tableorder = functions.database.ref('users/{uid}/bazaarTableOrders/{baza
 	})
 })
 
-exports.transaction = functions.database.ref('transactions/{uid}/{transactionId}').onCreate((snapshot, context) => {
+exports.transactionCreated = functions.database.ref('transactions/{uid}/{transactionId}').onCreate((snapshot, context) => {
 	const root = snapshot.ref.parent.parent.parent
 	const from = context.params.uid
 	const to = snapshot.val().to
@@ -62,13 +62,17 @@ exports.transaction = functions.database.ref('transactions/{uid}/{transactionId}
 	}
 })
 
-exports.user = functions.database.ref('users/{uid}').onCreate((snapshot, context) => {
+exports.userCreated = functions.database.ref('users/{uid}').onCreate((snapshot, context) => {
 	const root = snapshot.ref.parent.parent
 	const uid = context.params.uid
 	const name = snapshot.val().name
 	return Promise.all([
-		root.child(`companies/${uid}`).set({ industry: 'Unspecified', name: `${name}'s Company`, pv: 0, logo: "" }),
+		root.child(`companies/${uid}`).set({ industry: 'Unspecified', name: `${name}'s Company`, pv: 0, logo: '' }),
 		root.child(`companies/${uid}/products`).push({ name: `${name}'s First Product`, inStock: true, cost: 1 }),
-		root.child(`cards`).push(uid)
+		root.child('cards').push(uid)
 	])
+})
+
+exports.cardCreated = functions.database.ref('cards/{cardId}').onCreate((snapshot, context) => {
+	return snapshot.ref.parent.parent.child(`users/${snapshot.val()}/cards/${context.params.cardId}`).set('Debit Card')
 })
