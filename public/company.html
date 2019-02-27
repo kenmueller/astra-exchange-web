@@ -667,43 +667,48 @@
             });
         }
       scanner.addListener('scan', function (content) {
-        const newContent = CryptoJS.AES.decrypt(content, "1r80823f8u2380r0h82f0hdobufhaw-qji2edjqwidnbq39r02qbf").toString(CryptoJS.enc.Utf8);
-        const cardId = newContent.split("|")[1];
-        const customerId = newContent.split("|")[0];
-        let userPin;
-        return firebase.database().ref('users/' + customerId).once('value').then(function(snapshot) {
-          if (idOfCurrentProduct) {
-            const customerWealth = snapshot.val().balance;
-            const productPrice = Number(productSaves[idOfCurrentProduct][1]);
+        const cardId = CryptoJS.AES.decrypt(content, "1r80823f8u2380r0h82f0hdobufhaw-qji2edjqwidnbq39r02qbf").toString(CryptoJS.enc.Utf8);
+        return firebase.database().ref('cards/' + cardId).once('value').then(function(snapshot) {
+          const customerId = snapshot.val();
+          
+          if (customerId) {
+            return firebase.database().ref('users/' + customerId).once('value').then(function(snapshot) {
+              if (idOfCurrentProduct) {
+                const customerWealth = snapshot.val().balance;
+                const productPrice = Number(productSaves[idOfCurrentProduct][1]);
 
-            if (customerWealth >= productPrice) {
-              const customerWealth = Number(snapshot.val().balance);
-              const customerName = snapshot.val().name;
-              document.getElementById("currentCNameDisplay").innerHTML = customerName;
+                if (customerWealth >= productPrice) {
+                  const customerWealth = Number(snapshot.val().balance);
+                  const customerName = snapshot.val().name;
+                  document.getElementById("currentCNameDisplay").innerHTML = customerName;
 
-              const confirmConfidence = confirm("Are you sure you would like to purchase a \""+productSaves[idOfCurrentProduct][0]+"\" for "+productPrice+"A?");
-              document.getElementById("currentCNameDisplay").innerHTML = customerName;
-              if (confirmConfidence) {
-                return firebase.database().ref('users/' + id + "/balance").once('value').then(function(snapshot) {
-                  const companyWealth = Number(snapshot.val());
-                  const newCompWealth = customerWealth+productPrice;
-                  const newCustomerWealth = companyWealth+productPrice;
-                  firebase.database().ref('transactions/' + id).push({
-            				time: getDate(),
-            				from: cardId,
-            				to: id,
-            				amount: productPrice,
-            				balance: companyWealth + productPrice,
-            				message: "Product Purchase"
-            			})
-                  alert("Your transaction was successful! You now have " + (customerWealth - productPrice) + " Astras!");
-                });
+                  const confirmConfidence = confirm("Are you sure you would like to purchase a \""+productSaves[idOfCurrentProduct][0]+"\" for "+productPrice+"A?");
+                  document.getElementById("currentCNameDisplay").innerHTML = customerName;
+                  if (confirmConfidence) {
+                    return firebase.database().ref('users/' + id + "/balance").once('value').then(function(snapshot) {
+                      const companyWealth = Number(snapshot.val());
+                      const newCompWealth = customerWealth+productPrice;
+                      const newCustomerWealth = companyWealth+productPrice;
+                      firebase.database().ref('transactions/' + id).push({
+                				time: getDate(),
+                				from: cardId,
+                				to: id,
+                				amount: productPrice,
+                				balance: companyWealth + productPrice,
+                				message: "Product Purchase"
+                			})
+                      alert("Your transaction was successful! You now have " + (customerWealth - productPrice) + " Astras!");
+                    });
+                  }
+                } else {
+                  alert("You lack sufficient funds to purchase this product! Wealth : " + customerWealth + "A")
+                }
+              } else {
+                alert("A product has yet to be selected!")
               }
-            } else {
-              alert("You lack sufficient funds to purchase this product! Wealth : " + customerWealth + "A")
-            }
+            });
           } else {
-            alert("A product has yet to be selected!")
+            alert("This card's id does not exist in the database! Please alert Kai he fudged up!")
           }
         });
       });
