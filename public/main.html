@@ -295,6 +295,9 @@
 	}
 	function loadUserData() {
 		database.ref('users/' + id).on('value', function(snapshot) {
+			if (isTeacher()) {
+				document.getElementById("astrasToExchange").type = "text"
+			}
 			name = snapshot.val().name
 			change = !(userBalance > snapshot.val().balance)
 			userBalance = snapshot.val().balance
@@ -339,7 +342,7 @@
 		})
 	}
 
-	function isTeacher(id) {
+	function isTeacher() {
 		return id === 'h621pgey1vPfxrmoW5LUkZaHkhT2'
 	}
 
@@ -360,7 +363,7 @@
 				from: id,
 				to: document.getElementById("receiver").value,
 				amount: astrasToExchange,
-				balance: balance,
+				balance: userBalance,
 				message: ''
 			}).then(resetInputs)
 		} else {
