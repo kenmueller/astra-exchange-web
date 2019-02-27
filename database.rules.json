@@ -3,9 +3,13 @@
 		"bazaarData": {
 			".read": true
 		},
+		"pvHist": {
+			".read": true,
+			".write": true
+		},
 		"companies": {
 			"$uid": {
-				".read": "auth != null",
+				".read": true,
 				".write": "$uid === auth.uid",
 				"products": {
 					"$productId": {
@@ -94,7 +98,7 @@
 					".validate": "newData.val() === 0"
 				},
 				"independence": {
-					".read": "$uid === auth.uid"
+					".read": "$uid === auth.uid",
 				},
 				"cards": {
 					".read": "$uid === auth.uid",

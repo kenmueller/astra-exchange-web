@@ -179,6 +179,12 @@
 		margin-top: 10px;
 		margin-left: 5px;
 	}
+	#wealthContainer {
+		width: 100%;
+	}
+	#independenceDisplay {
+		margin-top: -30px;
+	}
 	</style>
 </head>
 <body>
@@ -193,14 +199,14 @@
 	</div>
 	<h1 id="title">Astra Exchange Network</h1>
 	<div class="flexContainer">
-	<img id="profileImage" />
+	<img id="profileImage"/>
 	</div>
 	<div id="mainPage">
 	<div id="mainUserInterface">
 		<h2 id="userDisplay"></h1>
+		<h7 id="independenceDisplay"></h7>
 		<div class="flexContainer">
-		<h2 id="wealthLabel"><h2 id="wealthDisplay"></h2></h2>
-		<h2 id="independence"></h2>
+			<h2 id="wealthLabel"><h2 id="wealthDisplay"></h2></h2>
 		</div>
 		<div id="mainContainer" class="flexContainer">
 		<div id="exchangeBox">
@@ -254,7 +260,7 @@
 		messagingSenderId: "946665066699"
 	};
 	firebase.initializeApp(config)
-	let db = firebase.database()
+	let database = firebase.database()
 	function signOutUser() {
 		firebase.auth().signOut().then(function() {
 		  console.log('Signed Out');
@@ -264,7 +270,7 @@
 		});
 	}
 	function loadTransHist() {
-		db.ref('transactions/'+id).on('child_added', function(snapshot) {
+		database.ref('transactions/'+id).on('child_added', function(snapshot) {
 			const receiverId = snapshot.val().to
 			const payerId = snapshot.val().from
 			const astrasInvolved = snapshot.val().amount
@@ -275,9 +281,9 @@
 			if (transNote) {
 				transNoteAddOn = " [ "+transNote+" ]"
 			}
-			return db.ref('users/' + receiverId + '/name').once('value').then(function(snapshot) {
+			return database.ref('users/' + receiverId + '/name').once('value').then(function(snapshot) {
 				const receiverName = snapshot.val()
-				return db.ref('users/' + payerId + '/name').once('value').then(function(snapshot) {
+				return database.ref('users/' + payerId + '/name').once('value').then(function(snapshot) {
 					const payerName = snapshot.val()
 					newTrans.innerHTML = astrasInvolved+"A : "+payerName+" -> "+receiverName + " | "+dateOfTrans + transNoteAddOn
 					newTrans.style.borderStyle = "solid"
@@ -288,52 +294,52 @@
 		})
 	}
 	function loadUserData() {
-		db.ref('users/' + id).on('value', function(snapshot) {
-		name = snapshot.val().name
-		change = !(userBalance > snapshot.val().balance)
-		userBalance = snapshot.val().balance
-		email = snapshot.val().email
-		independence = snapshot.val().independence
-		document.getElementById("userDisplay").innerHTML = name
-		document.getElementById("wealthLabel").innerHTML = "Wealth: "
-		document.getElementById("wealthDisplay").innerHTML = userBalance + "A";
-		document.getElementById("independence").innerHTML = `Independence level ${independence}`
-		if (recievedBalance && change) {
-			$( "#wealthDisplay" ).animate({
-			color: "#98FB98"
-			}, 200)
-			$( "#wealthDisplay" ).animate({
-			color: "rgba(0, 0, 0, 0.8)"
-			}, 700)
-		} else {
-			if (recievedBalance) {
-			$("#wealthDisplay").animate({
-				color: "#ff6961"
-			}, 200)
-			$("#wealthDisplay").animate({
-				color: "rgba(0, 0, 0, 0.8)"
-			}, 700)
+		database.ref('users/' + id).on('value', function(snapshot) {
+			name = snapshot.val().name
+			change = !(userBalance > snapshot.val().balance)
+			userBalance = snapshot.val().balance
+			email = snapshot.val().email
+			independenceLevel = snapshot.val().independence ? snapshot.val().independence : 3
+			document.getElementById("userDisplay").innerHTML = name
+			document.getElementById("wealthLabel").innerHTML = "Wealth: "
+			document.getElementById("wealthDisplay").innerHTML = userBalance + "A";
+			document.getElementById("independenceDisplay").innerHTML = "<i>Independence Level: "+independenceLevel + "</i>";
+			if (recievedBalance && change) {
+					$( "#wealthDisplay" ).animate({
+					color: "#98FB98"
+					}, 200)
+					$( "#wealthDisplay" ).animate({
+					color: "rgba(0, 0, 0, 0.8)"
+					}, 700)
+			} else {
+					if (recievedBalance) {
+						$("#wealthDisplay").animate({
+							color: "#ff6961"
+						}, 200)
+						$("#wealthDisplay").animate({
+							color: "rgba(0, 0, 0, 0.8)"
+						}, 700)
+					}
 			}
-		}
-		recievedBalance = true
+			recievedBalance = true
 		})
 	}
 	function loadReceiverData() {
-		let userData = db.ref('users')
-		userData.on('child_added', function(snapshot) {
-		receiverName = snapshot.val().name
-		receiverId = snapshot.key
-		if (receiverId != id) {
-			user.push(name)
-			let newReceiverOption = document.createElement("option")
-			newReceiverOption.value = receiverId
-			newReceiverOption.innerHTML = receiverName
-			document.getElementById("receiver").appendChild(newReceiverOption)
-		}
+		console.log("Loading receivers...")
+		database.ref('users').on('child_added', function(snapshot) {
+			receiverName = snapshot.val().name
+			receiverId = snapshot.key
+			console.log(receiverName)
+			if (receiverId != id) {
+				let newReceiverOption = document.createElement("option")
+				newReceiverOption.value = receiverId
+				newReceiverOption.innerHTML = receiverName
+				document.getElementById("receiver").appendChild(newReceiverOption)
+			}
 		})
 	}
 
-	function isTeacher() {
+	function isTeacher(id) {
 		return id === 'h621pgey1vPfxrmoW5LUkZaHkhT2'
 	}
 
@@ -349,7 +355,7 @@
 	function makeDirectExchange() {
 		const astrasToExchange = document.getElementById("astrasToExchange").value
 		if (astrasToExchange.match(/i\d/) && isTeacher()) {
-			db.ref('transactions/' + id).push({
+			database.ref('transactions/' + id).push({
 				time: getDate(),
 				from: id,
 				to: document.getElementById("receiver").value,
@@ -362,7 +368,7 @@
 			if (userBalance < amount) {
 				alert("You have insufficient wealth to complete this transaction!");
 			} else if (amount > 0 || isTeacher()) {
-				db.ref('transactions/' + id).push({
+				database.ref('transactions/' + id).push({
 					time: getDate(),
 					from: id,
 					to: document.getElementById("receiver").value,
@@ -385,13 +391,14 @@
 		email = document.getElementById("emailInput").value
 		const passwordInput = document.getElementById("passwordInput").value
 		firebase.auth().signInWithEmailAndPassword(email, passwordInput).catch(function(error) {
-		var errorCode = error.code
-		var errorMessage = error.message
-		firebase.auth().createUserWithEmailAndPassword(email, passwordInput).catch(function(error) {
-		var errorCode = error.code
-		var errorMessage = error.message
-		})
-		userExist=false
+			var errorCode = error.code
+			var errorMessage = error.message
+
+			firebase.auth().createUserWithEmailAndPassword(email, passwordInput).catch(function(error) {
+				var errorCode = error.code
+				var errorMessage = error.message
+			})
+			userExist=false
 		})
 	}
 	function viewTransactions() {
