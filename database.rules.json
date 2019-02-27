@@ -28,7 +28,7 @@
 		},
 		"transactions": {
 			"$uid": {
-				".read": "$uid === auth.uid",
+				".read": "$uid === auth.uid || root.child('users/' + auth.uid + '/cards/' + $uid).exists()",
 				".write": "$uid === auth.uid || root.child('cards/' + $uid).exists()",
 				"$transactionId": {
 					".write": "!data.exists()",
