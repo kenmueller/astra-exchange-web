@@ -33,7 +33,7 @@
 				"$transactionId": {
 					".write": "!data.exists()",
 					"time": {
-						".validate": "newData.isString()"
+						".validate": "newData.isString() && newData.val() != ''"
 					},
 					"from": {
 						".validate": "newData.isString() && root.child('users/' + newData.val()).exists()"
@@ -53,13 +53,37 @@
 				}
 			}
 		},
+		"pending": {
+			"$pendingId": {
+				".read": true,
+				".write": "!data.exists()",
+				"time": {
+					".validate": "newData.isString() && newData.val() != ''"
+				},
+				"from": {
+					".validate": "newData.isString() && root.child('cards/' + newData.val()).exists()"
+				},
+				"to": {
+					".validate": "newData.isString() && newData.val() != $uid && root.child('users/' + newData.val()).exists()"
+				},
+				"amount": {
+					".validate": "newData.isNumber() && newData.val() > 0"
+				},
+				"balance": {
+					".validate": "newData.isNumber() && newData.val() >= 0"
+				},
+				"pin": {
+					".validate": "newData.isString() && newData.val().length === 4"
+				}
+			}
+		},
 		"invoices": {
 			"$uid": {
 				".read": "$uid === auth.uid",
 				".write": "auth != null",
 				"$invoiceId": {
 					"time": {
-						".validate": "newData.isString()"
+						".validate": "newData.isString() && newData.val() != ''"
 					},
 					"status": {
 						".validate": "newData.val() === 'pending' || newData.val() === 'declined' || newData.val() === 'accepted'"
@@ -103,7 +127,12 @@
 				"cards": {
 					".read": "$uid === auth.uid",
 					"$cardId": {
-						".validate": "newData.isString() && newData.val() != ''"
+						"name": {
+							".validate": "newData.isString() && newData.val() != ''"
+						},
+						"pin": {
+							".validate": "newData.isString() && newData.val().length === 4"
+						}
 					}
 				}
 			}
