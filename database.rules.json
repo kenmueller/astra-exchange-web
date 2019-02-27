@@ -8,8 +8,8 @@
 			".write": true
 		},
 		"companies": {
+      		".read": true,
 			"$uid": {
-				".read": true,
 				".write": "$uid === auth.uid",
 				"products": {
 					"$productId": {
@@ -85,8 +85,8 @@
 			}
 		},
 		"users": {
+      		".read": true,
 			"$uid": {
-				".read": true,
 				".write": "!data.exists()",
 				"name": {
 					".validate": "newData.isString() && newData.val() != ''"
@@ -98,7 +98,7 @@
 					".validate": "newData.val() === 0"
 				},
 				"independence": {
-					".read": "$uid === auth.uid",
+					".read": "$uid === auth.uid"
 				},
 				"cards": {
 					".read": "$uid === auth.uid",
@@ -110,3 +110,4 @@
 		}
 	}
 }
+

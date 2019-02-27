@@ -34,30 +34,30 @@ exports.transaction = functions.database.ref('transactions/{uid}/{transactionId}
 	} else {
 		return root.child(`users/${to}/balance`).once('value').then(balanceSnapshot => {
 			const toBalance = balanceSnapshot.val() + amount / 2
-			if (root.child(`cards/${from}`).exists()) {
-				return root.child(`cards/${from}`).once('value').then(userSnapshot => {
+			return root.child(`cards/${from}`).once('value').then(userSnapshot => {
+				if (userSnapshot.exists()) {
 					return Promise.all([
 						root.child(`transactions/${to}/${context.params.transactionId}`).set({ time: snapshot.val().time, from: userSnapshot.val(), to: to, amount: amount, balance: toBalance, message: snapshot.val().message }),
 						root.child(`users/${userSnapshot.val()}/balance`).set(snapshot.val().balance),
 						root.child(`users/${to}/balance`).set(toBalance)
 					])
-				})
-			} else {
-				if (to == "ATM_Convert") {
-					request({
-						method: 'POST',
-						uri: 'https://io.adafruit.com/api/v2/esadun/feeds/servofeed/data',
-						body: { value: amount },
-						json: true,
-						headers: { 'X-AIO-Key': '26e90ad8e7a5411095f5dd18618265eb' }
-					})
+				} else {
+					if (to == "ATM_Convert") {
+						request({
+							method: 'POST',
+							uri: 'https://io.adafruit.com/api/v2/esadun/feeds/servofeed/data',
+							body: { value: amount },
+							json: true,
+							headers: { 'X-AIO-Key': '26e90ad8e7a5411095f5dd18618265eb' }
+						})
+					}
+					return Promise.all([
+						root.child(`transactions/${to}/${context.params.transactionId}`).set({ time: snapshot.val().time, from: from, to: to, amount: amount, balance: toBalance, message: snapshot.val().message }),
+						root.child(`users/${from}/balance`).set(snapshot.val().balance),
+						root.child(`users/${to}/balance`).set(toBalance)
+					])
 				}
-				return Promise.all([
-					root.child(`transactions/${to}/${context.params.transactionId}`).set({ time: snapshot.val().time, from: from, to: to, amount: amount, balance: toBalance, message: snapshot.val().message }),
-					root.child(`users/${from}/balance`).set(snapshot.val().balance),
-					root.child(`users/${to}/balance`).set(toBalance)
-				])
-			}
+			})
 		})
 	}
 })
