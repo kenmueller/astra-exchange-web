@@ -51,11 +51,11 @@
 		margin-top: 10px;
 		margin-bottom: 20px;
 	}
-	#userDisplay, #wealthDisplay, #wealthLabel {
+	#userDisplay, #wealthDisplay, #wealthLabel, #independence {
 		font-size: 35px;
 		font-weight: 700;
 	}
-	#wealthLabel, #wealthDisplay {
+	#wealthLabel, #wealthDisplay, #independence {
 		margin-top: 10px;
 		margin-right: 5px;
 	}
@@ -200,6 +200,7 @@
 		<h2 id="userDisplay"></h1>
 		<div class="flexContainer">
 		<h2 id="wealthLabel"><h2 id="wealthDisplay"></h2></h2>
+		<h2 id="independence"></h2>
 		</div>
 		<div id="mainContainer" class="flexContainer">
 		<div id="exchangeBox">
@@ -239,6 +240,7 @@
 	let email
 	let userBalance
 	let user = []
+	let independence
 	let recievedBalance = false
 	let change
 	let userExist = true
@@ -252,7 +254,7 @@
 		messagingSenderId: "946665066699"
 	};
 	firebase.initializeApp(config)
-	let defaultDatabase = firebase.database()
+	let db = firebase.database()
 	function signOutUser() {
 		firebase.auth().signOut().then(function() {
 		  console.log('Signed Out');
@@ -291,9 +293,11 @@
 		change = !(userBalance > snapshot.val().balance)
 		userBalance = snapshot.val().balance
 		email = snapshot.val().email
+		independence = snapshot.val().independence
 		document.getElementById("userDisplay").innerHTML = name
 		document.getElementById("wealthLabel").innerHTML = "Wealth: "
 		document.getElementById("wealthDisplay").innerHTML = userBalance + "A";
+		document.getElementById("independence").innerHTML = `Independence level ${independence}`
 		if (recievedBalance && change) {
 			$( "#wealthDisplay" ).animate({
 			color: "#98FB98"
@@ -328,6 +332,11 @@
 		}
 		})
 	}
+
+	function isTeacher() {
+		return id === 'h621pgey1vPfxrmoW5LUkZaHkhT2'
+	}
+
 	function getDate() {
 		const dateList = Date().split(" ")
 		let timeOfDay = " AM"
@@ -338,25 +347,39 @@
 		return dateList[1]+" "+dateList[2]+", "+dateList[3]+" @ "+dateTime+timeOfDay
 	}
 	function makeDirectExchange() {
-		const amount = Number(document.getElementById("astrasToExchange").value)
-		if (userBalance < amount) {
-			alert("You have insufficient wealth to complete this transaction!");
-		} else if (amount > 0 || id=="h621pgey1vPfxrmoW5LUkZaHkhT2") {
-			firebase.database().ref('transactions/' + id).push({
+		const astrasToExchange = document.getElementById("astrasToExchange").value
+		if (astrasToExchange.match(/i\d/) && isTeacher()) {
+			db.ref('transactions/' + id).push({
 				time: getDate(),
 				from: id,
 				to: document.getElementById("receiver").value,
-				amount: amount,
-				balance: userBalance - amount,
-				message: document.getElementById("noteInput").value,
-			}).then(function() {
-				document.getElementById("receiver").value = "";
-				document.getElementById("astrasToExchange").value = "";
-				document.getElementById("noteInput").value = "";
-			})
+				amount: astrasToExchange,
+				balance: balance,
+				message: ''
+			}).then(resetInputs)
 		} else {
-			alert("You can't transact negative (or non-existent) astras, you fool!");
+			const amount = Number(astrasToExchange)
+			if (userBalance < amount) {
+				alert("You have insufficient wealth to complete this transaction!");
+			} else if (amount > 0 || isTeacher()) {
+				db.ref('transactions/' + id).push({
+					time: getDate(),
+					from: id,
+					to: document.getElementById("receiver").value,
+					amount: amount,
+					balance: userBalance - amount,
+					message: document.getElementById("noteInput").value
+				}).then(resetInputs)
+			} else {
+				alert("You can't transact negative (or non-existent) astras, you fool!");
+			}
 		}
+	}
+
+	function resetInputs() {
+		document.getElementById("receiver").value = ""
+		document.getElementById("astrasToExchange").value = ""
+		document.getElementById("noteInput").value = ""
 	}
 	function loginUser() {
 		email = document.getElementById("emailInput").value

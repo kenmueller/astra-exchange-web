@@ -1,9 +1,5 @@
 {
 	"rules": {
-		"pvHist": {
-			".read": true,
-			".write": true
-		},
 		"bazaarData": {
 			".read": true
 		},
@@ -31,7 +27,7 @@
 				".read": "$uid === auth.uid",
 				".write": "$uid === auth.uid || root.child('cards/' + $uid).exists()",
 				"$transactionId": {
-					".write": "!data.exists() && $uid === auth.uid || root.child('debitCardTrans/'+$transactionId).exists()",
+					".write": "!data.exists()",
 					"time": {
 						".validate": "newData.isString()"
 					},

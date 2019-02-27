@@ -4,7 +4,7 @@ const request = require('request')
 admin.initializeApp()
 
 exports.tableorder = functions.database.ref('users/{uid}/bazaarTableOrders/{bazaarTableOrder}').onCreate((snapshot, context) => {
-	const root = snapshot.ref.parent.parent.parent.parent
+	const root = snapshot.ref.parent.parent.parent
 	const to = "SEC"
 	const tableOfOrder = snapshot.val().table
 	const payerName = snapshot.val().username
