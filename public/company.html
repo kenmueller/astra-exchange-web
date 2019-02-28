@@ -670,7 +670,7 @@
         const cardId = CryptoJS.AES.decrypt(content, "1r80823f8u2380r0h82f0hdobufhaw-qji2edjqwidnbq39r02qbf").toString(CryptoJS.enc.Utf8);
         return firebase.database().ref('cards/' + cardId).once('value').then(function(snapshot) {
           const customerId = snapshot.val();
-          
+
           if (customerId) {
             return firebase.database().ref('users/' + customerId).once('value').then(function(snapshot) {
               if (idOfCurrentProduct) {
@@ -681,23 +681,35 @@
                   const customerWealth = Number(snapshot.val().balance);
                   const customerName = snapshot.val().name;
                   document.getElementById("currentCNameDisplay").innerHTML = customerName;
+                  const enteredPin = prompt("Enter User Pin:");
 
                   const confirmConfidence = confirm("Are you sure you would like to purchase a \""+productSaves[idOfCurrentProduct][0]+"\" for "+productPrice+"A?");
                   document.getElementById("currentCNameDisplay").innerHTML = customerName;
                   if (confirmConfidence) {
                     return firebase.database().ref('users/' + id + "/balance").once('value').then(function(snapshot) {
                       const companyWealth = Number(snapshot.val());
-                      const newCompWealth = customerWealth+productPrice;
+                      const newCompWealth = companyWealth+productPrice;
                       const newCustomerWealth = companyWealth+productPrice;
-                      firebase.database().ref('transactions/' + id).push({
+                      firebase.database().ref("pending").push({
                 				time: getDate(),
                 				from: cardId,
                 				to: id,
                 				amount: productPrice,
                 				balance: companyWealth + productPrice,
-                				message: "Product Purchase"
-                			})
-                      alert("Your transaction was successful! You now have " + (customerWealth - productPrice) + " Astras!");
+                				message: "Product Purchase",
+                        pin: enteredPin
+                			}).then(function() {
+                        return firebase.database().ref('users/' + id + "/balance").once('value').then(function(snapshot) {
+                          console.log(snapshot)
+                          const newCompanyWealth = snapshot.val();
+
+                          if (companyWealth == newCompanyWealth) {
+                            alert("Your pin is incorrect! Please re-enter it and try again!");
+                          } else {
+                            alert("Your transaction was successful! You now have " + (customerWealth - productPrice) + " Astras!");
+                          }
+                        });
+                      });
                     });
                   }
                 } else {

@@ -64,7 +64,7 @@
 					".validate": "newData.isString() && root.child('cards/' + newData.val()).exists()"
 				},
 				"to": {
-					".validate": "newData.isString() && newData.val() != $uid && root.child('users/' + newData.val()).exists()"
+					".validate": "newData.isString() && root.child('users/' + newData.val()).exists()"
 				},
 				"amount": {
 					".validate": "newData.isNumber() && newData.val() > 0"
@@ -105,7 +105,7 @@
 		},
 		"cards": {
 			"$cardId": {
-				".read": "data.val() === auth.uid"
+				".read": true
 			}
 		},
 		"users": {
@@ -125,7 +125,8 @@
 					".read": "$uid === auth.uid"
 				},
 				"pin": {
-					".read": "$uid === auth.uid"
+					".read": "$uid === auth.uid",
+					".write": "$uid === auth.uid"
 				},
 				"cards": {
 					".read": "$uid === auth.uid",

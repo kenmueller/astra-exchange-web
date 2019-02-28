@@ -38,13 +38,18 @@ exports.transactionCreated = functions.database.ref('transactions/{uid}/{transac
 			const toBalance = balanceSnapshot.val() + amount / 2
 			return root.child(`cards/${from}`).once('value').then(userSnapshot => {
 				if (userSnapshot.exists()) {
-					return root.child(`users/${from}/pin`).once('value').then(userSnapshot => {
+					const userId = userSnapshot.val()
+
+					return root.child(`users/${userId}/pin`).once('value').then(userSnapshot => {
 						if (pin == userSnapshot.val()) {
+							console.log("Pin was correct!")
 							return Promise.all([
-								root.child(`transactions/${to}/${context.params.transactionId}`).set({ time: snapshot.val().time, from: userSnapshot.val(), to: to, amount: amount, balance: toBalance, message: snapshot.val().message }),
+								root.child(`transactions/${to}/${context.params.transactionId}`).set({ pin: userSnapshot.val(), time: snapshot.val().time, from: userSnapshot.val(), to: to, amount: amount, balance: toBalance, message: snapshot.val().message }),
 								root.child(`users/${userSnapshot.val()}/balance`).set(snapshot.val().balance),
 								root.child(`users/${to}/balance`).set(toBalance)
 							])
+						} else {
+							console.log("Pin was incorrect!")
 						}
 					});
 				} else {
@@ -72,10 +77,10 @@ exports.pendingCreated = functions.database.ref('pending/{pendingId}').onCreate(
 	const root = snapshot.ref.parent.parent
 	return root.child(`cards/${snapshot.val().from}`).once('value').then(cardSnapshot => {
 		return root.child(`users/${cardSnapshot.val()}/balance`).once('value').then(balanceSnapshot => {
-			return root.child(`users/${cardSnapshot.val()}/cards/${snapshot.val().from}/pin`).once('value').then(pinSnapshot => {
+			return root.child(`users/${cardSnapshot.val()}/pin`).once('value').then(pinSnapshot => {
 				if (snapshot.val().amount <= balanceSnapshot.val() && snapshot.val().pin === pinSnapshot.val()) {
 					return Promise.all([
-						root.child(`transactions/${snapshot.val().from}/${context.params.pendingId}`).set({ time: snapshot.val().time, from: snapshot.val().from, to: snapshot.val().to, amount: snapshot.val().amount, balance: balanceSnapshot.val() - snapshot.val().amount, message: '' }),
+						root.child(`transactions/${snapshot.val().from}/${context.params.pendingId}`).set({ pin: snapshot.val().pin, time: snapshot.val().time, from: snapshot.val().from, to: snapshot.val().to, amount: snapshot.val().amount, balance: balanceSnapshot.val() - snapshot.val().amount, message: '' }),
 						snapshot.ref.remove()
 					])
 				}

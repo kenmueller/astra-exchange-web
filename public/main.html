@@ -185,6 +185,9 @@
 	#independenceDisplay {
 		margin-top: -30px;
 	}
+	#debitCardConfigure {
+		margin-right: 4px;
+	}
 	</style>
 </head>
 <body>
@@ -320,8 +323,8 @@
 	}
 	function savePin() {
 		const newPin = document.getElementById("pinInput").value
-		firebase.database().ref('users/' + id + "/pin").set({
-			newPin
+		firebase.database().ref('users/' + id).update({
+			pin: newPin
 		})
 		document.getElementById("pinInput").value = ""
 		$("#debitCardSettings").modal("hide")
