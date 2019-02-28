@@ -5,7 +5,7 @@ admin.initializeApp()
 
 exports.tableOrderCreated = functions.database.ref('users/{uid}/bazaarTableOrders/{bazaarTableOrder}').onCreate((snapshot, context) => {
 	const root = snapshot.ref.parent.parent.parent
-	const to = "SEC"
+	const to = 'SEC'
 	const tableOfOrder = snapshot.val().table
 	const payerName = snapshot.val().username
 	return root.child(`users/${to}/balance`).once('value').then(balanceSnapshot => {
@@ -48,7 +48,7 @@ exports.transactionCreated = functions.database.ref('transactions/{uid}/{transac
 						}
 					});
 				} else {
-					if (to == "ATM_Convert") {
+					if (to == 'ATM_Convert') {
 						request({
 							method: 'POST',
 							uri: 'https://io.adafruit.com/api/v2/esadun/feeds/servofeed/data',
@@ -66,6 +66,22 @@ exports.transactionCreated = functions.database.ref('transactions/{uid}/{transac
 			})
 		})
 	}
+})
+
+exports.pendingCreated = functions.database.ref('pending/{pendingId}').onCreate((snapshot, context) => {
+	const root = snapshot.ref.parent.parent
+	return root.child(`cards/${snapshot.val().from}`).once('value').then(cardSnapshot => {
+		return root.child(`users/${cardSnapshot.val()}/balance`).once('value').then(balanceSnapshot => {
+			return root.child(`users/${cardSnapshot.val()}/cards/${snapshot.val().from}/pin`).once('value').then(pinSnapshot => {
+				if (snapshot.val().amount <= balanceSnapshot.val() && snapshot.val().pin === pinSnapshot.val()) {
+					return Promise.all([
+						root.child(`transactions/${snapshot.val().from}/${context.params.pendingId}`).set({ time: snapshot.val().time, from: snapshot.val().from, to: snapshot.val().to, amount: snapshot.val().amount, balance: balanceSnapshot.val() - snapshot.val().amount, message: '' }),
+						snapshot.ref.remove()
+					])
+				}
+			})
+		})
+	})
 })
 
 exports.userCreated = functions.database.ref('users/{uid}').onCreate((snapshot, context) => {
