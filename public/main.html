@@ -192,6 +192,7 @@
 		<img id="logo" src="https://i.imgur.com/ufHYGd9.png"/>
 	</div>
 	<div id="iconBar">
+	<img id="debitCardConfigure" class="menuIcon" onclick="showPin()" src="https://i.imgur.com/XNRzL8b.png" />
 	<img id="companyInterface" onclick="window.location.href='company.html'" class="menuIcon" src="https://i.imgur.com/aLgqM1V.png">
 	<img id="graphWorksIcon" onclick="window.location.href='investData.html?comp=index'" class="menuIcon" src="https://i.imgur.com/OM7iXc9.png">
 	<a href="bazaarTableManagement.html"><img id="btmIcon" class="menuIcon" src="https://imgur.com/6t3kyqw.png"></a>
@@ -238,19 +239,36 @@
 	</div>
 	</div>
 </div>
+<div class="modal fade" id="debitCardSettings" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+	<div class="modal-content" id="modalContainer">
+	<div class="modal-header">
+		<h5 class="modal-title" id="ceModalLabel">Debit Card Configuration</h5>
+	</div>
+	<div class="modal-body" id="transModalMain">
+		<h2 id="currentPin">Current PIN: </h2>
+		<input id="pinInput" class="form-control" type="number" placeholder="Change PIN"/>
+		<button class="btn btn-primary" id="savePinButton" onclick="savePin()">Save</button>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeButton">Close</button>
 	</div>
 	</div>
+</div>
 	<script>
 	let id = document.cookie
 	let name
 	let email
 	let userBalance
 	let user = []
-	let independence
+	let independenceLevel;
 	let recievedBalance = false
 	let change
 	let userExist = true
 	let transHistItems=[]
+	let cards;
+	let bazaarTableOrders;
+	let tablesReserved;
 	let config = {
 		apiKey: "AIzaSyDOfmd3fntDblft3mhjccRiEggWu_t5fW0",
 		authDomain: "astra-exchange.firebaseapp.com",
@@ -293,16 +311,35 @@
 			})
 		})
 	}
+	function showPin() {
+		$("#debitCardSettings").modal("show")
+		return firebase.database().ref('users/' + id + "/pin").once('value').then(function(snapshot) {
+			const pinNum = snapshot.val()
+			document.getElementById("currentPin").innerHTML = "PIN: "+pinNum
+		})
+	}
+	function savePin() {
+		const newPin = document.getElementById("pinInput").value
+		firebase.database().ref('users/' + id + "/pin").set({
+			newPin
+		})
+		document.getElementById("pinInput").value = ""
+		$("#debitCardSettings").modal("hide")
+	}
 	function loadUserData() {
 		database.ref('users/' + id).on('value', function(snapshot) {
 			if (isTeacher()) {
 				document.getElementById("astrasToExchange").type = "text"
 			}
+			cards = snapshot.val().cards;
+			bazaarTableOrders = snapshot.val().bazaarTableOrders;
+
 			name = snapshot.val().name
 			change = !(userBalance > snapshot.val().balance)
 			userBalance = snapshot.val().balance
 			email = snapshot.val().email
-			independenceLevel = snapshot.val().independence ? snapshot.val().independence : 3
+			independenceLevel = snapshot.val().independence ? snapshot.val().independence : 2
+			tablesReserved = snapshot.val().tablesReserved;
 			document.getElementById("userDisplay").innerHTML = name
 			document.getElementById("wealthLabel").innerHTML = "Wealth: "
 			document.getElementById("wealthDisplay").innerHTML = userBalance + "A";
