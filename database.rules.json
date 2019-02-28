@@ -64,7 +64,7 @@
 					".validate": "newData.isString() && root.child('cards/' + newData.val()).exists()"
 				},
 				"to": {
-					".validate": "newData.isString() && newData.val() != $uid && root.child('users/' + newData.val()).exists()"
+					".validate": "newData.isString() && root.child('users/' + newData.val()).exists()"
 				},
 				"amount": {
 					".validate": "newData.isNumber() && newData.val() > 0"
