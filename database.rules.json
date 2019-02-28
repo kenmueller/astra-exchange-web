@@ -109,7 +109,7 @@
 			}
 		},
 		"users": {
-      ".read": true,
+      	".read": true,
 			"$uid": {
 				".write": "!data.exists()",
 				"name": {
