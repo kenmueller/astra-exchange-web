@@ -91,6 +91,7 @@ exports.userCreated = functions.database.ref('users/{uid}').onCreate((snapshot, 
 	return Promise.all([
 		root.child(`companies/${uid}`).set({ industry: 'Unspecified', name: `${name}'s Company`, pv: 0, logo: '' }),
 		root.child(`companies/${uid}/products`).push({ name: `${name}'s First Product`, inStock: true, cost: 1 }),
+		root.child(`users/${uid}/independence`).set(0),
 		root.child('cards').push(uid)
 	])
 })

@@ -338,12 +338,13 @@
 			change = !(userBalance > snapshot.val().balance)
 			userBalance = snapshot.val().balance
 			email = snapshot.val().email
-			independenceLevel = snapshot.val().independence ? snapshot.val().independence : 2
-			tablesReserved = snapshot.val().tablesReserved;
+			const i = snapshot.val().independence
+			independenceLevel = i == 0 ? 'Pending' : i
+			tablesReserved = snapshot.val().tablesReserved
 			document.getElementById("userDisplay").innerHTML = name
 			document.getElementById("wealthLabel").innerHTML = "Wealth: "
-			document.getElementById("wealthDisplay").innerHTML = userBalance + "A";
-			document.getElementById("independenceDisplay").innerHTML = "<i>Independence Level: "+independenceLevel + "</i>";
+			document.getElementById("wealthDisplay").innerHTML = userBalance + "A"
+			document.getElementById("independenceDisplay").innerHTML = "<i>Independence Level: "+independenceLevel + "</i>"
 			if (recievedBalance && change) {
 					$( "#wealthDisplay" ).animate({
 					color: "#98FB98"
