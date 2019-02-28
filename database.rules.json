@@ -85,7 +85,7 @@
 			}
 		},
 		"users": {
-      		".read": true,
+      ".read": true,
 			"$uid": {
 				".write": "!data.exists()",
 				"name": {
@@ -98,6 +98,9 @@
 					".validate": "newData.val() === 0"
 				},
 				"independence": {
+					".read": "$uid === auth.uid"
+				},
+				"pin": {
 					".read": "$uid === auth.uid"
 				},
 				"cards": {
