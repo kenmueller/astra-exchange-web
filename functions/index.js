@@ -26,7 +26,6 @@ exports.transactionCreated = functions.database.ref('transactions/{uid}/{transac
 	const from = context.params.uid
 	const to = snapshot.val().to
 	const amount = snapshot.val().amount
-	const pin = snapshot.val().pin
 
 	if (typeof amount === 'string') {
 		return Promise.all([
@@ -39,19 +38,12 @@ exports.transactionCreated = functions.database.ref('transactions/{uid}/{transac
 			return root.child(`cards/${from}`).once('value').then(userSnapshot => {
 				if (userSnapshot.exists()) {
 					const userId = userSnapshot.val()
-
-					return root.child(`users/${userId}/pin`).once('value').then(userSnapshot => {
-						if (pin == userSnapshot.val()) {
-							console.log("Pin was correct!")
-							return Promise.all([
-								root.child(`transactions/${to}/${context.params.transactionId}`).set({ pin: userSnapshot.val(), time: snapshot.val().time, from: userSnapshot.val(), to: to, amount: amount, balance: toBalance, message: snapshot.val().message }),
-								root.child(`users/${userSnapshot.val()}/balance`).set(snapshot.val().balance),
-								root.child(`users/${to}/balance`).set(toBalance)
-							])
-						} else {
-							console.log("Pin was incorrect!")
-						}
-					});
+					console.log("Pin was correct!")
+					return Promise.all([
+						root.child(`transactions/${to}/${context.params.transactionId}`).set({ time: snapshot.val().time, from: userSnapshot.val(), to: to, amount: amount, balance: toBalance, message: snapshot.val().message }),
+						root.child(`users/${userSnapshot.val()}/balance`).set(snapshot.val().balance),
+						root.child(`users/${to}/balance`).set(toBalance)
+					])
 				} else {
 					if (to == 'ATM_Convert') {
 						request({
@@ -77,10 +69,10 @@ exports.pendingCreated = functions.database.ref('pending/{pendingId}').onCreate(
 	const root = snapshot.ref.parent.parent
 	return root.child(`cards/${snapshot.val().from}`).once('value').then(cardSnapshot => {
 		return root.child(`users/${cardSnapshot.val()}/balance`).once('value').then(balanceSnapshot => {
-			return root.child(`users/${cardSnapshot.val()}/pin`).once('value').then(pinSnapshot => {
+			return root.child(`users/${cardSnapshot.val()}/${snapshot.val().from}/pin`).once('value').then(pinSnapshot => {
 				if (snapshot.val().amount <= balanceSnapshot.val() && snapshot.val().pin === pinSnapshot.val()) {
 					return Promise.all([
-						root.child(`transactions/${snapshot.val().from}/${context.params.pendingId}`).set({ pin: snapshot.val().pin, time: snapshot.val().time, from: snapshot.val().from, to: snapshot.val().to, amount: snapshot.val().amount, balance: balanceSnapshot.val() - snapshot.val().amount, message: '' }),
+						root.child(`transactions/${snapshot.val().from}/${context.params.pendingId}`).set({ time: snapshot.val().time, from: snapshot.val().from, to: snapshot.val().to, amount: snapshot.val().amount, balance: balanceSnapshot.val() - snapshot.val().amount, message: '' }),
 						snapshot.ref.remove()
 					])
 				}
@@ -102,5 +94,10 @@ exports.userCreated = functions.database.ref('users/{uid}').onCreate((snapshot, 
 })
 
 exports.cardCreated = functions.database.ref('cards/{cardId}').onCreate((snapshot, context) => {
-	return snapshot.ref.parent.parent.child(`users/${snapshot.val()}/cards/${context.params.cardId}`).set('Debit Card')
+	const root = snapshot.ref.parent.parent
+
+	return Promise.all([
+		root.child(`users/${snapshot.val()}/cards/${context.params.cardId}/name`).set("Debit Card"),
+		root.child(`users/${snapshot.val()}/cards/${context.params.cardId}/pin`).set(""+Math.floor(Math.random()*9)+Math.floor(Math.random()*9)+Math.floor(Math.random()*9)+Math.floor(Math.random()*9))
+	])
 })

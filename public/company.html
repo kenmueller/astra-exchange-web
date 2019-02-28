@@ -695,7 +695,7 @@
                 				from: cardId,
                 				to: id,
                 				amount: productPrice,
-                				balance: companyWealth + productPrice,
+                				balance: customerWealth-productPrice,
                 				message: "Product Purchase",
                         pin: enteredPin
                 			}).then(function() {
