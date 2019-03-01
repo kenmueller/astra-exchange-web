@@ -69,7 +69,7 @@ exports.pendingCreated = functions.database.ref('pending/{pendingId}').onCreate(
 	const root = snapshot.ref.parent.parent
 	return root.child(`cards/${snapshot.val().from}`).once('value').then(cardSnapshot => {
 		return root.child(`users/${cardSnapshot.val()}/balance`).once('value').then(balanceSnapshot => {
-			return root.child(`users/${cardSnapshot.val()}/${snapshot.val().from}/pin`).once('value').then(pinSnapshot => {
+			return root.child(`users/${cardSnapshot.val()}/cards/${snapshot.val().from}/pin`).once('value').then(pinSnapshot => {
 				if (snapshot.val().amount <= balanceSnapshot.val() && snapshot.val().pin === pinSnapshot.val()) {
 					return Promise.all([
 						root.child(`transactions/${snapshot.val().from}/${context.params.pendingId}`).set({ time: snapshot.val().time, from: snapshot.val().from, to: snapshot.val().to, amount: snapshot.val().amount, balance: balanceSnapshot.val() - snapshot.val().amount, message: '' }),
