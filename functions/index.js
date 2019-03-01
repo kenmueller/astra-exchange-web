@@ -7,7 +7,6 @@ exports.tableOrderCreated = functions.database.ref('users/{uid}/bazaarTableOrder
 	const root = snapshot.ref.parent.parent.parent
 	const to = 'SEC'
 	const tableOfOrder = snapshot.val().table
-	const payerName = snapshot.val().username
 	return root.child(`users/${to}/balance`).once('value').then(balanceSnapshot => {
 		const from = context.params.uid
 		const amount = snapshot.val().amount
@@ -26,7 +25,6 @@ exports.transactionCreated = functions.database.ref('transactions/{uid}/{transac
 	const from = context.params.uid
 	const to = snapshot.val().to
 	const amount = snapshot.val().amount
-
 	if (typeof amount === 'string') {
 		return Promise.all([
 			root.child(`users/${to}/independence`).set(parseInt(amount, 10)),
@@ -94,9 +92,8 @@ exports.userCreated = functions.database.ref('users/{uid}').onCreate((snapshot, 
 
 exports.cardCreated = functions.database.ref('cards/{cardId}').onCreate((snapshot, context) => {
 	const root = snapshot.ref.parent.parent
-
 	return Promise.all([
-		root.child(`users/${snapshot.val()}/cards/${context.params.cardId}/name`).set("Debit Card"),
-		root.child(`users/${snapshot.val()}/cards/${context.params.cardId}/pin`).set(""+Math.floor(Math.random()*9)+Math.floor(Math.random()*9)+Math.floor(Math.random()*9)+Math.floor(Math.random()*9))
+		root.child(`users/${snapshot.val()}/cards/${context.params.cardId}/name`).set('Debit Card'),
+		root.child(`users/${snapshot.val()}/cards/${context.params.cardId}/pin`).set((Math.floor(Math.random() * 10000) + 10000).toString().substring(1))
 	])
 })
