@@ -38,7 +38,6 @@ exports.transactionCreated = functions.database.ref('transactions/{uid}/{transac
 			return root.child(`cards/${from}`).once('value').then(userSnapshot => {
 				if (userSnapshot.exists()) {
 					const userId = userSnapshot.val()
-					console.log("Pin was correct!")
 					return Promise.all([
 						root.child(`transactions/${to}/${context.params.transactionId}`).set({ time: snapshot.val().time, from: userSnapshot.val(), to: to, amount: amount, balance: toBalance, message: snapshot.val().message }),
 						root.child(`users/${userSnapshot.val()}/balance`).set(snapshot.val().balance),

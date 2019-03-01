@@ -399,6 +399,24 @@
       #saveLogoButton {
         width: 400px;
       }
+      #epfpContent {
+        height: 240px;
+      }
+      #enterPinInput {
+        margin-top: 10px;
+        font-size: 25px;
+        color: rgba(0, 0, 0, 0.9);
+      }
+      #epfpTitle {
+        font-size: 40px;
+        margin-bottom: 70px;
+      }
+      #epfpExplain {
+        margin-top: 20px;
+      }
+      #enterPinForPurchase {
+        margin-top: 100px;
+      }
     </style>
   </head>
   <body>
@@ -505,23 +523,46 @@
         </div>
       </div>
     </div>
+    <div class="modal fade" id="enterPinForPurchase" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content" id="epfpContent">
+          <div class="modal-header">
+            <h5 class="modal-title" id="epfpTitle">Enter Pin For Purchase</h5>
+          </div>
+          <div class="modal-body" id="tableContainer">
+            <form autocomplete="off">
+              <input type="password" id="enterPinInput" class="form-control" placeholder="Enter Pin">
+            </form>
+              <h5 id="epfpExplain"><i>Press 'Enter' To Submit Pin</i></h5>
+          </div>
+        </div>
+      </div>
+    </div>
     <script>
       let id = document.cookie;
       const d = new Date();
       let name;
+      let enteredPin;
+      let pinInputActive=false;
       let compBalance;
       let user = [];
+      let customerWealth;
+      let productPrice;
+      let customerName;
       let productSaves = {};
       let industryOC;
       let compLogo;
+      let cardId;
       let currentNewLogoData;
       let idOfCurrentProduct;
       let productData = {};
       let lastProductId = 1;
       let cameraPermitted = false;
+      let companyWealth;
       let reader = new FileReader();
       let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
       let currentSetting = 0;
+
       $("#companyInterface").hide();
       $("#currentCNameDisplay").hide();
       $("#currentPidDisplay").hide();
@@ -667,60 +708,34 @@
             });
         }
       scanner.addListener('scan', function (content) {
-        const cardId = CryptoJS.AES.decrypt(content, "1r80823f8u2380r0h82f0hdobufhaw-qji2edjqwidnbq39r02qbf").toString(CryptoJS.enc.Utf8);
+        cardId = CryptoJS.AES.decrypt(content, "1r80823f8u2380r0h82f0hdobufhaw-qji2edjqwidnbq39r02qbf").toString(CryptoJS.enc.Utf8);
         return firebase.database().ref('cards/' + cardId).once('value').then(function(snapshot) {
           const customerId = snapshot.val();
+          if (customerId == id) {
+            alert("Stop trying to buy your own products to make yourself feel more popular, you fool!");
+          } else {
+            if (customerId) {
+              return firebase.database().ref('users/' + customerId).once('value').then(function(snapshot) {
+                if (idOfCurrentProduct) {
+                  customerWealth = snapshot.val().balance;
+                  productPrice = Number(productSaves[idOfCurrentProduct][1]);
 
-          if (customerId) {
-            return firebase.database().ref('users/' + customerId).once('value').then(function(snapshot) {
-              if (idOfCurrentProduct) {
-                const customerWealth = snapshot.val().balance;
-                const productPrice = Number(productSaves[idOfCurrentProduct][1]);
-
-                if (customerWealth >= productPrice) {
-                  const customerWealth = Number(snapshot.val().balance);
-                  const customerName = snapshot.val().name;
-                  document.getElementById("currentCNameDisplay").innerHTML = customerName;
-                  const enteredPin = prompt("Enter User Pin:");
-
-                  const confirmConfidence = confirm("Are you sure you would like to purchase a \""+productSaves[idOfCurrentProduct][0]+"\" for "+productPrice+"A?");
-                  document.getElementById("currentCNameDisplay").innerHTML = customerName;
-                  if (confirmConfidence) {
-                    return firebase.database().ref('users/' + id + "/balance").once('value').then(function(snapshot) {
-                      const companyWealth = Number(snapshot.val());
-                      const newCompWealth = companyWealth+productPrice;
-                      const newCustomerWealth = companyWealth+productPrice;
-                      firebase.database().ref("pending").push({
-                				time: getDate(),
-                				from: cardId,
-                				to: id,
-                				amount: productPrice,
-                				balance: customerWealth-productPrice,
-                				message: "Product Purchase",
-                        pin: enteredPin
-                			}).then(function() {
-                        return firebase.database().ref('users/' + id + "/balance").once('value').then(function(snapshot) {
-                          console.log(snapshot)
-                          const newCompanyWealth = snapshot.val();
-
-                          if (companyWealth == newCompanyWealth) {
-                            alert("Your pin is incorrect! Please re-enter it and try again!");
-                          } else {
-                            alert("Your transaction was successful! You now have " + (customerWealth - productPrice) + " Astras!");
-                          }
-                        });
-                      });
-                    });
+                  if (customerWealth >= productPrice) {
+                    customerWealth = Number(snapshot.val().balance);
+                    customerName = snapshot.val().name;
+                    document.getElementById("currentCNameDisplay").innerHTML = customerName;
+                    $("#enterPinForPurchase").modal("show");
+                    pinInputActive = true;
+                  } else {
+                    alert("You lack sufficient funds to purchase this product! Wealth : " + customerWealth + "A")
                   }
                 } else {
-                  alert("You lack sufficient funds to purchase this product! Wealth : " + customerWealth + "A")
+                  alert("A product has yet to be selected!")
                 }
-              } else {
-                alert("A product has yet to be selected!")
-              }
-            });
-          } else {
-            alert("This card's id does not exist in the database! Please alert Kai he fudged up!")
+              });
+            } else {
+              alert("This card's id does not exist in the database! Please alert Kai he fudged up!")
+            }
           }
         });
       });
@@ -761,6 +776,8 @@
         }
         if (cameraPermitted) {
           openSellingMenuDisplays();
+        } else {
+          alert("Your camera must be enabled for debit card scanning!");
         }
       }
       function openSellingMenuDisplays() {
@@ -812,6 +829,67 @@
             if (productSaves[idOfCurrentProduct][2]) {
               document.getElementById("currentPidDisplay").innerHTML = "<i>"+productSaves[idOfCurrentProduct][0]+" : "+productSaves[idOfCurrentProduct][1]+"A"+"</i>";
             }
+          } else {
+            if (key == -35) {
+              if (pinInputActive) {
+                enteredPin = document.getElementById("enterPinInput").value;
+                if (enteredPin) {
+                  $("#enterPinForPurchase").modal("hide");
+                  document.getElementById("enterPinInput").value = "";
+                  const confirmConfidence = confirm("Are you sure you would like to purchase a \""+productSaves[idOfCurrentProduct][0]+"\" for "+productPrice+"A?");
+                  document.getElementById("currentCNameDisplay").innerHTML = customerName;
+                  if (confirmConfidence) {
+                      try {
+                        return firebase.database().ref('users/' + id + "/balance").once('value').then(function(snapshot) {
+                          companyWealth = Number(snapshot.val());
+                          const oldCompanyWealth = companyWealth
+                          const newCompWealth = companyWealth+productPrice;
+                          const newCustomerWealth = customerWealth-productPrice;
+
+                          firebase.database().ref("pending").push({
+                            time: getDate(),
+                            from: cardId,
+                            to: id,
+                            amount: productPrice,
+                            balance: newCustomerWealth,
+                            message: "Product Purchase",
+                            pin: enteredPin
+                          }).then(function(snapshot) {
+                            return firebase.database().ref('users/' + id + "/balance").once('value').then(function(snapshot) {
+                              let alertMessage;
+                              
+                              if (newCustomerWealth == 0) {
+                                alertMessage = "The transaction was successful, but you are now bankrupt! Now go and work hard to get back up the socio-economic ladder!";
+                              } else {
+                                const pluralExtension = newCustomerWealth > 1 ? "s!" : "!"
+                                alertMessage = "Your transaction was successful! You now have " + newCustomerWealth + " Astra" + pluralExtension
+                              }
+                              alert(alertMessage);
+                              document.getElementById("enterPinInput").value = "";
+                              document.getElementById("currentCNameDisplay").innerHTML = "<i>No Customer Active!</i>";
+                              document.getElementById("currentPidDisplay").innerHTML = "<i>No Product Selected!</i>";
+
+                              idOfCurrentProduct = undefined;
+                            });
+                          });
+                        });
+                      }
+                      catch(error) {
+                        alert("Your pin is incorrect! Please re-enter it and try again!");
+                        document.getElementById("enterPinInput").value = "";
+                        document.getElementById("currentCNameDisplay").innerHTML = "<i>No Customer Active!</i>";
+                        document.getElementById("currentPidDisplay").innerHTML = "<i>No Product Selected!</i>";
+
+                        idOfCurrentProduct = undefined;
+                      }
+                  } else {
+                    alert("Purchase Cancelled!")
+                  }
+                } else {
+                  alert("You haven't entered a pin yet!");
+                }
+              }
+            }
           }
       }
       function previewFile() {
@@ -854,6 +932,9 @@
     		}
     		return dateList[1]+" "+dateList[2]+", "+dateList[3]+" @ "+dateTime+timeOfDay
     	}
+      $('form').on('submit', function(event){
+        event.preventDefault();
+      });
       closeSellingMenu();
       loadCompData();
     </script>

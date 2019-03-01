@@ -328,7 +328,7 @@
 		return firebase.database().ref('users/' + id + "/cards").once('value').then(function(snapshot) {
 			const firstCardId = Object.keys(snapshot.val())[0]
 			console.log(firstCardId)
-			firebase.database().ref('users/' + id + "/cards/" + firstCardId).update({
+			firebase.database().ref("users/" + id + "/cards/" + firstCardId).update({
 				pin: newPin
 			}).then(function() {
 				document.getElementById("pinInput").value = ""
