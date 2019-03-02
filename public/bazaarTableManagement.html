@@ -1,4 +1,7 @@
-<html lang="en" class="gr__bazaartablemanagement_000webhostapp_com"><head>
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,700" rel="stylesheet">
     <script defer src="/__/firebase/5.7.3/firebase-app.js"></script>
     <script defer src="/__/firebase/5.7.3/firebase-auth.js"></script>
@@ -10,6 +13,15 @@
     <style>
       body {
         overflow: scroll;
+        opacity: 0;
+        animation-name: introduction;
+        animation-delay: 0.6s;
+        animation-duration: 2s;
+        animation-fill-mode: forwards;
+      }
+      @keyframes introduction {
+        from { opacity: 0; }
+        to { opacity: 1; }
       }
       * {
         font-family: Nunito;
@@ -110,11 +122,23 @@
         height: 50px;
       }
       #bazaarDisplay {
+        margin-top: 0px;
         margin-right: 320px;
       }
       #rtuiButton {
-        margin-top: -70px;
-        margin-left: 320px;
+        margin-top: 0px;
+        height: 30px;
+        font-size: 20px;
+        width: 270px;
+        transition: background 0.2s ease-out;
+      }
+      #flexContainer {
+        margin-top: 30px;
+        display: flex;
+        justify-content: center;
+      }
+      #returnBack {
+        margin-top: 0px;
         height: 30px;
         font-size: 20px;
         width: 270px;
@@ -122,49 +146,58 @@
       }
     </style>
   </head>
-  <body data-gr-c-s-loaded="true" style="">
+  <body id="body" data-gr-c-s-loaded="true" style="">
 
     <!--<div id="cover" style="background:#D3D3D3;height:100%;width:100%;position:absolute;z-index:10000;"></div>-->
-    <h1>Bazaar Table Order Management</h1>
-    <h2 id="bazaarDisplay"></h2>
-    <button id="rtuiButton" onclick="window.location.href='main.html'">Return to User Interface</button>
-    <div id="pageContainer">
-      <div id="infoContainer">
-        <div class="table" style="position:absolute;margin-left:1050px;z-index:-1;height:510px;width:220px;margin-top:-5px;"></div>
-        <h3 style="margin-bottom:-60px;margin-left:1070px;margin-top:30px;text-align:left;font-size:28px;font-weight: 400;">Selected Table</h3>
-        <div class="table" id="selectedTable" style="position:absolute;margin-left:1060px;margin-top:80px;width:200px;opacity:0.7;font-size:25px;"></div>
-        <h3 style="font-size:20px;margin-bottom:-60px;margin-left:1090px;margin-top:30px;text-align:left;font-size:28px;font-weight: 400;margin-top:200px;position:absolute;">Ownership</h3>
-        <div class="table" id="tableOwnership" style="position:absolute;margin-left:1060px;margin-top:80px;width:200px;opacity:0.7;font-size:25px;margin-top:250px;"></div>
-        <h3 style="font-size:20px;margin-bottom:-60px;margin-left:1130px;margin-top:30px;text-align:left;font-size:28px;font-weight: 400;margin-top:370px;position:absolute;">Cost</h3>
-        <div class="table" id="tableCost" style="position:absolute;margin-left:1060px;margin-top:80px;width:200px;opacity:0.7;font-size:25px;margin-top:420px;"></div>
-        <div class="table" id="reserveTableButton" onclick="purchaseItemSetUp()" style="position:absolute;margin-left:1035px;width:250px;opacity:0.7;font-size:28px;margin-top:540px;">Reserve Table</div>
+    <div id="notProximateDisplay">
+      <h1>It's Still Quite A Bit Until The Next Bazaar!</h1>
+      <h3>It must be within two weeks of the Bazaar until tables can be reserved!</h3>
+      <button id="returnBack" onclick="window.location.href='index.html'">Return to User Interface</button>
+    </div>
+    <div id="orderInterface">
+      <h1>Bazaar Table Order Management</h1>
+      <div id="flexContainer">
+        <h2 id="bazaarDisplay"></h2>
+        <button id="rtuiButton" onclick="window.location.href='main.html'">Return to User Interface</button>
       </div>
-      <section id="tables">
-        <div id="Lobby" class="table" style="width:200px;margin-left:800px;" onclick="submit(this.id)">Lobby</div>
-        <div id="conferenceRoom" class="table" style="font-size:20px;line-height:100px;width:200px;height:100px;margin-left:800px;margin-top:10px;" onclick="submit(this.id)">Conference Room</div>
-        <div id="EnglishRoom" class="table" style="font-size:20px;line-height:200px;width:200px;height:200px;margin-left:540px;transition: none;margin-top: -210px;transition: background-color 0s ease-out;">English Room</div>
-        <div id="T1" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:530px;margin-top:20px;" onclick="submit(this.id)">T1</div>
-        <div id="T12" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:600px;margin-top:-36px;" onclick="submit(this.id)">T12</div>
-        <div id="T2" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:470px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">T2</div>
-        <div id="T3" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:470px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">T3</div>
-        <div id="T4" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:470px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">T4</div>
-        <div id="T5" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:470px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">T5</div>
-        <div id="T6" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:470px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">T6</div>
-        <div id="T7" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:470px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">T7</div>
-        <div id="T8" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:530px;margin-top:20px;" onclick="submit(this.id)">T8</div>
-        <div id="T9" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:600px;margin-top:-36px;" onclick="submit(this.id)">T9</div>
-        <div id="K1" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:670px;margin-top:-300px;transform: rotate(90deg);" onclick="submit(this.id)">K1</div>
-        <div id="K6" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:705px;margin-top:-36px;transform: rotate(90deg);" onclick="submit(this.id)">K6</div>
-        <div id="K2" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:670px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">K2</div>
-        <div id="K3" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:670px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">K3</div>
-        <div id="K4" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:670px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">K4</div>
-        <div id="K5" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:670px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">K5</div>
-         <div id="K7" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:705px;margin-top:-36px;transform: rotate(90deg);" onclick="submit(this.id)">K7</div>
-        <div class="table" id="Kitchen" style="font-size:20px;line-height:200px;width:200px;height:200px;margin-left:750px;transition: none;margin-top: -230px;transition: background-color 0s ease-out;">Kitchen</div>
-        <div id="T10" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:730px;margin-top:-270px;" onclick="submit(this.id)">T10</div>
-        <div id="T11" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:800px;margin-top:-36px;" onclick="submit(this.id)">T11</div>
-        <div class="table" id="antarcticTable" style="font-size:20px;line-height:80px;width:200px;height:80px;margin-left:750px;margin-top: 240px;" onclick="submit(this.id)">Antarctica Table</div>
-      </section>
+      <div id="pageContainer">
+        <div id="infoContainer">
+          <div class="table" style="position:absolute;margin-left:1050px;z-index:-1;height:510px;width:220px;margin-top:-5px;"></div>
+          <h3 style="margin-bottom:-60px;margin-left:1070px;margin-top:30px;text-align:left;font-size:28px;font-weight: 400;">Selected Table</h3>
+          <div class="table" id="selectedTable" style="position:absolute;margin-left:1060px;margin-top:80px;width:200px;opacity:0.7;font-size:25px;"></div>
+          <h3 style="font-size:20px;margin-bottom:-60px;margin-left:1090px;margin-top:30px;text-align:left;font-size:28px;font-weight: 400;margin-top:200px;position:absolute;">Ownership</h3>
+          <div class="table" id="tableOwnership" style="position:absolute;margin-left:1060px;margin-top:80px;width:200px;opacity:0.7;font-size:25px;margin-top:250px;"></div>
+          <h3 style="font-size:20px;margin-bottom:-60px;margin-left:1130px;margin-top:30px;text-align:left;font-size:28px;font-weight: 400;margin-top:370px;position:absolute;">Cost</h3>
+          <div class="table" id="tableCost" style="position:absolute;margin-left:1060px;margin-top:80px;width:200px;opacity:0.7;font-size:25px;margin-top:420px;"></div>
+          <div class="table" id="reserveTableButton" onclick="purchaseItemSetUp()" style="position:absolute;margin-left:1035px;width:250px;opacity:0.7;font-size:28px;margin-top:540px;">Reserve Table</div>
+        </div>
+        <section id="tables">
+          <div id="Lobby" class="table" style="width:200px;margin-left:800px;" onclick="submit(this.id)">Lobby</div>
+          <div id="conferenceRoom" class="table" style="font-size:20px;line-height:100px;width:200px;height:100px;margin-left:800px;margin-top:10px;" onclick="submit(this.id)">Conference Room</div>
+          <div id="EnglishRoom" class="table" style="font-size:20px;line-height:200px;width:200px;height:200px;margin-left:540px;transition: none;margin-top: -210px;transition: background-color 0s ease-out;">English Room</div>
+          <div id="T1" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:530px;margin-top:20px;" onclick="submit(this.id)">T1</div>
+          <div id="T12" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:600px;margin-top:-36px;" onclick="submit(this.id)">T12</div>
+          <div id="T2" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:470px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">T2</div>
+          <div id="T3" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:470px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">T3</div>
+          <div id="T4" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:470px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">T4</div>
+          <div id="T5" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:470px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">T5</div>
+          <div id="T6" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:470px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">T6</div>
+          <div id="T7" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:470px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">T7</div>
+          <div id="T8" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:530px;margin-top:20px;" onclick="submit(this.id)">T8</div>
+          <div id="T9" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:600px;margin-top:-36px;" onclick="submit(this.id)">T9</div>
+          <div id="K1" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:670px;margin-top:-300px;transform: rotate(90deg);" onclick="submit(this.id)">K1</div>
+          <div id="K6" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:705px;margin-top:-36px;transform: rotate(90deg);" onclick="submit(this.id)">K6</div>
+          <div id="K2" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:670px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">K2</div>
+          <div id="K3" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:670px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">K3</div>
+          <div id="K4" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:670px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">K4</div>
+          <div id="K5" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:670px;margin-top:15px;transform: rotate(90deg);" onclick="submit(this.id)">K5</div>
+           <div id="K7" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:705px;margin-top:-36px;transform: rotate(90deg);" onclick="submit(this.id)">K7</div>
+          <div class="table" id="Kitchen" style="font-size:20px;line-height:200px;width:200px;height:200px;margin-left:750px;transition: none;margin-top: -230px;transition: background-color 0s ease-out;">Kitchen</div>
+          <div id="T10" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:730px;margin-top:-270px;" onclick="submit(this.id)">T10</div>
+          <div id="T11" class="table" style="font-size:20px;line-height:30px;width:50px;height:30px;margin-left:800px;margin-top:-36px;" onclick="submit(this.id)">T11</div>
+          <div class="table" id="antarcticTable" style="font-size:20px;line-height:80px;width:200px;height:80px;margin-left:750px;margin-top: 240px;" onclick="submit(this.id)">Antarctica Table</div>
+        </section>
+      </div>
     </div>
     <script>
       let tableCost;
@@ -184,6 +217,17 @@
       };
       firebase.initializeApp(config);
       let defaultDatabase = firebase.database();
+      function checkIfComing() {
+        return firebase.database().ref('bazaarData/withinTwoWeeks').once('value').then(function(snapshot) {
+          if (!snapshot.val()) {
+            $("#orderInterface").hide();
+            $("#notProximateDisplay").show();
+          } else {
+            $("#orderInterface").show();
+            $("#notProximateDisplay").hide();
+          }
+        });
+      }
       function getSeason() {
         const DateObj = new Date();
         const currentMonth = DateObj.getMonth();
@@ -254,6 +298,7 @@
     		}
     		return dateList[1]+" "+dateList[2]+", "+dateList[3]+" @ "+dateTime+timeOfDay
     	}
+      checkIfComing();
       loadUserData();
     </script>
   </body>

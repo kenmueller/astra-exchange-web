@@ -209,7 +209,7 @@
             for (target of Object.keys(pvHistObject)) {
               for (dateData of Object.keys(pvHistObject[target])) {
                 if (!calculatedDates.includes(dateData)) {
-                  let pvDataItems = [];
+                  let pvDataLength = 0;
                   let pvDataSum = 0;
 
                   // Sum up all pvs for that date
@@ -218,20 +218,19 @@
                       if (dateOfItem == dateData) {
                         const pvHistList = pvHistObject[compId][dateOfItem];
 
+                        pvDataLength++;
                         pvDataSum += pvHistList.sales;
-                        pvDataItems.push(pvHistList.sales);
                       }
                     }
                   }
-                  const stdPvDev = standardDev(pvDataItems);
-                  const averageSales = pvDataSum / (pvDataItems.length)
+                  const averageSales = pvDataSum / (pvDataLength)
 
                   // Actually edit 'pvHistObject' and add percentages based on sum data
                   for (compId of Object.keys(pvHistObject)) {
                     for (dateOfToEditItem of Object.keys(pvHistObject[compId])) {
                       if (dateOfToEditItem == dateData) {
                         const pvHistList = pvHistObject[compId][dateOfToEditItem];
-                        pvHistObject[compId][dateOfToEditItem]["pv"] = (pvHistList.sales - averageSales)/stdPvDev;
+                        pvHistObject[compId][dateOfToEditItem]["pv"] = (pvHistList.sales)/averageSales;
                       }
                     }
                   }
