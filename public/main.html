@@ -140,7 +140,7 @@
 		height: 40px;
 		margin-bottom: 5px;
 	}
-	#vtButton {
+	#vtButton, #ivButton {
 		margin-top: 10px;
 		width: 250px;
 		display: block;
@@ -159,8 +159,8 @@
 		outline-color: rgba(0, 0, 250, 0.1);
 	}
 	#iconBar {
-		margin-top: -52px;
-		margin-left: 560px;
+		margin-top: -54px;
+		margin-left: 310px;
 	}
 	#savePinButton {
 		margin-top: 20px;
@@ -187,6 +187,26 @@
 	}
 	#debitCardConfigure {
 		margin-right: 4px;
+		margin-left: 150px;
+	}
+	#ivButton {
+		margin-top: 10px;
+	}
+	#invModalMain {
+		display: flex;
+	}
+	#invoiceModalContainer {
+		width: 800px;
+		margin-left: -150px;
+	}
+	#invoiceHistBox {
+		border-right-style: solid;
+		border-right-color: lightgray;
+		margin-right: 20px;
+		padding-left: 20px;
+	}
+	#invMessageInput, #invAstrasInvolvedInput {
+		margin-top: 10px;
 	}
 	</style>
 </head>
@@ -195,6 +215,7 @@
 		<img id="logo" src="https://i.imgur.com/ufHYGd9.png"/>
 	</div>
 	<div id="iconBar">
+	<img id="invoiceIcon" class="menuIcon" onclick="openInVoiceInterface()" src="https://i.imgur.com/sdl2GDF.png" />
 	<img id="debitCardConfigure" class="menuIcon" onclick="showPin()" src="https://i.imgur.com/XNRzL8b.png" />
 	<img id="companyInterface" onclick="window.location.href='company.html'" class="menuIcon" src="https://i.imgur.com/aLgqM1V.png">
 	<img id="graphWorksIcon" onclick="window.location.href='investData.html?comp=index'" class="menuIcon" src="https://i.imgur.com/OM7iXc9.png">
@@ -243,19 +264,47 @@
 	</div>
 </div>
 <div class="modal fade" id="debitCardSettings" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div class="modal-dialog" role="document">
-	<div class="modal-content" id="modalContainer">
-	<div class="modal-header">
-		<h5 class="modal-title" id="ceModalLabel">Debit Card Configuration</h5>
+	<div class="modal-dialog" role="document">
+		<div class="modal-content" id="modalContainer">
+		<div class="modal-header">
+			<h5 class="modal-title" id="ceModalLabel">Debit Card Configuration</h5>
+		</div>
+		<div class="modal-body" id="transModalMain">
+			<h2 id="currentPin">Current PIN: </h2>
+			<input id="pinInput" class="form-control" type="number" placeholder="Change PIN"/>
+			<button class="btn btn-primary" id="savePinButton" onclick="savePin()">Save</button>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeButton">Close</button>
+		</div>
+		</div>
 	</div>
-	<div class="modal-body" id="transModalMain">
-		<h2 id="currentPin">Current PIN: </h2>
-		<input id="pinInput" class="form-control" type="number" placeholder="Change PIN"/>
-		<button class="btn btn-primary" id="savePinButton" onclick="savePin()">Save</button>
-	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeButton">Close</button>
-	</div>
+</div>
+<div class="modal fade" id="invoiceInterface" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content" id="invoiceModalContainer">
+			<div class="modal-header">
+				<h3 class="modal-title" id="invModalLabel">Invoice Interface</h3>
+			</div>
+			<div class="modal-body" id="invModalMain">
+				<div id="invoiceHistBox">
+					<h4>You haven't made or received any invoices yet!</h4>
+				</div>
+				<table class="table" id="invoiceHistTable">
+				</table>
+				<div id="invoiceCreationBox">
+					<select class="custom-select mr-sm-2" id="invReceiver">
+						<option value="nullSelected" selected disabled>Receiver</option>
+					</select>
+					<input id="invAstrasInvolvedInput" type="number" class="form-control" placeholder="Astras"/>
+					<input id="invMessageInput" type="text" class="form-control" placeholder="Message"/>
+					<button class="btn btn-primary" onclick="createInvoice()">Create Invoice</button>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeButton">Close</button>
+			</div>
+		</div>
 	</div>
 </div>
 	<script>
@@ -386,11 +435,16 @@
 				let newReceiverOption = document.createElement("option")
 				newReceiverOption.value = receiverId
 				newReceiverOption.innerHTML = receiverName
+
+				const invReceiverOption = newReceiverOption.cloneNode(true);
 				document.getElementById("receiver").appendChild(newReceiverOption)
+				document.getElementById("invReceiver").appendChild(invReceiverOption);
 			}
 		})
 	}
-
+	function openInVoiceInterface() {
+		$("#invoiceInterface").modal("show");
+	}
 	function isTeacher() {
 		return id === 'h621pgey1vPfxrmoW5LUkZaHkhT2'
 	}
@@ -435,7 +489,7 @@
 	}
 
 	function resetInputs() {
-		document.getElementById("receiver").value = ""
+		document.getElementById("receiver").selectedIndex = 0
 		document.getElementById("astrasToExchange").value = ""
 		document.getElementById("noteInput").value = ""
 	}
@@ -463,6 +517,86 @@
 		return 0
 		}
 	}
+	function loadInvHist() {
+		let cleared = false;
+		database.ref('invoices/'+id).on('child_added', function(snapshot) {
+			if (!cleared) {
+				document.getElementById("invoiceHistBox").innerHTML = ""
+				cleared = true
+			}
+			const receiverId = snapshot.val().to
+			const payerId = snapshot.val().from
+			const astrasInvolved = snapshot.val().amount
+			const dateOfInv = snapshot.val().time
+			const invNote = snapshot.val().message
+			const newInv = document.createElement("tr")
+			let transInvAddOn = ""
+			if (invNote) {
+				transNoteAddOn = " [ "+invNote+" ]"
+			}
+			return database.ref('users/' + receiverId + '/name').once('value').then(function(receiverSnapshot) {
+				const receiverName = receiverSnapshot.val()
+				return database.ref('users/' + payerId + '/name').once('value').then(function(payerSnapshot) {
+					const payerName = payerSnapshot.val();
+					const invData = document.createElement("h4");
+					const invData = document.createElement("h4");
+					const invData = document.createElement("h4");
+					
+					newData.innerHTML = astrasInvolved + "A -> " + receiverName + transInvAddOn;
+					newData.style.borderStyle = "solid";
+					newData.style.borderColor = "lightgray";
+					newInv.appendChild(invData);
+
+					document.getElementById("invoiceHistTable").appendChild(newInv);
+				})
+			})
+		})
+	}
+	function createInvoice() {
+		const receiverOfInv = document.getElementById("invReceiver").value;
+		const astrasInvolved = Number(document.getElementById("invAstrasInvolvedInput").value);
+		const messageOfInv = document.getElementById("invMessageInput").value;
+
+		return database.ref('users/' + receiverOfInv + '/balance').once('value').then(function(snapshot) {
+			const receiverBalance = snapshot.val();
+
+			if (astrasInvolved > 0) {
+				let confirmMessage;
+				if (astrasInvolved == receiverBalance) {
+					confirmMessage = "Your invoice's Astras is equivalent to this user's wealth! Are you sure you would like to make this invoice?";
+				} else if (astrasInvolved > receiverBalance) {
+					confirmMessage = "Your invoice's Astras in greater than this user's wealth! Are you sure you would like to make this invoice?";
+				}
+
+				let invConfirm;
+				if (confirmMessage) {
+					invConfirm = confirm(confirmMessage);
+				} else {
+					invConfirm = true;
+				}
+				if (invConfirm) {
+					database.ref('invoices/' + id).push({
+						time: getDate(),
+						from: id,
+						to: receiverOfInv,
+						amount: astrasInvolved,
+						message: messageOfInv,
+						status: "pending"
+					}).then(function() {
+						alert("Invoice created successfully!");
+						document.getElementById("invMessageInput").value = "";
+						document.getElementById("invAstrasInvolvedInput").value = "";
+						document.getElementById("invReceiver").selectedIndex = 0;
+					})
+				} else {
+					alert("Invoice cancelled!");
+				}
+			} else {
+				alert("You can't send invoices with negative or zero Astras, you fool!");
+			}
+		});
+	}
+	loadInvHist()
 	loadTransHist()
 	loadUserData()
 	loadReceiverData()
