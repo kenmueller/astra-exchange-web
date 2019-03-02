@@ -756,6 +756,7 @@
         $("#preview").hide();
         $("#productTable").hide();
         $("#eProducts").show();
+        $("#alertDeveloper").show();
       }
       function openSellingMenu() {
         if (!cameraPermitted) {
@@ -782,6 +783,7 @@
       }
       function openSellingMenuDisplays() {
         console.log("Selling!");
+        $("#alertDeveloper").hide();
         $("#openClModalButton").hide();
         $("#currentCNameDisplay").show();
         $("#currentPidDisplay").show();
@@ -857,7 +859,7 @@
                           }).then(function(snapshot) {
                             return firebase.database().ref('users/' + id + "/balance").once('value').then(function(snapshot) {
                               let alertMessage;
-                              
+
                               if (newCustomerWealth == 0) {
                                 alertMessage = "The transaction was successful, but you are now bankrupt! Now go and work hard to get back up the socio-economic ladder!";
                               } else {

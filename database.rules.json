@@ -8,7 +8,7 @@
 			".write": true
 		},
 		"companies": {
-      		".read": true,
+      ".read": true,
 			"$uid": {
 				".write": "$uid === auth.uid",
 				"products": {
