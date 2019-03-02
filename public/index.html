@@ -57,16 +57,17 @@
 			}
 			#switchCurrentInputForm {
 				font-size: 15px;
+				display: block;
+				margin: auto;
+    			margin-top: 20px;
 			}
-			#downloadIosAppButton {
+			#downloadiOSAppButton {
 				margin: auto;
 				margin-top: 20px;
 				display: block;
-				height: 30px;
 				width: 250px;
 				font-size: 15px;
 				line-height: 17px;
-				vertical-align: middle;
 			}
 		</style>
 </head>
@@ -92,8 +93,9 @@
 			<button id="accountSignInButton" onclick="signIn()" class="btn btn-secondary">Log In</button>
 		</div>
 	</div>
-	<div class="flexContainer">
+	<div>
 		<button class="btn btn-light" id="switchCurrentInputForm" onclick="changeForm()">Create An Account Instead!</button>
+		<a class="btn btn-primary" id="downloadiOSAppButton" href="itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist">Download App</a>
 	</div>
 	<div class="flexContainer"></div>
 	</div>
@@ -113,6 +115,11 @@
 		</div>
 	</div>
 	<script>
+		if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+			window.location.href='itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist'
+		} else {
+			document.getElementById("accountCreationButton").style.display = 'none'
+		}
 		let name;
 		let id;
 		let email;
