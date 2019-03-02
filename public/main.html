@@ -78,6 +78,8 @@
 	}
 	#logo {
 		margin-top: 20px;
+		width: 165px;
+		height: 165px;
 	}
 	#copyright {
 		text-align: right;
@@ -246,10 +248,10 @@
 		<div id="mainContainer" class="flexContainer">
 		<div id="exchangeBox">
 			<select class="custom-select mr-sm-2" id="receiver">
-			<option value="nullSelected" selected disabled>Receiver</option>
+			<option value="nullSelected" selected disabled>Recipient</option>
 			</select>
-			<input id="astrasToExchange" class="form-control" placeholder="Astras To Exchange" type="number"/>
-			<input id="noteInput" class="form-control" placeholder="Exchange Note (Optional)"/>
+			<input id="astrasToExchange" class="form-control" placeholder="Amount" type="number"/>
+			<input id="noteInput" class="form-control" placeholder="Message"/>
 			<button class="btn btn-primary" onclick="makeDirectExchange()">Make Exchange</button>
 			<button class="btn btn-secondary" onclick="viewTransactions()" id="vtButton">View Transaction History</button>
 		</div>
