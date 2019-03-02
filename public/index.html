@@ -63,11 +63,21 @@
 			}
 			#downloadiOSAppButton {
 				margin: auto;
-				margin-top: 20px;
+				margin-top: 30px;
+				display: block;
+				width: 250px;
+				font-size: 18px;
+				line-height: 30px;
+			}
+			#downloadAppMessage {
+				margin: auto;
+				margin-top: 8px;
 				display: block;
 				width: 250px;
 				font-size: 15px;
 				line-height: 17px;
+				font-family: Nunito;
+				text-align: left;
 			}
 		</style>
 </head>
@@ -96,6 +106,7 @@
 	<div>
 		<button class="btn btn-light" id="switchCurrentInputForm" onclick="changeForm()">Create An Account Instead!</button>
 		<a class="btn btn-primary" id="downloadiOSAppButton" href="itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist">Download App</a>
+		<p id="downloadAppMessage">Visit astra.exchange on your mobile device to download the app</p>
 	</div>
 	<div class="flexContainer"></div>
 	</div>
@@ -117,8 +128,9 @@
 	<script>
 		if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
 			window.location.href='itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist'
+			document.getElementById('downloadAppMessage').style.display = 'none'
 		} else {
-			document.getElementById('downloadiOSAppButton').style.display = 'none'
+			document.getElementById('downloadiOSAppButton').disabled = true
 		}
 		let name;
 		let id;
