@@ -210,21 +210,44 @@
 	#invMessageInput, #invAstrasInvolvedInput {
 		margin-top: 10px;
 	}
+	#top_navigation_bar {
+		overflow: hidden;
+		background-color: white;
+		height: 60px;
+	}
+	#top_navigation_bar a {
+		color: #434343;
+		text-align: center;
+		padding: 30px 30px;
+		text-decoration: none;
+		font-size: 20px;
+		vertical-align: middle;
+	}
+	#top_navigation_bar a:hover {
+		color: #eee;
+		
+	}
+	#top_navigation_bar a.active {
+		color: #3A0300;
+	}
 	</style>
 </head>
 <body>
-	<div id="headerBox" class="flexContainer">
-		<img id="logo" src="https://i.imgur.com/hrRbh4F.png"/>
-	</div>
-	<div id="iconBar">
-	<img id="invoiceIcon" class="menuIcon" onclick="openInVoiceInterface()" src="https://i.imgur.com/sdl2GDF.png" />
-	<img id="debitCardConfigure" class="menuIcon" onclick="showPin()" src="https://i.imgur.com/XNRzL8b.png" />
-	<img id="companyInterface" onclick="window.location.href='company.html'" class="menuIcon" src="https://i.imgur.com/aLgqM1V.png">
-	<img id="graphWorksIcon" onclick="window.location.href='investData.html?comp=index'" class="menuIcon" src="https://i.imgur.com/OM7iXc9.png">
-	<a href="bazaarTableManagement.html"><img id="btmIcon" class="menuIcon" src="https://imgur.com/6t3kyqw.png"></a>
-	<img id="exitIcon" class="menuIcon" src="https://i.imgur.com/N5tesXB.png" onclick="signOutUser()">
-	</div>
-	<h1 id="title">Astra Exchange Network</h1>
+	<center>
+		<div class="top_navigation_bar" id="top_navigation_bar">
+			<ul>
+				<img class="primary_heading" style="height: 60px" src="https://i.imgur.com/hrRbh4F.png" onclick="window.location.href = 'main.html'"/>
+				<a onclick="openInVoiceInterface()" class="primary_heading">Invoices</a>
+				<a href="company.html" class="primary_heading">Companies</a>
+				<a onclick="window.location.href='investData.html?comp=index'" class="primary_heading">Stock Market</a>
+				<a href="bazaarTableManagement.html" class="primary_heading">Bazaar Tables</a>
+				<a onclick="showPin()" class="primary_heading">Debit Cards</a>
+				<a onclick="signOutUser()" class="primary_heading" style="color: #cc3333">Sign Out</a>
+			</ul>
+		</div>
+		<div style="background:#ddd;height: 1px;width: 100%;"></div>
+	</center>
+	<h1 id="title">Direct Pay</h1>
 	<div class="flexContainer">
 	<img id="profileImage"/>
 	</div>
@@ -238,10 +261,10 @@
 		<div id="mainContainer" class="flexContainer">
 		<div id="exchangeBox">
 			<select class="custom-select mr-sm-2" id="receiver">
-			<option value="nullSelected" selected disabled>Receiver</option>
+			<option value="nullSelected" selected disabled>Recipient</option>
 			</select>
-			<input id="astrasToExchange" class="form-control" placeholder="Astras To Exchange" type="number"/>
-			<input id="noteInput" class="form-control" placeholder="Exchange Note (Optional)"/>
+			<input id="astrasToExchange" class="form-control" placeholder="Amount" type="number"/>
+			<input id="noteInput" class="form-control" placeholder="Message"/>
 			<button class="btn btn-primary" onclick="makeDirectExchange()">Make Exchange</button>
 			<button class="btn btn-secondary" onclick="viewTransactions()" id="vtButton">View Transaction History</button>
 		</div>
