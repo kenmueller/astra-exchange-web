@@ -186,8 +186,8 @@
 		margin-top: -30px;
 	}
 	#debitCardConfigure {
-		margin-right: 4px;
-		margin-left: 150px;
+		margin-right: 160px;
+		margin-left: -90px;
 	}
 	#ivButton {
 		margin-top: 10px;
@@ -200,13 +200,23 @@
 		margin-left: -150px;
 	}
 	#invoiceHistBox {
-		border-right-style: solid;
-		border-right-color: lightgray;
 		margin-right: 20px;
 		padding-left: 20px;
 	}
 	#invMessageInput, #invAstrasInvolvedInput {
 		margin-top: 10px;
+	}
+	.invoiceButton {
+		width: 80px;
+		height: 40px;
+		line-height: 10px;
+		margin-top: 0px;
+		vertical-align: middle;
+	}
+	#invoiceCreationBox {
+		border-left-style: solid;
+		border-left-color: lightgray;
+		padding-left: 10px;
 	}
 	</style>
 </head>
@@ -215,7 +225,7 @@
 		<img id="logo" src="https://i.imgur.com/ufHYGd9.png"/>
 	</div>
 	<div id="iconBar">
-	<img id="invoiceIcon" class="menuIcon" onclick="openInVoiceInterface()" src="https://i.imgur.com/sdl2GDF.png" />
+	<!-- The code for invoices is just about complete, but I don't think they're a good feature, and thus I'm commenting this out! <img id="invoiceIcon" class="menuIcon" onclick="openInVoiceInterface()" src="https://i.imgur.com/sdl2GDF.png" />-->
 	<img id="debitCardConfigure" class="menuIcon" onclick="showPin()" src="https://i.imgur.com/XNRzL8b.png" />
 	<img id="companyInterface" onclick="window.location.href='company.html'" class="menuIcon" src="https://i.imgur.com/aLgqM1V.png">
 	<img id="graphWorksIcon" onclick="window.location.href='investData.html?comp=index'" class="menuIcon" src="https://i.imgur.com/OM7iXc9.png">
@@ -517,6 +527,53 @@
 		return 0
 		}
 	}
+	function acceptInvoice(invoiceId) {
+		return firebase.database().ref("invoices/" + id + "/" + invoiceId).once('value').then(function(snapshot) {
+			const astrasInvolved = snapshot.val().amount;
+			const receiverId = snapshot.val().to;
+			const invoiceNote = snapshot.val().message;
+
+			database.ref('transactions/' + id).push({
+				time: getDate(),
+				from: id,
+				to: receiverId,
+				amount: astrasInvolved,
+				balance: userBalance - astrasInvolved,
+				message: invoiceNote
+			}).then(function() {
+				return firebase.database().ref("invoices/" + id + "/" + invoiceId).update({
+					status: "accepted"
+				}).then(function() {
+					return firebase.database().ref("invoices/" + invoiceReceiver + "/" + invoiceId).update({
+						status: "accepted"
+					}).then(function() {
+						alert("Invoice successfully accepted!");
+					});
+				})
+			});
+		});
+	}
+	function denyInvoice(invoiceId) {
+		return firebase.database().ref("invoices/" + id + "/" + invoiceId).once('value').then(function(snapshot) {
+			const astrasInvolved = snapshot.val().amount;
+			const invoiceReceiver = snapshot.val().from;
+
+			const confirmInvoiceDeny = confirm("Are you sure that you would like to deny this invoice?");
+			if (confirmInvoiceDeny) {
+				return firebase.database().ref("invoices/" + id + "/" + invoiceId).update({
+					status: "denied"
+				}).then(function() {
+					return firebase.database().ref("invoices/" + invoiceReceiver + "/" + invoiceId).update({
+						status: "denied"
+					}).then(function() {
+						alert("Invoice successfully denied!");
+					});
+				})
+			} else {
+				alert("Invoice deny request cancelled!");
+			}
+		});
+	}
 	function loadInvHist() {
 		let cleared = false;
 		database.ref('invoices/'+id).on('child_added', function(snapshot) {
@@ -529,7 +586,7 @@
 			const astrasInvolved = snapshot.val().amount
 			const dateOfInv = snapshot.val().time
 			const invNote = snapshot.val().message
-			const newInv = document.createElement("tr")
+			let newInv = document.createElement("tr")
 			let transInvAddOn = ""
 			if (invNote) {
 				transNoteAddOn = " [ "+invNote+" ]"
@@ -538,14 +595,32 @@
 				const receiverName = receiverSnapshot.val()
 				return database.ref('users/' + payerId + '/name').once('value').then(function(payerSnapshot) {
 					const payerName = payerSnapshot.val();
+					const textHolder = document.createElement("td");
 					const invData = document.createElement("h4");
-					const invData = document.createElement("h4");
-					const invData = document.createElement("h4");
-					
-					newData.innerHTML = astrasInvolved + "A -> " + receiverName + transInvAddOn;
-					newData.style.borderStyle = "solid";
-					newData.style.borderColor = "lightgray";
-					newInv.appendChild(invData);
+					const buttonHolderOne = document.createElement("td");
+					const buttonHolderTwo = document.createElement("td");
+					const acceptButton = document.createElement("button");
+					const denyButton = document.createElement("button");
+
+					buttonHolderOne.appendChild(acceptButton);
+					buttonHolderTwo.appendChild(denyButton);
+					acceptButton.style.background = "lightgreen";
+					denyButton.style.background = "lightred";
+					acceptButton.innerHTML = "Accept";
+					denyButton.innerHTML = "Deny";
+					denyButton.className = "invoiceButton btn btn-danger";
+					acceptButton.className = "invoiceButton btn btn-success";
+					acceptButton.id = snapshot.key;
+					denyButton.id = snapshot.key;
+					acceptButton.onclick = function() { acceptInvoice(this.id) };
+					denyButton.onclick = function() { denyInvoice(this.id) };
+					invData.innerHTML = astrasInvolved + "A -> " + receiverName + transInvAddOn;
+					invData.style.borderStyle = "solid";
+					invData.style.borderColor = "lightgray";
+					textHolder.appendChild(invData);
+					newInv.appendChild(textHolder);
+					newInv.appendChild(buttonHolderOne);
+					newInv.appendChild(buttonHolderTwo);
 
 					document.getElementById("invoiceHistTable").appendChild(newInv);
 				})
