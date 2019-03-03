@@ -38,7 +38,7 @@
 		margin-top: 30px;
 	}
 	#title {
-		margin-top: 30px;
+		margin-top: 15px;
 		font-size: 50px;
 	}
 	#astrasToExchange {
@@ -60,7 +60,7 @@
 		margin-right: 5px;
 	}
 	#userDisplay {
-		margin-top: 20px;
+		margin-top: 10px;
 	}
 	#receiver {
 		margin-top: -20px;
@@ -78,8 +78,7 @@
 	}
 	#logo {
 		margin-top: 20px;
-		width: 165px;
-		height: 165px;
+		width: 135px;
 	}
 	#copyright {
 		text-align: right;
@@ -150,9 +149,9 @@
 		margin: 0 auto;
 	}
 	.menuIcon {
-		width: 80px;
-		margin-left: 0px;
-		margin-right: 0px;
+		width: 75px;
+		margin-left: 2px;
+		margin-right: 2px;
 		transition: outline-color 0.2s ease-out;
 		outline-color: rgba(0, 0, 250, 0);
 	}
@@ -161,15 +160,11 @@
 		outline-color: rgba(0, 0, 250, 0.1);
 	}
 	#iconBar {
-		margin-top: -54px;
+		margin-top: -51px;
 		margin-left: 310px;
 	}
 	#savePinButton {
 		margin-top: 20px;
-	}
-	#btmIcon {
-		height: 57px;
-		margin-bottom: 1.1px;
 	}
 	#soButton {
 		margin-top: 20px;
@@ -188,8 +183,8 @@
 		margin-top: -30px;
 	}
 	#debitCardConfigure {
-		margin-right: 4px;
-		margin-left: 150px;
+		margin-right: 149px;
+		margin-left: 4px;
 	}
 	#ivButton {
 		margin-top: 10px;
@@ -202,52 +197,45 @@
 		margin-left: -150px;
 	}
 	#invoiceHistBox {
-		border-right-style: solid;
-		border-right-color: lightgray;
 		margin-right: 20px;
 		padding-left: 20px;
 	}
 	#invMessageInput, #invAstrasInvolvedInput {
 		margin-top: 10px;
 	}
-	#top_navigation_bar {
-		overflow: hidden;
-		background-color: white;
-		height: 60px;
-	}
-	#top_navigation_bar a {
-		color: #434343;
-		text-align: center;
-		padding: 30px 30px;
-		text-decoration: none;
-		font-size: 20px;
+	.invoiceButton {
+		width: 80px;
+		height: 40px;
+		line-height: 10px;
+		margin-top: 0px;
 		vertical-align: middle;
 	}
-	#top_navigation_bar a:hover {
-		color: #eee;
-		
+	#invoiceCreationBox {
+		border-left-style: solid;
+		border-left-color: lightgray;
+		padding-left: 10px;
 	}
-	#top_navigation_bar a.active {
-		color: #3A0300;
+	#leaderboardIcon {
+		width: 77px;
+		margin-left: 4px;
+		margin-bottom: 1px;
 	}
 	</style>
 </head>
 <body>
-	<center>
-		<div class="top_navigation_bar" id="top_navigation_bar">
-			<ul>
-				<img class="primary_heading" style="height: 60px" src="https://i.imgur.com/hrRbh4F.png" onclick="window.location.href = 'main.html'"/>
-				<a onclick="openInVoiceInterface()" class="primary_heading">Invoices</a>
-				<a href="company.html" class="primary_heading">Companies</a>
-				<a onclick="window.location.href='investData.html?comp=index'" class="primary_heading">Stock Market</a>
-				<a href="bazaarTableManagement.html" class="primary_heading">Bazaar Tables</a>
-				<a onclick="showPin()" class="primary_heading">Debit Cards</a>
-				<a onclick="signOutUser()" class="primary_heading" style="color: #cc3333">Sign Out</a>
-			</ul>
-		</div>
-		<div style="background:#ddd;height: 1px;width: 100%;"></div>
-	</center>
-	<h1 id="title">Direct Pay</h1>
+	<div id="headerBox" class="flexContainer">
+		<img id="logo" src="https://i.imgur.com/ufHYGd9.png"/>
+	</div>
+	<div id="iconBar">
+	<!-- The code for invoices is just about complete, but I don't think they're a good feature, and thus I'm commenting this out! <img id="invoiceIcon" class="menuIcon" onclick="openInVoiceInterface()" src="https://i.imgur.com/sdl2GDF.png" />-->
+	<img id="debitCardConfigure" class="menuIcon" onclick="showPin()" src="https://i.imgur.com/XNRzL8b.png" />
+	<img id="companyInterface" onclick="window.location.href='company.html'" class="menuIcon" src="https://i.imgur.com/ElJDPc5.png">
+	<img id="graphWorksIcon" onclick="window.location.href='investData.html?comp=index'" class="menuIcon" src="https://i.imgur.com/HI4zOkz.png">
+	<a href="bazaarTableManagement.html"><img id="btmIcon" class="menuIcon" src="https://i.imgur.com/F3TNjOs.png"></a>
+	<img id="leaderboardIcon" onclick="openLeaderboard()" class="menuIcon" src="https://i.imgur.com/yhrOBSJ.png">
+	<img id="exitIcon" class="menuIcon" src="https://i.imgur.com/N5tesXB.png" onclick="signOutUser()">
+	</div>
+	<h1 id="title">Astra Exchange Network</h1>
 	<div class="flexContainer">
 	<img id="profileImage"/>
 	</div>
@@ -325,6 +313,31 @@
 					<input id="invMessageInput" type="text" class="form-control" placeholder="Message"/>
 					<button class="btn btn-primary" onclick="createInvoice()">Create Invoice</button>
 				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeButton">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="leaderboardModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content" id="leaderboardModalContainer">
+			<div class="modal-header">
+				<h3 class="modal-title" id="invModalLabel">Astra Exchange Leaderboard</h3>
+			</div>
+			<div class="modal-body" id="invModalMain">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Rank</th>
+							<th>Name</th>
+							<th>Wealth</th>
+						</tr>
+					</thead>
+					<tbody id="studentList">
+					</tbody>
+				</table>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeButton">Close</button>
@@ -542,6 +555,56 @@
 		return 0
 		}
 	}
+	function openLeaderboard() {
+		$("#leaderboardModal").modal("show");
+	}
+	function acceptInvoice(invoiceId) {
+		return firebase.database().ref("invoices/" + id + "/" + invoiceId).once('value').then(function(snapshot) {
+			const astrasInvolved = snapshot.val().amount;
+			const receiverId = snapshot.val().to;
+			const invoiceNote = snapshot.val().message;
+
+			database.ref('transactions/' + id).push({
+				time: getDate(),
+				from: id,
+				to: receiverId,
+				amount: astrasInvolved,
+				balance: userBalance - astrasInvolved,
+				message: invoiceNote
+			}).then(function() {
+				return firebase.database().ref("invoices/" + id + "/" + invoiceId).update({
+					status: "accepted"
+				}).then(function() {
+					return firebase.database().ref("invoices/" + invoiceReceiver + "/" + invoiceId).update({
+						status: "accepted"
+					}).then(function() {
+						alert("Invoice successfully accepted!");
+					});
+				})
+			});
+		});
+	}
+	function denyInvoice(invoiceId) {
+		return firebase.database().ref("invoices/" + id + "/" + invoiceId).once('value').then(function(snapshot) {
+			const astrasInvolved = snapshot.val().amount;
+			const invoiceReceiver = snapshot.val().from;
+
+			const confirmInvoiceDeny = confirm("Are you sure that you would like to deny this invoice?");
+			if (confirmInvoiceDeny) {
+				return firebase.database().ref("invoices/" + id + "/" + invoiceId).update({
+					status: "denied"
+				}).then(function() {
+					return firebase.database().ref("invoices/" + invoiceReceiver + "/" + invoiceId).update({
+						status: "denied"
+					}).then(function() {
+						alert("Invoice successfully denied!");
+					});
+				})
+			} else {
+				alert("Invoice deny request cancelled!");
+			}
+		});
+	}
 	function loadInvHist() {
 		let cleared = false;
 		database.ref('invoices/'+id).on('child_added', function(snapshot) {
@@ -554,7 +617,7 @@
 			const astrasInvolved = snapshot.val().amount
 			const dateOfInv = snapshot.val().time
 			const invNote = snapshot.val().message
-			const newInv = document.createElement("tr")
+			let newInv = document.createElement("tr")
 			let transInvAddOn = ""
 			if (invNote) {
 				transNoteAddOn = " [ "+invNote+" ]"
@@ -563,14 +626,32 @@
 				const receiverName = receiverSnapshot.val()
 				return database.ref('users/' + payerId + '/name').once('value').then(function(payerSnapshot) {
 					const payerName = payerSnapshot.val();
+					const textHolder = document.createElement("td");
 					const invData = document.createElement("h4");
-					const invData = document.createElement("h4");
-					const invData = document.createElement("h4");
-					
-					newData.innerHTML = astrasInvolved + "A -> " + receiverName + transInvAddOn;
-					newData.style.borderStyle = "solid";
-					newData.style.borderColor = "lightgray";
-					newInv.appendChild(invData);
+					const buttonHolderOne = document.createElement("td");
+					const buttonHolderTwo = document.createElement("td");
+					const acceptButton = document.createElement("button");
+					const denyButton = document.createElement("button");
+
+					buttonHolderOne.appendChild(acceptButton);
+					buttonHolderTwo.appendChild(denyButton);
+					acceptButton.style.background = "lightgreen";
+					denyButton.style.background = "lightred";
+					acceptButton.innerHTML = "Accept";
+					denyButton.innerHTML = "Deny";
+					denyButton.className = "invoiceButton btn btn-danger";
+					acceptButton.className = "invoiceButton btn btn-success";
+					acceptButton.id = snapshot.key;
+					denyButton.id = snapshot.key;
+					acceptButton.onclick = function() { acceptInvoice(this.id) };
+					denyButton.onclick = function() { denyInvoice(this.id) };
+					invData.innerHTML = astrasInvolved + "A -> " + receiverName + transInvAddOn;
+					invData.style.borderStyle = "solid";
+					invData.style.borderColor = "lightgray";
+					textHolder.appendChild(invData);
+					newInv.appendChild(textHolder);
+					newInv.appendChild(buttonHolderOne);
+					newInv.appendChild(buttonHolderTwo);
 
 					document.getElementById("invoiceHistTable").appendChild(newInv);
 				})
@@ -621,6 +702,44 @@
 			}
 		});
 	}
+	function loadLeaderboardData() {
+		return firebase.database().ref('users').on('value', function(snapshot) {
+			document.getElementById("studentList").innerHTML = "";
+			const userData = snapshot.val();
+			let wealthToUserData = {};
+			let userWealthArray = [];
+
+			for (target of Object.keys(userData)) {
+				const currentUserItem = userData[target];
+				wealthToUserData[Number(currentUserItem.balance)] = currentUserItem.name;
+			}
+
+			for (target of Object.keys(wealthToUserData)) {
+				userWealthArray.push(Number(target));
+			}
+			userWealthArray = userWealthArray.sort(function(a,b){return a - b}).reverse();
+
+			//document.getElementById("wealthiestStudentOne").innerHTML = wealthToUserData[userWealthArray[0]] + " : " + userWealthArray[0] + "A";
+			//document.getElementById("wealthiestStudentTwo").innerHTML = wealthToUserData[userWealthArray[1]] + " : " + userWealthArray[1] + "A";
+			//document.getElementById("wealthiestStudentThree").innerHTML = wealthToUserData[userWealthArray[2]] + " : " + userWealthArray[2] + "A";
+
+			for (let i=0;i<userWealthArray.length;i++) {
+				let newStudentRow = document.createElement("tr");
+				let studentIndex = document.createElement("td");
+				let newStudentName = document.createElement("td");
+				let newStudentWealth = document.createElement("td")
+				newStudentName.innerHTML = wealthToUserData[userWealthArray[i]];
+				newStudentWealth.innerHTML = userWealthArray[i]+"A";
+				studentIndex.innerHTML = i+1;
+
+				newStudentRow.appendChild(studentIndex);
+				newStudentRow.appendChild(newStudentName);
+				newStudentRow.appendChild(newStudentWealth);
+				document.getElementById("studentList").appendChild(newStudentRow);
+			}
+		});
+	}
+	loadLeaderboardData();
 	loadInvHist()
 	loadTransHist()
 	loadUserData()
