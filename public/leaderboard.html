@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+  	<link rel="shortcut icon" href="https://i.imgur.com/ufHYGd9.png">
+  	<script defer src="/__/firebase/5.7.3/firebase-app.js"></script>
+  	<script defer src="/__/firebase/5.7.3/firebase-auth.js"></script>
+  	<script defer src="/__/firebase/5.7.3/firebase-database.js"></script>
+  	<script src="https://www.gstatic.com/firebasejs/5.7.3/firebase.js"></script>
+  	<script defer src="/__/firebase/init.js"></script>
+  	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  	<link href="https://fonts.googleapis.com/css?family=Nunito:600,700" rel="stylesheet">
+  	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+  	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <title>Astra Exchange Leaderboard</title>
+    <style>
+      *,h1,h2,h3,h4 {
+        font-family: Nunito;
+        text-align: center;
+        color: rgba(0, 0, 0, 0.8);
+      }
+      #title {
+        margin-top: 20px;
+        margin-bottom: 35px;
+      }
+      #logo {
+        margin-top: 10px;
+      }
+      .table {
+        width: 600px;
+        margin: auto;
+      }
+      #wealthLabel {
+        margin-top: -25px;
+        margin-left: -400px;
+        margin-bottom: 5px;
+      }
+      /* Checkbox Styling */
+      .container {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      /* Hide the browser's default checkbox */
+      .container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+      }
+
+      /* Create a custom checkbox */
+      .checkmark {
+        position: absolute;
+        top: 0;
+        margin-left: 5px;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+      }
+
+      /* On mouse-over, add a grey background color */
+      .container:hover input ~ .checkmark {
+        background-color: #ccc;
+      }
+
+      /* When the checkbox is checked, add a blue background */
+      .container input:checked ~ .checkmark {
+        background-color: #2196F3;
+      }
+
+      /* Create the checkmark/indicator (hidden when not checked) */
+      .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+      }
+
+      /* Show the checkmark when checked */
+      .container input:checked ~ .checkmark:after {
+        display: block;
+      }
+
+      /* Style the checkmark/indicator */
+      .container .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+      }
+      #wpiContainer {
+        margin-top: -30px;
+        margin-right: -260px;
+        margin-bottom: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="headerBox" class="flexContainer">
+  		<img id="logo" src="https://i.imgur.com/ufHYGd9.png"/>
+  	</div>
+    <h1 id="title">Astra Exchange Student Leaderboard</h1>
+    <h5 id="wealthLabel"><i>Wealth Public: </i></h5>
+    <label class="container" id="wpiContainer">
+      <input id="wealthPublicInput" type="checkbox">
+      <span class="checkmark"></span>
+    </label>
+    <h2 id="wealthiestStudentOne"></h2>
+    <h3 id="wealthiestStudentTwo"></h2>
+    <h4 id="wealthiestStudentThree"></h2>
+    <table class="table">
+      <tbody id="studentList">
+      </tbody>
+    </table>
+    <script>
+      let userWealthArray = [];
+      let userData;
+      let config = {
+        apiKey: "AIzaSyDOfmd3fntDblft3mhjccRiEggWu_t5fW0",
+        authDomain: "astra-exchange.firebaseapp.com",
+        databaseURL: "https://astra-exchange.firebaseio.com",
+        projectId: "astra-exchange",
+        storageBucket: "astra-exchange.appspot.com",
+        messagingSenderId: "946665066699"
+      };
+      firebase.initializeApp(config);
+      let database = firebase.database();
+      function retrieveUserData() {
+        return firebase.database().ref('users/'+id).once('value').(function(snapshot) {
+          const userPendingValue = snapshot.val().wealthPublic ? snapshot.val().wealthPublic : true;
+
+          if (userPendingValue) {
+            document.getElementById("wealthPublicInput").click();
+          }
+        });
+      }
+      function loadLeaderboardData() {
+        return firebase.database().ref('users').on('value', function(snapshot) {
+          document.getElementById("studentList").innerHTML = "";
+          userData = snapshot.val();
+          let wealthToUserData = {};
+
+          for (target of Object.keys(userData)) {
+            const currentUserItem = userData[target];
+            wealthToUserData[Number(currentUserItem.balance)] = currentUserItem.name;
+          }
+
+          for (target of Object.keys(wealthToUserData)) {
+            userWealthArray.push(Number(target));
+          }
+          userWealthArray = userWealthArray.sort(function(a,b){return a - b}).reverse();
+
+          document.getElementById("wealthiestStudentOne").innerHTML = wealthToUserData[userWealthArray[0]] + " : " + userWealthArray[0] + "A";
+          document.getElementById("wealthiestStudentTwo").innerHTML = wealthToUserData[userWealthArray[1]] + " : " + userWealthArray[1] + "A";
+          document.getElementById("wealthiestStudentThree").innerHTML = wealthToUserData[userWealthArray[2]] + " : " + userWealthArray[2] + "A";
+
+          for (let i=3;i<userWealthArray.length;i++) {
+            let newStudentRow = document.createElement("tr");
+            let studentIndex = document.createElement("td");
+            let newStudentName = document.createElement("td");
+            let newStudentWealth = document.createElement("td")
+            newStudentName.innerHTML = wealthToUserData[userWealthArray[i]];
+            newStudentWealth.innerHTML = userWealthArray[i]+"A";
+            studentIndex.innerHTML = i;
+
+            newStudentRow.appendChild(studentIndex);
+            newStudentRow.appendChild(newStudentName);
+            newStudentRow.appendChild(newStudentWealth);
+            document.getElementById("studentList").appendChild(newStudentRow);
+          }
+        });
+      }
+      loadLeaderboardData();
+    </script>
+  </body>
+</html>
