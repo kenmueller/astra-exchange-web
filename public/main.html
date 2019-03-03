@@ -187,8 +187,8 @@
 		margin-top: -30px;
 	}
 	#debitCardConfigure {
-		margin-right: 160px;
-		margin-left: -90px;
+		margin-right: 150px;
+		margin-left: -5px;
 	}
 	#ivButton {
 		margin-top: 10px;
@@ -219,6 +219,10 @@
 		border-left-color: lightgray;
 		padding-left: 10px;
 	}
+	#leaderboardIcon {
+		height: 53px;
+		margin-left: 5px;
+	}
 	</style>
 </head>
 <body>
@@ -231,6 +235,7 @@
 	<img id="companyInterface" onclick="window.location.href='company.html'" class="menuIcon" src="https://i.imgur.com/aLgqM1V.png">
 	<img id="graphWorksIcon" onclick="window.location.href='investData.html?comp=index'" class="menuIcon" src="https://i.imgur.com/OM7iXc9.png">
 	<a href="bazaarTableManagement.html"><img id="btmIcon" class="menuIcon" src="https://imgur.com/6t3kyqw.png"></a>
+	<img id="leaderboardIcon" onclick="openLeaderboard()" class="menuIcon" src="https://i.imgur.com/yhrOBSJ.png">
 	<img id="exitIcon" class="menuIcon" src="https://i.imgur.com/N5tesXB.png" onclick="signOutUser()">
 	</div>
 	<h1 id="title">Astra Exchange Network</h1>
@@ -311,6 +316,31 @@
 					<input id="invMessageInput" type="text" class="form-control" placeholder="Message"/>
 					<button class="btn btn-primary" onclick="createInvoice()">Create Invoice</button>
 				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeButton">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="leaderboardModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content" id="leaderboardModalContainer">
+			<div class="modal-header">
+				<h3 class="modal-title" id="invModalLabel">Astra Exchange Leaderboard</h3>
+			</div>
+			<div class="modal-body" id="invModalMain">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Rank</th>
+							<th>Name</th>
+							<th>Wealth</th>
+						</tr>
+					</thead>
+					<tbody id="studentList">
+					</tbody>
+				</table>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeButton">Close</button>
@@ -528,6 +558,9 @@
 		return 0
 		}
 	}
+	function openLeaderboard() {
+		$("#leaderboardModal").modal("show");
+	}
 	function acceptInvoice(invoiceId) {
 		return firebase.database().ref("invoices/" + id + "/" + invoiceId).once('value').then(function(snapshot) {
 			const astrasInvolved = snapshot.val().amount;
@@ -672,6 +705,44 @@
 			}
 		});
 	}
+	function loadLeaderboardData() {
+		return firebase.database().ref('users').on('value', function(snapshot) {
+			document.getElementById("studentList").innerHTML = "";
+			const userData = snapshot.val();
+			let wealthToUserData = {};
+			let userWealthArray = [];
+
+			for (target of Object.keys(userData)) {
+				const currentUserItem = userData[target];
+				wealthToUserData[Number(currentUserItem.balance)] = currentUserItem.name;
+			}
+
+			for (target of Object.keys(wealthToUserData)) {
+				userWealthArray.push(Number(target));
+			}
+			userWealthArray = userWealthArray.sort(function(a,b){return a - b}).reverse();
+
+			//document.getElementById("wealthiestStudentOne").innerHTML = wealthToUserData[userWealthArray[0]] + " : " + userWealthArray[0] + "A";
+			//document.getElementById("wealthiestStudentTwo").innerHTML = wealthToUserData[userWealthArray[1]] + " : " + userWealthArray[1] + "A";
+			//document.getElementById("wealthiestStudentThree").innerHTML = wealthToUserData[userWealthArray[2]] + " : " + userWealthArray[2] + "A";
+
+			for (let i=0;i<userWealthArray.length;i++) {
+				let newStudentRow = document.createElement("tr");
+				let studentIndex = document.createElement("td");
+				let newStudentName = document.createElement("td");
+				let newStudentWealth = document.createElement("td")
+				newStudentName.innerHTML = wealthToUserData[userWealthArray[i]];
+				newStudentWealth.innerHTML = userWealthArray[i]+"A";
+				studentIndex.innerHTML = i+1;
+
+				newStudentRow.appendChild(studentIndex);
+				newStudentRow.appendChild(newStudentName);
+				newStudentRow.appendChild(newStudentWealth);
+				document.getElementById("studentList").appendChild(newStudentRow);
+			}
+		});
+	}
+	loadLeaderboardData();
 	loadInvHist()
 	loadTransHist()
 	loadUserData()
