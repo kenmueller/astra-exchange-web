@@ -8,7 +8,7 @@
 			".write": true
 		},
 		"companies": {
-      ".read": true,
+      		".read": true,
 			"$uid": {
 				".write": "$uid === auth.uid",
 				"products": {
@@ -45,7 +45,7 @@
 						".validate": "(newData.isNumber() && ((newData.val() > 0 && newData.val() <= root.child('users/' + $uid + '/balance').val()) || auth.uid === 'h621pgey1vPfxrmoW5LUkZaHkhT2')) || (newData.isString() && newData.val().length === 2 && auth.uid === 'h621pgey1vPfxrmoW5LUkZaHkhT2')"
 					},
 					"balance": {
-						".validate": "newData.isNumber() && newData.val() >= 0"
+						".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() < root.child('users/' + $uid + '/balance').val()"
 					},
 					"message": {
 						".validate": "newData.isString()"
@@ -140,6 +140,9 @@
 					}
 				}
 			}
+		},
+		"version": {
+			".read": true
 		}
 	}
 }
