@@ -30,7 +30,7 @@
     <h1 id="wealthOfUser"></h1>
     <video autoplay="autoplay" class="active" id="preview"></video>
     <script>
-      let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+      let scanner = new Instascan.Scanner({ video: document.getElementById('preview') })
 
       let config = {
         apiKey: "AIzaSyDOfmd3fntDblft3mhjccRiEggWu_t5fW0",
@@ -39,39 +39,39 @@
         projectId: "astra-exchange",
         storageBucket: "astra-exchange.appspot.com",
         messagingSenderId: "946665066699"
-      };
-      firebase.initializeApp(config);
-      let defaultDatabase = firebase.database();
+      }
+      firebase.initializeApp(config)
+      let defaultDatabase = firebase.database()
 
       Instascan.Camera.getCameras().then(function (cameras) {
         if (cameras.length > 0) {
-          scanner.start(cameras[0]);
-          document.getElementById("preview").style.background = "";
-          currentSetting = 1;
-          document.getElementById("title").innerHTML = name;
-          openSellingMenuDisplays();
+          scanner.start(cameras[0])
+          document.getElementById("preview").style.background = ""
+          currentSetting = 1
+          document.getElementById("title").innerHTML = name
+          openSellingMenuDisplays()
         } else {
-          alert("No cameras found!");
+          alert("No cameras found!")
         }
       }).catch(function (e) {
         alert("Error!")
-      });
+      })
 
       scanner.addListener('scan', function (content) {
-        const cardId = CryptoJS.AES.decrypt(content, "1r80823f8u2380r0h82f0hdobufhaw-qji2edjqwidnbq39r02qbf").toString(CryptoJS.enc.Utf8);
+        const cardId = CryptoJS.AES.decrypt(content, "1r80823f8u2380r0h82f0hdobufhaw-qji2edjqwidnbq39r02qbf").toString(CryptoJS.enc.Utf8)
         return firebase.database().ref('cards/' + cardId).once('value').then(function(snapshot) {
-          const customerId = snapshot.val();
+          const customerId = snapshot.val()
 
           if (customerId) {
             return firebase.database().ref('users/' + customerId).once('value').then(function(snapshot) {
-              document.getElementById("nameOfUser").innerHTML = snapshot.val().name;
-              document.getElementById("wealthOfUser").innerHTML = snapshot.val().balance;
-            });
+              document.getElementById("nameOfUser").innerHTML = snapshot.val().name
+              document.getElementById("wealthOfUser").innerHTML = snapshot.val().balance
+            })
           } else {
             alert("This card's id does not exist in the database! Please alert Kai he fudged up!")
           }
-        });
-      });
+        })
+      })
     </script>
   </body>
 </html>

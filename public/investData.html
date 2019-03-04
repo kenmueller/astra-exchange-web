@@ -57,8 +57,6 @@
         border-style: solid;
         border-color: lightgray;
       }
-      .compRowOne {
-      }
       .compRow, .compRowOne {
         height: 340px;
         width: 1050px;
@@ -137,8 +135,8 @@
       <canvas id="pvGraph" width="800" height="400" style="border:3px solid lightgray; background:rgba(0,0,0,0.01)"
     </div>
     <script>
-      let compName;
-      let pvHistObject;
+      let compName
+      let pvHistObject
       let defaultImageLink = "https://i.imgur.com/lBJXFA9.png"
       let config = {
     		apiKey: "AIzaSyDOfmd3fntDblft3mhjccRiEggWu_t5fW0",
@@ -147,79 +145,79 @@
     		projectId: "astra-exchange",
     		storageBucket: "astra-exchange.appspot.com",
     		messagingSenderId: "946665066699"
-    	};
+    	}
     	firebase.initializeApp(config)
-      const monthObject = {1:"Janurary",2:"Feburary",3:"March",4:"April",5:"May",6:"June",7:"July",8:"August",9:"September",10:"October",11:"November",12:"December"};
+      const monthObject = {1:"Janurary",2:"Feburary",3:"March",4:"April",5:"May",6:"June",7:"July",8:"August",9:"September",10:"October",11:"November",12:"December"}
 
-      $("#dataDiv").hide();
+      $("#dataDiv").hide()
       function loadInvestmentData(url) {
-          let invCompanyId = decodeURIComponent(url.split('?comp=')[1]);
+          let invCompanyId = decodeURIComponent(url.split('?comp=')[1])
           if (invCompanyId!="index") {
             if (invCompanyId) {
-              $("#dataDiv").show();
-              $("#mainDiv").hide();
-              loadCompInvestData(invCompanyId);
+              $("#dataDiv").show()
+              $("#mainDiv").hide()
+              loadCompInvestData(invCompanyId)
             } else {
               document.getElementById("pageHeader").innerHTML = "The Company You're Searching For Doesn't Exist!"
             }
           } else {
-            loadIndexData();
+            loadIndexData()
           }
       }
       function loadCompInvestData(invCompanyId) {
         return firebase.database().ref('companies/'+invCompanyId).once('value').then(function(snapshot) {
-          const compLogo = snapshot.val().logo;
-          const compPvHist = pvHistObject[invCompanyId];
-          compName = snapshot.val().name;
+          const compLogo = snapshot.val().logo
+          const compPvHist = pvHistObject[invCompanyId]
+          compName = snapshot.val().name
 
-          let c = document.getElementById("pvGraph");
-          let ctx = c.getContext("2d");
-          ctx.lineWidth = 6;
-          ctx.strokeStyle = "lightgray";
-          ctx.fillStyle = "rgba(0,0,0,0.1)";
-          ctx.globalCompositeOperation='destination-over';
+          let c = document.getElementById("pvGraph")
+          let ctx = c.getContext("2d")
+          ctx.lineWidth = 6
+          ctx.strokeStyle = "lightgray"
+          ctx.fillStyle = "rgba(0,0,0,0.1)"
+          ctx.globalCompositeOperation='destination-over'
 
-          let currentLineX = 1;
-          let currentLineY = c.height;
+          let currentLineX = 1
+          let currentLineY = c.height
           for (target of Object.keys(compPvHist)) {
-            const bazaarPv = compPvHist[target].pv;
+            const bazaarPv = compPvHist[target].pv
 
             //(currentLineX/Object.keys(compPvHist).length)*c.width
-            ctx.moveTo(500, currentLineY);
-            ctx.lineTo(0, (bazaarPv*(c.height/6))+(c.height/2));
-            ctx.stroke();
-            /*ctx.font = "30px Nunito";
-            ctx.fillText();
-            ctx.fillRect();
-            ctx.stroke();*/
+            ctx.moveTo(500, currentLineY)
+            ctx.lineTo(0, (bazaarPv*(c.height/6))+(c.height/2))
+            ctx.stroke()
+            /*ctx.font = "30px Nunito"
+            ctx.fillText()
+            ctx.fillRect()
+            ctx.stroke()*/
 
-            currentLineX += 1;
-            currentLineY -= c.height - (bazaarPv*(c.height/6))+(c.height/2);
-            console.log("Iter: "+currentLineX);
+            currentLineX += 1
+            currentLineY -= c.height - (bazaarPv*(c.height/6))+(c.height/2)
+            console.log("Iter: "+currentLineX)
           }
-          document.getElementById("invCompanyName").innerHTML = compName;
-          document.getElementById("documentTitle").innerHTML = "GraphWorks - "+compName;
-        });
+          document.getElementById("invCompanyName").innerHTML = compName
+          document.getElementById("documentTitle").innerHTML = "GraphWorks - "+compName
+        })
       }
       function loadPvHistData() {
         return firebase.database().ref('pvHist/').once('value').then(function(snapshot) {
-            pvHistObject = snapshot.val();
+            pvHistObject = snapshot.val()
 
-            let calculatedDates = [];
+            let calculatedDates = []
             for (target of Object.keys(pvHistObject)) {
               for (dateData of Object.keys(pvHistObject[target])) {
                 if (!calculatedDates.includes(dateData)) {
-                  let pvDataLength = 0;
-                  let pvDataSum = 0;
+                  let pvDataLength = 0
+                  let pvDataSum = 0
 
                   // Sum up all pvs for that date
                   for (compId of Object.keys(pvHistObject)) {
                     for (dateOfItem of Object.keys(pvHistObject[compId])) {
                       if (dateOfItem == dateData) {
-                        const pvHistList = pvHistObject[compId][dateOfItem];
+                        const pvHistList = pvHistObject[compId][dateOfItem]
 
-                        pvDataLength++;
-                        pvDataSum += pvHistList.sales;
+                        pvDataLength++
+                        pvDataSum += pvHistList.sales
                       }
                     }
                   }
@@ -229,124 +227,124 @@
                   for (compId of Object.keys(pvHistObject)) {
                     for (dateOfToEditItem of Object.keys(pvHistObject[compId])) {
                       if (dateOfToEditItem == dateData) {
-                        const pvHistList = pvHistObject[compId][dateOfToEditItem];
-                        pvHistObject[compId][dateOfToEditItem]["pv"] = (pvHistList.sales)/averageSales;
+                        const pvHistList = pvHistObject[compId][dateOfToEditItem]
+                        pvHistObject[compId][dateOfToEditItem]["pv"] = (pvHistList.sales)/averageSales
                       }
                     }
                   }
-                  calculatedDates.push(dateData);
+                  calculatedDates.push(dateData)
                 }
               }
             }
         })
       }
       function countIfPvExist(input) {
-        let counter = 0;
+        let counter = 0
         for (target of input) {
           if (Object.keys(pvHistObject).includes(target)) {
-            counter += 1;
+            counter += 1
           }
         }
-        return counter;
+        return counter
       }
       function loadIndexData() {
 
         return firebase.database().ref('companies/').once('value').then(function(snapshot) {
-          compDataExist = false;
-          secTicker = 0;
-          newCompRow = document.createElement("div");
-          newCompRow.className = "compRow";
+          compDataExist = false
+          secTicker = 0
+          newCompRow = document.createElement("div")
+          newCompRow.className = "compRow"
           let compCount = countIfPvExist(Object.keys(snapshot.val()))
         	for (target of Object.keys(snapshot.val())) {
 
             if (Object.keys(pvHistObject).includes(target)) {
-              const compData = snapshot.val()[target];
-              let currentCompPv;
-              let newCompEntryDisplay = document.createElement("div");
-              let newCompLogo = document.createElement("img");
-              let compNameDisplay = document.createElement("h5");
-              let compLatestPvDisplay = document.createElement("h6");
-              let compIndustryDisplay = document.createElement("h6");
+              const compData = snapshot.val()[target]
+              let currentCompPv
+              let newCompEntryDisplay = document.createElement("div")
+              let newCompLogo = document.createElement("img")
+              let compNameDisplay = document.createElement("h5")
+              let compLatestPvDisplay = document.createElement("h6")
+              let compIndustryDisplay = document.createElement("h6")
 
 
-              currentCompPv = pvHistObject[target][Object.keys(pvHistObject[target])[Object.keys(pvHistObject[target]).length - 1]].pv + "PV";
+              currentCompPv = pvHistObject[target][Object.keys(pvHistObject[target])[Object.keys(pvHistObject[target]).length - 1]].pv + "PV"
 
-              newCompLogo.id = target;
+              newCompLogo.id = target
               newCompLogo.onclick = function() { window.location.href = `?comp=${this.id}` }
-              compLatestPvDisplay.className = "pvDisplay";
-              compIndustryDisplay.className = "industryDisplay";
-              newCompLogo.className = "logoImg";
-              newCompEntryDisplay.className = "compEntry";
-              compNameDisplay.innerHTML = compData.name;
-              compLatestPvDisplay.innerHTML = currentCompPv ? currentCompPv : "Start-Up";
-              newCompLogo.src = compData.logo ? compData.logo : defaultImageLink;
-              compIndustryDisplay.innerHTML = compData.industry;
+              compLatestPvDisplay.className = "pvDisplay"
+              compIndustryDisplay.className = "industryDisplay"
+              newCompLogo.className = "logoImg"
+              newCompEntryDisplay.className = "compEntry"
+              compNameDisplay.innerHTML = compData.name
+              compLatestPvDisplay.innerHTML = currentCompPv ? currentCompPv : "Start-Up"
+              newCompLogo.src = compData.logo ? compData.logo : defaultImageLink
+              compIndustryDisplay.innerHTML = compData.industry
               if (compData.logo == "companyInterfaceIcon.png") {
-                newCompLogo.src = defaultImageLink;
+                newCompLogo.src = defaultImageLink
               }
               if (compData.name <= 18) {
-                compNameDisplay.style.marginTop = "10px";
+                compNameDisplay.style.marginTop = "10px"
               }
-              newCompEntryDisplay.style.display = "inline-block";
+              newCompEntryDisplay.style.display = "inline-block"
 
               console.log(compData.name + " : "+target)
 
               newCompEntryDisplay.appendChild(newCompLogo)
-              newCompEntryDisplay.appendChild(compNameDisplay);
-              newCompEntryDisplay.appendChild(compLatestPvDisplay);
-              newCompEntryDisplay.appendChild(compIndustryDisplay);
-              newCompRow.appendChild(newCompEntryDisplay);
+              newCompEntryDisplay.appendChild(compNameDisplay)
+              newCompEntryDisplay.appendChild(compLatestPvDisplay)
+              newCompEntryDisplay.appendChild(compIndustryDisplay)
+              newCompRow.appendChild(newCompEntryDisplay)
 
-              secTicker += 1;
-              compCount -= 1;
+              secTicker += 1
+              compCount -= 1
               console.log(compCount)
               if (secTicker == 3 || compCount == 0) {
-                secTicker = 0;
+                secTicker = 0
               }
               if (secTicker == 0) {
-                const secToAppend = newCompRow;
-                document.getElementById("compList").appendChild(secToAppend);
-                newCompRow = document.createElement("div");
-                newCompRow.className = "compRow";
+                const secToAppend = newCompRow
+                document.getElementById("compList").appendChild(secToAppend)
+                newCompRow = document.createElement("div")
+                newCompRow.className = "compRow"
               }
             }
           }
         })
       }
       function getMonth() {
-        const DateObj = new Date();
-        const currentMonth = DateObj.getMonth();
-        return monthObject[currentMonth+1];
+        const DateObj = new Date()
+        const currentMonth = DateObj.getMonth()
+        return monthObject[currentMonth+1]
       }
       function getInvestDate() {
-    		const dateList = Date().split(" ");
-    		return `${dateList[2]},${getSeason()},${dateList[3]}`;
+    		const dateList = Date().split(" ")
+    		return `${dateList[2]},${getSeason()},${dateList[3]}`
       }
       function toPercent(x) {
-        const sigFigures = x.split(".")[1];
-        return `${sigFigures.substring(0,2)}.${sigFigures.substring(2,3)}%`;
+        const sigFigures = x.split(".")[1]
+        return `${sigFigures.substring(0,2)}.${sigFigures.substring(2,3)}%`
       }
       function standardDev(data) {
-        let sum = 0;
-        const count = data.length;
+        let sum = 0
+        const count = data.length
 
         for (target of data) {
-          sum += target;
+          sum += target
         }
 
-        const average = sum / count;
+        const average = sum / count
         console.log("Avg : " + average)
 
-        let squareDiffSum = 0;
+        let squareDiffSum = 0
 
         for (target of data) {
-          squareDiffSum += Math.pow((target - average), 2);
+          squareDiffSum += Math.pow((target - average), 2)
         }
         console.log("squareDiffSum : ", squareDiffSum)
-        return Math.sqrt(squareDiffSum);
+        return Math.sqrt(squareDiffSum)
       }
-      loadPvHistData();
-      loadInvestmentData(window.location.href);
+      loadPvHistData()
+      loadInvestmentData(window.location.href)
     </script>
   </body>
 </html>

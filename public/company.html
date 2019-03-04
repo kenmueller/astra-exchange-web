@@ -539,33 +539,33 @@
       </div>
     </div>
     <script>
-      let id = document.cookie;
-      const d = new Date();
-      let name;
-      let enteredPin;
-      let pinInputActive=false;
-      let compBalance;
-      let user = [];
-      let customerWealth;
-      let productPrice;
-      let customerName;
-      let productSaves = {};
-      let industryOC;
-      let compLogo;
-      let cardId;
-      let currentNewLogoData;
-      let idOfCurrentProduct;
-      let productData = {};
-      let lastProductId = 1;
-      let cameraPermitted = false;
-      let companyWealth;
-      let reader = new FileReader();
-      let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
-      let currentSetting = 0;
+      let id = document.cookie
+      const d = new Date()
+      let name
+      let enteredPin
+      let pinInputActive=false
+      let compBalance
+      let user = []
+      let customerWealth
+      let productPrice
+      let customerName
+      let productSaves = {}
+      let industryOC
+      let compLogo
+      let cardId
+      let currentNewLogoData
+      let idOfCurrentProduct
+      let productData = {}
+      let lastProductId = 1
+      let cameraPermitted = false
+      let companyWealth
+      let reader = new FileReader()
+      let scanner = new Instascan.Scanner({ video: document.getElementById('preview') })
+      let currentSetting = 0
 
-      $("#companyInterface").hide();
-      $("#currentCNameDisplay").hide();
-      $("#currentPidDisplay").hide();
+      $("#companyInterface").hide()
+      $("#currentCNameDisplay").hide()
+      $("#currentPidDisplay").hide()
       let config = {
         apiKey: "AIzaSyDOfmd3fntDblft3mhjccRiEggWu_t5fW0",
         authDomain: "astra-exchange.firebaseapp.com",
@@ -573,36 +573,36 @@
         projectId: "astra-exchange",
         storageBucket: "astra-exchange.appspot.com",
         messagingSenderId: "946665066699"
-      };
-      firebase.initializeApp(config);
-      let defaultDatabase = firebase.database();
-      let storage = firebase.storage();
+      }
+      firebase.initializeApp(config)
+      let defaultDatabase = firebase.database()
+      let storage = firebase.storage()
       function deleteProduct(pId) {
         firebase.database().ref('companies/' + id + "/products/" + pId).remove().then(function() {
-          loadCompData();
-        });
+          loadCompData()
+        })
       }
       function saveNewProduct() {
-        const newProdName = document.getElementById("productNameInput").value;
-        const newProdCost = Number(document.getElementById("productCostInput").value);
+        const newProdName = document.getElementById("productNameInput").value
+        const newProdCost = Number(document.getElementById("productCostInput").value)
         firebase.database().ref('companies/' + id + "/products").push({
           name: newProdName,
           cost: newProdCost,
           inStock: true
         }).then(function() {
-          document.getElementById("productNameInput").value = "";
-          document.getElementById("productCostInput").value = "";
-          alert("Product Addition Successful!");
-        });
+          document.getElementById("productNameInput").value = ""
+          document.getElementById("productCostInput").value = ""
+          alert("Product Addition Successful!")
+        })
       }
       function changeStock(pId) {
-        const productDBId = pId.split("|")[0];
-        const productNumId = pId.split("|")[1];
-        const productDataList = productSaves[productNumId];
-        const productName = productDataList[0];
-        const productCost = productDataList[1];
-        const productInStock = !productDataList[2];
-        const checkValue = !document.getElementById(pId).checked;
+        const productDBId = pId.split("|")[0]
+        const productNumId = pId.split("|")[1]
+        const productDataList = productSaves[productNumId]
+        const productName = productDataList[0]
+        const productCost = productDataList[1]
+        const productInStock = !productDataList[2]
+        const checkValue = !document.getElementById(pId).checked
         console.log(checkValue)
         firebase.database().ref('companies/' + id + '/products/' + productDBId).set({
           name: productName,
@@ -613,240 +613,240 @@
         })
       }
       function loadCompData() {
-        console.log("Loading Company Data...");
-        let compData = firebase.database().ref('companies/' + id);
+        console.log("Loading Company Data...")
+        let compData = firebase.database().ref('companies/' + id)
         compData.on('value', function(snapshot) {
             if (snapshot.val()) {
-              document.getElementById("compNameInput").value = "";
-              document.getElementById("productListConfig").innerHTML = "";
-              document.getElementById("productList").innerHTML = "";
+              document.getElementById("compNameInput").value = ""
+              document.getElementById("productListConfig").innerHTML = ""
+              document.getElementById("productList").innerHTML = ""
 
-              name = snapshot.val().name;
-              compLogo = snapshot.val().logo ? snapshot.val().logo : "https://i.imgur.com/lBJXFA9.png";
-              products = snapshot.val().products;
-              industryOC = snapshot.val().industry;
+              name = snapshot.val().name
+              compLogo = snapshot.val().logo ? snapshot.val().logo : "https://i.imgur.com/lBJXFA9.png"
+              products = snapshot.val().products
+              industryOC = snapshot.val().industry
 
-              document.getElementById("logo").src = compLogo;
-              $("#selectIndustry").val(industryOC).select();
-              document.getElementById("compTitle").innerHTML = name;
-              document.getElementById("compIndustry").innerHTML = "Industry: "+industryOC;
+              document.getElementById("logo").src = compLogo
+              $("#selectIndustry").val(industryOC).select()
+              document.getElementById("compTitle").innerHTML = name
+              document.getElementById("compIndustry").innerHTML = "Industry: "+industryOC
               if (industryOC == "Unspecified") {
                 document.getElementById("alertDeveloper").innerHTML = "<i>If your company's industry isn't listed, please inform Kai!</i>"
               } else {
-                document.getElementById("alertDeveloper").innerHTML = "";
+                document.getElementById("alertDeveloper").innerHTML = ""
               }
-              productSaves = {};
-              lastProductId = 1;
+              productSaves = {}
+              lastProductId = 1
               try {
                 if (products) {
                   for (target of Object.keys(products)) {
-                      const currentProduct = products[target];
-                      const productName = currentProduct.name;
-                      const productCost = currentProduct.cost;
-                      const productInStock = currentProduct.inStock;
-                      const newProductSave = [productName, productCost, productInStock];
-                      productSaves[lastProductId] = newProductSave;
-                      const newProductDisplay = document.createElement("tr");
-                      const productIdDisplay = document.createElement("th");
-                      const productNameDisplay = document.createElement("th");
-                      const productCostDisplay = document.createElement("th");
-                      const productInStockDisplay = document.createElement("th");
-                      const buttonContainer = document.createElement("th");
-                      const deleteButton = document.createElement("button");
+                      const currentProduct = products[target]
+                      const productName = currentProduct.name
+                      const productCost = currentProduct.cost
+                      const productInStock = currentProduct.inStock
+                      const newProductSave = [productName, productCost, productInStock]
+                      productSaves[lastProductId] = newProductSave
+                      const newProductDisplay = document.createElement("tr")
+                      const productIdDisplay = document.createElement("th")
+                      const productNameDisplay = document.createElement("th")
+                      const productCostDisplay = document.createElement("th")
+                      const productInStockDisplay = document.createElement("th")
+                      const buttonContainer = document.createElement("th")
+                      const deleteButton = document.createElement("button")
 
-                      const newCheckBoxContainer = document.createElement("label");
-                      const newCheckBox = document.createElement("input");
-                      const newCheckMark = document.createElement("span");
+                      const newCheckBoxContainer = document.createElement("label")
+                      const newCheckBox = document.createElement("input")
+                      const newCheckMark = document.createElement("span")
 
-                      newCheckBoxContainer.className = "container";
-                      newCheckBox.type = "checkbox";
-                      newCheckMark.className = "checkmark";
-                      newCheckBox.id = target+"|"+lastProductId;
-                      newCheckBox.onclick = function() { changeStock(this.id) };
+                      newCheckBoxContainer.className = "container"
+                      newCheckBox.type = "checkbox"
+                      newCheckMark.className = "checkmark"
+                      newCheckBox.id = target+"|"+lastProductId
+                      newCheckBox.onclick = function() { changeStock(this.id) }
 
-                      newCheckBoxContainer.appendChild(newCheckBox);
-                      newCheckBoxContainer.appendChild(newCheckMark);
+                      newCheckBoxContainer.appendChild(newCheckBox)
+                      newCheckBoxContainer.appendChild(newCheckMark)
 
-                      productIdDisplay.innerHTML = lastProductId;
-                      productNameDisplay.innerHTML = productName;
-                      productCostDisplay.innerHTML = productCost+"A";
-                      newCheckBox.checked = productInStock;
-                      productInStockDisplay.innerHTML = productInStock ? "In Stock" : "Sold Out";
-                      newProductDisplay.style.textDecoration = productInStock ? "" : "line-through";
-                      deleteButton.innerHTML = "X";
-                      deleteButton.style.marginBottom = "0px";
-                      deleteButton.style.marginTop = "0px";
-                      deleteButton.style.height = "40px";
-                      deleteButton.className = "btn btn-danger";
-                      deleteButton.id = target;
-                      deleteButton.setAttribute('onclick','deleteProduct(this.id)');
-                      deleteButton.style.width = "100%";
-                      buttonContainer.appendChild(deleteButton);
+                      productIdDisplay.innerHTML = lastProductId
+                      productNameDisplay.innerHTML = productName
+                      productCostDisplay.innerHTML = productCost+"A"
+                      newCheckBox.checked = productInStock
+                      productInStockDisplay.innerHTML = productInStock ? "In Stock" : "Sold Out"
+                      newProductDisplay.style.textDecoration = productInStock ? "" : "line-through"
+                      deleteButton.innerHTML = "X"
+                      deleteButton.style.marginBottom = "0px"
+                      deleteButton.style.marginTop = "0px"
+                      deleteButton.style.height = "40px"
+                      deleteButton.className = "btn btn-danger"
+                      deleteButton.id = target
+                      deleteButton.setAttribute('onclick','deleteProduct(this.id)')
+                      deleteButton.style.width = "100%"
+                      buttonContainer.appendChild(deleteButton)
 
-                      newProductDisplay.appendChild(productIdDisplay);
-                      newProductDisplay.appendChild(productNameDisplay);
-                      newProductDisplay.appendChild(productCostDisplay);
-                      newProductDisplay.appendChild(productInStockDisplay);
-                      const modalList = newProductDisplay.cloneNode(true);
-                      modalList.appendChild(newCheckBoxContainer);
+                      newProductDisplay.appendChild(productIdDisplay)
+                      newProductDisplay.appendChild(productNameDisplay)
+                      newProductDisplay.appendChild(productCostDisplay)
+                      newProductDisplay.appendChild(productInStockDisplay)
+                      const modalList = newProductDisplay.cloneNode(true)
+                      modalList.appendChild(newCheckBoxContainer)
                       modalList.appendChild(buttonContainer)
-                      document.getElementById("productListConfig").appendChild(modalList);
-                      document.getElementById("productList").appendChild(newProductDisplay);
-                      lastProductId += 1;
+                      document.getElementById("productListConfig").appendChild(modalList)
+                      document.getElementById("productList").appendChild(newProductDisplay)
+                      lastProductId += 1
                   }
                 }
               } catch(error) {
-                alert("There has been an error! '" + error + "'");
+                alert("There has been an error! '" + error + "'")
               }
-              $("#companyInterface").show();
-              $("#loadingData").hide();
-              lastProductId += 1;
-              recievedBalance = true;
+              $("#companyInterface").show()
+              $("#loadingData").hide()
+              lastProductId += 1
+              recievedBalance = true
               } else {
-                document.getElementById("loadingData").innerHTML = "No Company Data Exists! Go and Alert Ken that He Fudged With The Database!";
+                document.getElementById("loadingData").innerHTML = "No Company Data Exists! Go and Alert Ken that He Fudged With The Database!"
               }
-            });
+            })
         }
       scanner.addListener('scan', function (content) {
-        cardId = CryptoJS.AES.decrypt(content, "1r80823f8u2380r0h82f0hdobufhaw-qji2edjqwidnbq39r02qbf").toString(CryptoJS.enc.Utf8);
+        cardId = CryptoJS.AES.decrypt(content, "1r80823f8u2380r0h82f0hdobufhaw-qji2edjqwidnbq39r02qbf").toString(CryptoJS.enc.Utf8)
         return firebase.database().ref('cards/' + cardId).once('value').then(function(snapshot) {
-          const customerId = snapshot.val();
+          const customerId = snapshot.val()
           if (customerId == id) {
-            alert("Stop trying to buy your own products to make yourself feel more popular, you fool!");
+            alert("Stop trying to buy your own products to make yourself feel more popular, you fool!")
           } else {
             if (customerId) {
               return firebase.database().ref('users/' + customerId).once('value').then(function(snapshot) {
                 if (idOfCurrentProduct) {
-                  customerWealth = snapshot.val().balance;
-                  productPrice = Number(productSaves[idOfCurrentProduct][1]);
+                  customerWealth = snapshot.val().balance
+                  productPrice = Number(productSaves[idOfCurrentProduct][1])
 
                   if (customerWealth >= productPrice) {
-                    customerWealth = Number(snapshot.val().balance);
-                    customerName = snapshot.val().name;
-                    document.getElementById("currentCNameDisplay").innerHTML = customerName;
-                    $("#enterPinForPurchase").modal("show");
-                    pinInputActive = true;
+                    customerWealth = Number(snapshot.val().balance)
+                    customerName = snapshot.val().name
+                    document.getElementById("currentCNameDisplay").innerHTML = customerName
+                    $("#enterPinForPurchase").modal("show")
+                    pinInputActive = true
                   } else {
                     alert("You lack sufficient funds to purchase this product! Wealth : " + customerWealth + "A")
                   }
                 } else {
                   alert("A product has yet to be selected!")
                 }
-              });
+              })
             } else {
               alert("This card's id does not exist in the database! Please alert Kai he fudged up!")
             }
           }
-        });
-      });
+        })
+      })
       function closeSellingMenu() {
-        currentSetting = 0;
-        console.log("Closing Down...");
-        document.getElementById("title").innerHTML = "Company Configurations";
-        $("#openClModalButton").show();
-        $("#currentCNameDisplay").hide();
-        $("#currentPidDisplay").hide();
-        $("#compTitle").show();
-        $("#selectIndustry").show();
-        $("#compTitle").show();
-        $("#sdButton").show();
-        $("#compNameInput").show();
-        $("#currentPV").show();
-        $("#compIndustry").show();
-        $("#preview").hide();
-        $("#productTable").hide();
-        $("#eProducts").show();
-        $("#alertDeveloper").show();
+        currentSetting = 0
+        console.log("Closing Down...")
+        document.getElementById("title").innerHTML = "Company Configurations"
+        $("#openClModalButton").show()
+        $("#currentCNameDisplay").hide()
+        $("#currentPidDisplay").hide()
+        $("#compTitle").show()
+        $("#selectIndustry").show()
+        $("#compTitle").show()
+        $("#sdButton").show()
+        $("#compNameInput").show()
+        $("#currentPV").show()
+        $("#compIndustry").show()
+        $("#preview").hide()
+        $("#productTable").hide()
+        $("#eProducts").show()
+        $("#alertDeveloper").show()
       }
       function openSellingMenu() {
         if (!cameraPermitted) {
           Instascan.Camera.getCameras().then(function (cameras) {
             if (cameras.length > 0) {
-              cameraPermitted = true;
-              scanner.start(cameras[0]);
-              document.getElementById("preview").style.background = "";
-              currentSetting = 1;
-              document.getElementById("title").innerHTML = name;
-              openSellingMenuDisplays();
+              cameraPermitted = true
+              scanner.start(cameras[0])
+              document.getElementById("preview").style.background = ""
+              currentSetting = 1
+              document.getElementById("title").innerHTML = name
+              openSellingMenuDisplays()
             } else {
-              alert("No cameras found!");
+              alert("No cameras found!")
             }
           }).catch(function (e) {
-            closeSellingMenu();
-          });
+            closeSellingMenu()
+          })
         }
         if (cameraPermitted) {
-          openSellingMenuDisplays();
+          openSellingMenuDisplays()
         } else {
-          alert("Your camera must be enabled for debit card scanning!");
+          alert("Your camera must be enabled for debit card scanning!")
         }
       }
       function openSellingMenuDisplays() {
-        console.log("Selling!");
-        $("#alertDeveloper").hide();
-        $("#openClModalButton").hide();
-        $("#currentCNameDisplay").show();
-        $("#currentPidDisplay").show();
-        $("#customerDataDisplay").show();
-        $("#compNameInput").hide();
-        $("#selectIndustry").hide();
-        $("#compTitle").hide();
-        $("#currentPV").hide();
-        $("#compIndustry").hide();
-        $("#preview").show();
-        $("#sdButton").hide();
-        $("#productTable").show();
-        $("#eProducts").hide();
+        console.log("Selling!")
+        $("#alertDeveloper").hide()
+        $("#openClModalButton").hide()
+        $("#currentCNameDisplay").show()
+        $("#currentPidDisplay").show()
+        $("#customerDataDisplay").show()
+        $("#compNameInput").hide()
+        $("#selectIndustry").hide()
+        $("#compTitle").hide()
+        $("#currentPV").hide()
+        $("#compIndustry").hide()
+        $("#preview").show()
+        $("#sdButton").hide()
+        $("#productTable").show()
+        $("#eProducts").hide()
       }
       function saveData() {
-        let newIndustry = document.getElementById("selectIndustry").value;
-        let newName = document.getElementById("compNameInput").value;
+        let newIndustry = document.getElementById("selectIndustry").value
+        let newName = document.getElementById("compNameInput").value
 
         if (newName) {
-          name = newName;
+          name = newName
         }
-        products = products ? products : "";
+        products = products ? products : ""
         firebase.database().ref('companies/' + id).set({
           industry: newIndustry,
           name: name,
           products: products,
           logo: compLogo
-        });
+        })
       }
       function openProductsConfig() {
-        $("#productsConfig").modal("show");
+        $("#productsConfig").modal("show")
       }
       function openChangeLogoModal() {
-        $("#changeLogo").modal("show");
+        $("#changeLogo").modal("show")
       }
       document.onkeydown = function(e){
-          e = e || window.event;
-          let selected = false;
-          let key = e.which || e.keyCode;
-          key = key - 48;
+          e = e || window.event
+          let selected = false
+          let key = e.which || e.keyCode
+          key = key - 48
           //48 (0) to 57 (9)
-          console.log("Key: "+key);
+          console.log("Key: "+key)
           if (Object.keys(productSaves).includes(key+"") && currentSetting == 1) {
-            idOfCurrentProduct = key;
+            idOfCurrentProduct = key
             if (productSaves[idOfCurrentProduct][2]) {
-              document.getElementById("currentPidDisplay").innerHTML = "<i>"+productSaves[idOfCurrentProduct][0]+" : "+productSaves[idOfCurrentProduct][1]+"A"+"</i>";
+              document.getElementById("currentPidDisplay").innerHTML = "<i>"+productSaves[idOfCurrentProduct][0]+" : "+productSaves[idOfCurrentProduct][1]+"A"+"</i>"
             }
           } else {
             if (key == -35) {
               if (pinInputActive) {
-                enteredPin = document.getElementById("enterPinInput").value;
+                enteredPin = document.getElementById("enterPinInput").value
                 if (enteredPin) {
-                  $("#enterPinForPurchase").modal("hide");
-                  document.getElementById("enterPinInput").value = "";
-                  const confirmConfidence = confirm("Are you sure you would like to purchase a \""+productSaves[idOfCurrentProduct][0]+"\" for "+productPrice+"A?");
-                  document.getElementById("currentCNameDisplay").innerHTML = customerName;
+                  $("#enterPinForPurchase").modal("hide")
+                  document.getElementById("enterPinInput").value = ""
+                  const confirmConfidence = confirm("Are you sure you would like to purchase a \""+productSaves[idOfCurrentProduct][0]+"\" for "+productPrice+"A?")
+                  document.getElementById("currentCNameDisplay").innerHTML = customerName
                   if (confirmConfidence) {
                       try {
                         return firebase.database().ref('users/' + id + "/balance").once('value').then(function(snapshot) {
-                          companyWealth = Number(snapshot.val());
+                          companyWealth = Number(snapshot.val())
                           const oldCompanyWealth = companyWealth
-                          const newCompWealth = companyWealth+productPrice;
-                          const newCustomerWealth = customerWealth-productPrice;
+                          const newCompWealth = companyWealth+productPrice
+                          const newCustomerWealth = customerWealth-productPrice
 
                           firebase.database().ref("pending").push({
                             time: getDate(),
@@ -858,71 +858,71 @@
                             pin: enteredPin
                           }).then(function(snapshot) {
                             return firebase.database().ref('users/' + id + "/balance").once('value').then(function(snapshot) {
-                              let alertMessage;
+                              let alertMessage
 
                               if (newCustomerWealth == 0) {
-                                alertMessage = "The transaction was successful, but you are now bankrupt! Now go and work hard to get back up the socio-economic ladder!";
+                                alertMessage = "The transaction was successful, but you are now bankrupt! Now go and work hard to get back up the socio-economic ladder!"
                               } else {
                                 const pluralExtension = newCustomerWealth > 1 ? "s!" : "!"
                                 alertMessage = "Your transaction was successful! You now have " + newCustomerWealth + " Astra" + pluralExtension
                               }
-                              alert(alertMessage);
-                              document.getElementById("enterPinInput").value = "";
-                              document.getElementById("currentCNameDisplay").innerHTML = "<i>No Customer Active!</i>";
-                              document.getElementById("currentPidDisplay").innerHTML = "<i>No Product Selected!</i>";
+                              alert(alertMessage)
+                              document.getElementById("enterPinInput").value = ""
+                              document.getElementById("currentCNameDisplay").innerHTML = "<i>No Customer Active!</i>"
+                              document.getElementById("currentPidDisplay").innerHTML = "<i>No Product Selected!</i>"
 
-                              idOfCurrentProduct = undefined;
-                            });
-                          });
-                        });
+                              idOfCurrentProduct = undefined
+                            })
+                          })
+                        })
                       }
                       catch(error) {
-                        alert("Your pin is incorrect! Please re-enter it and try again!");
-                        document.getElementById("enterPinInput").value = "";
-                        document.getElementById("currentCNameDisplay").innerHTML = "<i>No Customer Active!</i>";
-                        document.getElementById("currentPidDisplay").innerHTML = "<i>No Product Selected!</i>";
+                        alert("Your pin is incorrect! Please re-enter it and try again!")
+                        document.getElementById("enterPinInput").value = ""
+                        document.getElementById("currentCNameDisplay").innerHTML = "<i>No Customer Active!</i>"
+                        document.getElementById("currentPidDisplay").innerHTML = "<i>No Product Selected!</i>"
 
-                        idOfCurrentProduct = undefined;
+                        idOfCurrentProduct = undefined
                       }
                   } else {
                     alert("Purchase Cancelled!")
                   }
                 } else {
-                  alert("You haven't entered a pin yet!");
+                  alert("You haven't entered a pin yet!")
                 }
               }
             }
           }
       }
       function previewFile() {
-        let preview = document.createElement("img");
-        let file = document.getElementById("logoInput").files[0];
+        let preview = document.createElement("img")
+        let file = document.getElementById("logoInput").files[0]
 
-        const imgData = reader.readAsDataURL(file);
+        const imgData = reader.readAsDataURL(file)
 
         reader.onload = function(e) {
 
-          currentNewLogoData = e.target.result;
-          document.getElementById("displayInput").src = currentNewLogoData;
-        };
+          currentNewLogoData = e.target.result
+          document.getElementById("displayInput").src = currentNewLogoData
+        }
       }
       function saveLogo() {
         if (currentNewLogoData) {
-          let file = document.getElementById("logoInput").files[0];
+          let file = document.getElementById("logoInput").files[0]
 
-          products = products ? products : "";
+          products = products ? products : ""
           firebase.database().ref("companies/" + id).set({
             logo: currentNewLogoData,
             industry: industryOC,
             name: name,
             products: products
           }).then(function() {
-            alert("Success!");
-            document.getElementById("logo").src = currentNewLogoData;
-            document.getElementById("closeClModal").click();
-          });
+            alert("Success!")
+            document.getElementById("logo").src = currentNewLogoData
+            document.getElementById("closeClModal").click()
+          })
         } else {
-          alert("No file data exists!");
+          alert("No file data exists!")
         }
       }
       function getDate() {
@@ -935,10 +935,10 @@
     		return dateList[1]+" "+dateList[2]+", "+dateList[3]+" @ "+dateTime+timeOfDay
     	}
       $('form').on('submit', function(event){
-        event.preventDefault();
-      });
-      closeSellingMenu();
-      loadCompData();
+        event.preventDefault()
+      })
+      closeSellingMenu()
+      loadCompData()
     </script>
   </body>
 </html>

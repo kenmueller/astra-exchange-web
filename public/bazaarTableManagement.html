@@ -200,13 +200,13 @@
       </div>
     </div>
     <script>
-      let tableCost;
-      let tableOwner;
-      let selectedTableName;
-      let payerUsername;
-      const id = document.cookie;
-      let userBalance;
-      let tablesReserved;
+      let tableCost
+      let tableOwner
+      let selectedTableName
+      let payerUsername
+      const id = document.cookie
+      let userBalance
+      let tablesReserved
       let config = {
         apiKey: "AIzaSyDOfmd3fntDblft3mhjccRiEggWu_t5fW0",
         authDomain: "astra-exchange.firebaseapp.com",
@@ -214,57 +214,57 @@
         projectId: "astra-exchange",
         storageBucket: "astra-exchange.appspot.com",
         messagingSenderId: "946665066699"
-      };
-      firebase.initializeApp(config);
-      let defaultDatabase = firebase.database();
+      }
+      firebase.initializeApp(config)
+      let defaultDatabase = firebase.database()
       function checkIfComing() {
         return firebase.database().ref('bazaarData/withinTwoWeeks').once('value').then(function(snapshot) {
           if (!snapshot.val()) {
-            $("#orderInterface").hide();
-            $("#notProximateDisplay").show();
+            $("#orderInterface").hide()
+            $("#notProximateDisplay").show()
           } else {
-            $("#orderInterface").show();
-            $("#notProximateDisplay").hide();
+            $("#orderInterface").show()
+            $("#notProximateDisplay").hide()
           }
-        });
+        })
       }
       function getSeason() {
-        const DateObj = new Date();
-        const currentMonth = DateObj.getMonth();
+        const DateObj = new Date()
+        const currentMonth = DateObj.getMonth()
         if (currentMonth < 2) {
-          return "Winter";
+          return "Winter"
         } else if (currentMonth < 5) {
-          return "Spring";
+          return "Spring"
         } else if (currentMonth < 8) {
-          return "Summer";
+          return "Summer"
         } else {
-          return "Autumn";
+          return "Autumn"
         }
       }
       function loadUserData() {
-        document.getElementById("bazaarDisplay").innerHTML = getSeason() + " Bazaar";
+        document.getElementById("bazaarDisplay").innerHTML = getSeason() + " Bazaar"
         return firebase.database().ref('users/' + id).once('value').then(function(snapshot) {
-          userBalance = snapshot.val().balance;
-          payerUsername = snapshot.val().name;
-          tablesReserved = snapshot.val().tablesReserved ? snapshot.val().tablesReserved : 0;
-        });
+          userBalance = snapshot.val().balance
+          payerUsername = snapshot.val().name
+          tablesReserved = snapshot.val().tablesReserved ? snapshot.val().tablesReserved : 0
+        })
       }
       function submit(tableId) {
         return firebase.database().ref('bazaarData/bazaarTables/' + tableId).once('value').then(function(snapshot) {
-          tableCost = snapshot.val().cost;
-          tableOwner =  snapshot.val().owner ? snapshot.val().owner : "Unreserved!";
-          selectedTableName = tableId;
+          tableCost = snapshot.val().cost
+          tableOwner =  snapshot.val().owner ? snapshot.val().owner : "Unreserved!"
+          selectedTableName = tableId
 
-          document.getElementById("selectedTable").innerHTML = tableId;
-          document.getElementById("tableCost").innerHTML = tableCost+"A";
-          document.getElementById("tableOwnership").innerHTML = tableOwner;
-        });
+          document.getElementById("selectedTable").innerHTML = tableId
+          document.getElementById("tableCost").innerHTML = tableCost+"A"
+          document.getElementById("tableOwnership").innerHTML = tableOwner
+        })
       }
       function purchaseItemSetUp() {
         if (tableCost && (tableOwner == "Unreserved!")) {
           if (userBalance >= tableCost) {
             if (tablesReserved < 2 || !tablesReserved) {
-              const confirmPurchase = confirm("Are you sure that you would like to purchase "+selectedTableName+" for "+tableCost+"A?");
+              const confirmPurchase = confirm("Are you sure that you would like to purchase "+selectedTableName+" for "+tableCost+"A?")
               if (confirmPurchase) {
                 firebase.database().ref("users/" + id + "/bazaarTableOrders/").push({
           				time: getDate(),
@@ -274,19 +274,19 @@
           				balance: userBalance - tableCost,
                   tablesReserved: tablesReserved
           			}).then(function() {
-                  tablesReserved += 1;
-                  alert(selectedTableName + " successfully purchased!");
-          				submit(selectedTableName);
+                  tablesReserved += 1
+                  alert(selectedTableName + " successfully purchased!")
+          				submit(selectedTableName)
           			})
               }
             } else {
-              alert("You already have two tables, you hogger!");
+              alert("You already have two tables, you hogger!")
             }
           } else {
-            alert("You lack sufficient funding!");
+            alert("You lack sufficient funding!")
           }
         } else {
-          alert("You haven't selected a table yet or the table has already been reserved!");
+          alert("You haven't selected a table yet or the table has already been reserved!")
         }
       }
       function getDate() {
@@ -298,8 +298,8 @@
     		}
     		return dateList[1]+" "+dateList[2]+", "+dateList[3]+" @ "+dateTime+timeOfDay
     	}
-      checkIfComing();
-      loadUserData();
+      checkIfComing()
+      loadUserData()
     </script>
   </body>
 </html>

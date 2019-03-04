@@ -351,14 +351,14 @@
 	let email
 	let userBalance
 	let user = []
-	let independenceLevel;
+	let independenceLevel
 	let recievedBalance = false
 	let change
 	let userExist = true
 	let transHistItems=[]
-	let cards;
-	let bazaarTableOrders;
-	let tablesReserved;
+	let cards
+	let bazaarTableOrders
+	let tablesReserved
 	let config = {
 		apiKey: "AIzaSyDOfmd3fntDblft3mhjccRiEggWu_t5fW0",
 		authDomain: "astra-exchange.firebaseapp.com",
@@ -366,16 +366,16 @@
 		projectId: "astra-exchange",
 		storageBucket: "astra-exchange.appspot.com",
 		messagingSenderId: "946665066699"
-	};
+	}
 	firebase.initializeApp(config)
 	let database = firebase.database()
 	function signOutUser() {
 		firebase.auth().signOut().then(function() {
-		  console.log('Signed Out');
-			window.location.href = "index.html";
+		  console.log('Signed Out')
+			window.location.href = "index.html"
 		}, function(error) {
-		  console.error('Sign Out Error', error);
-		});
+		  console.error('Sign Out Error', error)
+		})
 	}
 	function loadTransHist() {
 		database.ref('transactions/'+id).on('child_added', function(snapshot) {
@@ -406,7 +406,7 @@
 		return firebase.database().ref('users/' + id + "/cards").once('value').then(function(snapshot) {
 			const firstCardId = Object.keys(snapshot.val())[0]
 
-			const pinNum = snapshot.val()[firstCardId].pin;
+			const pinNum = snapshot.val()[firstCardId].pin
 			document.getElementById("currentPin").innerHTML = "PIN: "+pinNum
 		})
 	}
@@ -428,12 +428,12 @@
 			if (isTeacher()) {
 				document.getElementById("astrasToExchange").type = "text"
 			}
-			cards = snapshot.val().cards;
-			bazaarTableOrders = snapshot.val().bazaarTableOrders;
+			cards = snapshot.val().cards
+			bazaarTableOrders = snapshot.val().bazaarTableOrders
 
 			name = snapshot.val().name
 			change = !(userBalance > snapshot.val().balance)
-			const neutralChange = userBalance == snapshot.val().balance;
+			const neutralChange = userBalance == snapshot.val().balance
 			userBalance = snapshot.val().balance
 			email = snapshot.val().email
 			const i = snapshot.val().independence
@@ -474,14 +474,14 @@
 				newReceiverOption.value = receiverId
 				newReceiverOption.innerHTML = receiverName
 
-				const invReceiverOption = newReceiverOption.cloneNode(true);
+				const invReceiverOption = newReceiverOption.cloneNode(true)
 				document.getElementById("receiver").appendChild(newReceiverOption)
-				document.getElementById("invReceiver").appendChild(invReceiverOption);
+				document.getElementById("invReceiver").appendChild(invReceiverOption)
 			}
 		})
 	}
 	function openInVoiceInterface() {
-		$("#invoiceInterface").modal("show");
+		$("#invoiceInterface").modal("show")
 	}
 	function isTeacher() {
 		return id === 'h621pgey1vPfxrmoW5LUkZaHkhT2'
@@ -510,7 +510,7 @@
 		} else {
 			const amount = Number(astrasToExchange)
 			if (userBalance < amount) {
-				alert("You have insufficient wealth to complete this transaction!");
+				alert("You have insufficient wealth to complete this transaction!")
 			} else if (amount > 0 || isTeacher()) {
 				database.ref('transactions/' + id).push({
 					time: getDate(),
@@ -521,7 +521,7 @@
 					message: document.getElementById("noteInput").value
 				}).then(resetInputs)
 			} else {
-				alert("You can't transact negative (or non-existent) astras, you fool!");
+				alert("You can't transact negative (or non-existent) astras, you fool!")
 			}
 		}
 	}
@@ -556,13 +556,13 @@
 		}
 	}
 	function openLeaderboard() {
-		$("#leaderboardModal").modal("show");
+		$("#leaderboardModal").modal("show")
 	}
 	function acceptInvoice(invoiceId) {
 		return firebase.database().ref("invoices/" + id + "/" + invoiceId).once('value').then(function(snapshot) {
-			const astrasInvolved = snapshot.val().amount;
-			const receiverId = snapshot.val().to;
-			const invoiceNote = snapshot.val().message;
+			const astrasInvolved = snapshot.val().amount
+			const receiverId = snapshot.val().to
+			const invoiceNote = snapshot.val().message
 
 			database.ref('transactions/' + id).push({
 				time: getDate(),
@@ -578,18 +578,18 @@
 					return firebase.database().ref("invoices/" + invoiceReceiver + "/" + invoiceId).update({
 						status: "accepted"
 					}).then(function() {
-						alert("Invoice successfully accepted!");
-					});
+						alert("Invoice successfully accepted!")
+					})
 				})
-			});
-		});
+			})
+		})
 	}
 	function denyInvoice(invoiceId) {
 		return firebase.database().ref("invoices/" + id + "/" + invoiceId).once('value').then(function(snapshot) {
-			const astrasInvolved = snapshot.val().amount;
-			const invoiceReceiver = snapshot.val().from;
+			const astrasInvolved = snapshot.val().amount
+			const invoiceReceiver = snapshot.val().from
 
-			const confirmInvoiceDeny = confirm("Are you sure that you would like to deny this invoice?");
+			const confirmInvoiceDeny = confirm("Are you sure that you would like to deny this invoice?")
 			if (confirmInvoiceDeny) {
 				return firebase.database().ref("invoices/" + id + "/" + invoiceId).update({
 					status: "denied"
@@ -597,16 +597,16 @@
 					return firebase.database().ref("invoices/" + invoiceReceiver + "/" + invoiceId).update({
 						status: "denied"
 					}).then(function() {
-						alert("Invoice successfully denied!");
-					});
+						alert("Invoice successfully denied!")
+					})
 				})
 			} else {
-				alert("Invoice deny request cancelled!");
+				alert("Invoice deny request cancelled!")
 			}
-		});
+		})
 	}
 	function loadInvHist() {
-		let cleared = false;
+		let cleared = false
 		database.ref('invoices/'+id).on('child_added', function(snapshot) {
 			if (!cleared) {
 				document.getElementById("invoiceHistBox").innerHTML = ""
@@ -625,60 +625,60 @@
 			return database.ref('users/' + receiverId + '/name').once('value').then(function(receiverSnapshot) {
 				const receiverName = receiverSnapshot.val()
 				return database.ref('users/' + payerId + '/name').once('value').then(function(payerSnapshot) {
-					const payerName = payerSnapshot.val();
-					const textHolder = document.createElement("td");
-					const invData = document.createElement("h4");
-					const buttonHolderOne = document.createElement("td");
-					const buttonHolderTwo = document.createElement("td");
-					const acceptButton = document.createElement("button");
-					const denyButton = document.createElement("button");
+					const payerName = payerSnapshot.val()
+					const textHolder = document.createElement("td")
+					const invData = document.createElement("h4")
+					const buttonHolderOne = document.createElement("td")
+					const buttonHolderTwo = document.createElement("td")
+					const acceptButton = document.createElement("button")
+					const denyButton = document.createElement("button")
 
-					buttonHolderOne.appendChild(acceptButton);
-					buttonHolderTwo.appendChild(denyButton);
-					acceptButton.style.background = "lightgreen";
-					denyButton.style.background = "lightred";
-					acceptButton.innerHTML = "Accept";
-					denyButton.innerHTML = "Deny";
-					denyButton.className = "invoiceButton btn btn-danger";
-					acceptButton.className = "invoiceButton btn btn-success";
-					acceptButton.id = snapshot.key;
-					denyButton.id = snapshot.key;
-					acceptButton.onclick = function() { acceptInvoice(this.id) };
-					denyButton.onclick = function() { denyInvoice(this.id) };
-					invData.innerHTML = astrasInvolved + "A -> " + receiverName + transInvAddOn;
-					invData.style.borderStyle = "solid";
-					invData.style.borderColor = "lightgray";
-					textHolder.appendChild(invData);
-					newInv.appendChild(textHolder);
-					newInv.appendChild(buttonHolderOne);
-					newInv.appendChild(buttonHolderTwo);
+					buttonHolderOne.appendChild(acceptButton)
+					buttonHolderTwo.appendChild(denyButton)
+					acceptButton.style.background = "lightgreen"
+					denyButton.style.background = "lightred"
+					acceptButton.innerHTML = "Accept"
+					denyButton.innerHTML = "Deny"
+					denyButton.className = "invoiceButton btn btn-danger"
+					acceptButton.className = "invoiceButton btn btn-success"
+					acceptButton.id = snapshot.key
+					denyButton.id = snapshot.key
+					acceptButton.onclick = function() { acceptInvoice(this.id) }
+					denyButton.onclick = function() { denyInvoice(this.id) }
+					invData.innerHTML = astrasInvolved + "A -> " + receiverName + transInvAddOn
+					invData.style.borderStyle = "solid"
+					invData.style.borderColor = "lightgray"
+					textHolder.appendChild(invData)
+					newInv.appendChild(textHolder)
+					newInv.appendChild(buttonHolderOne)
+					newInv.appendChild(buttonHolderTwo)
 
-					document.getElementById("invoiceHistTable").appendChild(newInv);
+					document.getElementById("invoiceHistTable").appendChild(newInv)
 				})
 			})
 		})
 	}
 	function createInvoice() {
-		const receiverOfInv = document.getElementById("invReceiver").value;
-		const astrasInvolved = Number(document.getElementById("invAstrasInvolvedInput").value);
-		const messageOfInv = document.getElementById("invMessageInput").value;
+		const receiverOfInv = document.getElementById("invReceiver").value
+		const astrasInvolved = Number(document.getElementById("invAstrasInvolvedInput").value)
+		const messageOfInv = document.getElementById("invMessageInput").value
 
 		return database.ref('users/' + receiverOfInv + '/balance').once('value').then(function(snapshot) {
-			const receiverBalance = snapshot.val();
+			const receiverBalance = snapshot.val()
 
 			if (astrasInvolved > 0) {
-				let confirmMessage;
+				let confirmMessage
 				if (astrasInvolved == receiverBalance) {
-					confirmMessage = "Your invoice's Astras is equivalent to this user's wealth! Are you sure you would like to make this invoice?";
+					confirmMessage = "Your invoice's Astras is equivalent to this user's wealth! Are you sure you would like to make this invoice?"
 				} else if (astrasInvolved > receiverBalance) {
-					confirmMessage = "Your invoice's Astras in greater than this user's wealth! Are you sure you would like to make this invoice?";
+					confirmMessage = "Your invoice's Astras in greater than this user's wealth! Are you sure you would like to make this invoice?"
 				}
 
-				let invConfirm;
+				let invConfirm
 				if (confirmMessage) {
-					invConfirm = confirm(confirmMessage);
+					invConfirm = confirm(confirmMessage)
 				} else {
-					invConfirm = true;
+					invConfirm = true
 				}
 				if (invConfirm) {
 					database.ref('invoices/' + id).push({
@@ -689,57 +689,57 @@
 						message: messageOfInv,
 						status: "pending"
 					}).then(function() {
-						alert("Invoice created successfully!");
-						document.getElementById("invMessageInput").value = "";
-						document.getElementById("invAstrasInvolvedInput").value = "";
-						document.getElementById("invReceiver").selectedIndex = 0;
+						alert("Invoice created successfully!")
+						document.getElementById("invMessageInput").value = ""
+						document.getElementById("invAstrasInvolvedInput").value = ""
+						document.getElementById("invReceiver").selectedIndex = 0
 					})
 				} else {
-					alert("Invoice cancelled!");
+					alert("Invoice cancelled!")
 				}
 			} else {
-				alert("You can't send invoices with negative or zero Astras, you fool!");
+				alert("You can't send invoices with negative or zero Astras, you fool!")
 			}
-		});
+		})
 	}
 	function loadLeaderboardData() {
 		return firebase.database().ref('users').on('value', function(snapshot) {
-			document.getElementById("studentList").innerHTML = "";
-			const userData = snapshot.val();
-			let wealthToUserData = {};
-			let userWealthArray = [];
+			document.getElementById("studentList").innerHTML = ""
+			const userData = snapshot.val()
+			let wealthToUserData = {}
+			let userWealthArray = []
 
 			for (target of Object.keys(userData)) {
-				const currentUserItem = userData[target];
-				wealthToUserData[Number(currentUserItem.balance)] = currentUserItem.name;
+				const currentUserItem = userData[target]
+				wealthToUserData[Number(currentUserItem.balance)] = currentUserItem.name
 			}
 
 			for (target of Object.keys(wealthToUserData)) {
-				userWealthArray.push(Number(target));
+				userWealthArray.push(Number(target))
 			}
-			userWealthArray = userWealthArray.sort(function(a,b){return a - b}).reverse();
+			userWealthArray = userWealthArray.sort(function(a,b){return a - b}).reverse()
 
-			//document.getElementById("wealthiestStudentOne").innerHTML = wealthToUserData[userWealthArray[0]] + " : " + userWealthArray[0] + "A";
-			//document.getElementById("wealthiestStudentTwo").innerHTML = wealthToUserData[userWealthArray[1]] + " : " + userWealthArray[1] + "A";
-			//document.getElementById("wealthiestStudentThree").innerHTML = wealthToUserData[userWealthArray[2]] + " : " + userWealthArray[2] + "A";
+			//document.getElementById("wealthiestStudentOne").innerHTML = wealthToUserData[userWealthArray[0]] + " : " + userWealthArray[0] + "A"
+			//document.getElementById("wealthiestStudentTwo").innerHTML = wealthToUserData[userWealthArray[1]] + " : " + userWealthArray[1] + "A"
+			//document.getElementById("wealthiestStudentThree").innerHTML = wealthToUserData[userWealthArray[2]] + " : " + userWealthArray[2] + "A"
 
-			for (let i=0;i<userWealthArray.length;i++) {
-				let newStudentRow = document.createElement("tr");
-				let studentIndex = document.createElement("td");
-				let newStudentName = document.createElement("td");
+			for (let i=0; i<userWealthArray.length; i++) {
+				let newStudentRow = document.createElement("tr")
+				let studentIndex = document.createElement("td")
+				let newStudentName = document.createElement("td")
 				let newStudentWealth = document.createElement("td")
-				newStudentName.innerHTML = wealthToUserData[userWealthArray[i]];
-				newStudentWealth.innerHTML = userWealthArray[i]+"A";
-				studentIndex.innerHTML = i+1;
+				newStudentName.innerHTML = wealthToUserData[userWealthArray[i]]
+				newStudentWealth.innerHTML = userWealthArray[i]+"A"
+				studentIndex.innerHTML = i+1
 
-				newStudentRow.appendChild(studentIndex);
-				newStudentRow.appendChild(newStudentName);
-				newStudentRow.appendChild(newStudentWealth);
-				document.getElementById("studentList").appendChild(newStudentRow);
+				newStudentRow.appendChild(studentIndex)
+				newStudentRow.appendChild(newStudentName)
+				newStudentRow.appendChild(newStudentWealth)
+				document.getElementById("studentList").appendChild(newStudentRow)
 			}
-		});
+		})
 	}
-	loadLeaderboardData();
+	loadLeaderboardData()
 	loadInvHist()
 	loadTransHist()
 	loadUserData()
