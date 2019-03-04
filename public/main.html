@@ -203,39 +203,44 @@
 	#invMessageInput, #invAstrasInvolvedInput {
 		margin-top: 10px;
 	}
-	.invoiceButton {
-		width: 80px;
-		height: 40px;
-		line-height: 10px;
-		margin-top: 0px;
+	#top_navigation_bar {
+		overflow: hidden;
+		background-color: white;
+		height: 60px;
+	}
+	#top_navigation_bar a {
+		color: #434343;
+		text-align: center;
+		padding: 30px 30px;
+		text-decoration: none;
+		font-size: 20px;
 		vertical-align: middle;
 	}
-	#invoiceCreationBox {
-		border-left-style: solid;
-		border-left-color: lightgray;
-		padding-left: 10px;
+	#top_navigation_bar a:hover {
+		color: #eee;
+		
 	}
-	#leaderboardIcon {
-		height: 53.3px;
-		margin-left: 4px;
-		margin-bottom: 1px;
+	#top_navigation_bar a.active {
+		color: #3A0300;
 	}
 	</style>
 </head>
 <body>
-	<div id="headerBox" class="flexContainer">
-		<img id="logo" src="https://i.imgur.com/ufHYGd9.png"/>
-	</div>
-	<div id="iconBar">
-	<!-- The code for invoices is just about complete, but I don't think they're a good feature, and thus I'm commenting this out! <img id="invoiceIcon" class="menuIcon" onclick="openInVoiceInterface()" src="https://i.imgur.com/sdl2GDF.png" />-->
-	<img id="debitCardConfigure" class="menuIcon" onclick="showPin()" src="https://i.imgur.com/XNRzL8b.png" />
-	<img id="companyInterface" onclick="window.location.href='company.html'" class="menuIcon" src="https://i.imgur.com/ElJDPc5.png">
-	<img id="graphWorksIcon" onclick="window.location.href='investData.html?comp=index'" class="menuIcon" src="https://i.imgur.com/HI4zOkz.png">
-	<a href="bazaarTableManagement.html"><img id="btmIcon" class="menuIcon" src="https://i.imgur.com/F3TNjOs.png"></a>
-	<img id="leaderboardIcon" onclick="openLeaderboard()" class="menuIcon" src="https://i.imgur.com/yhrOBSJ.png">
-	<img id="exitIcon" class="menuIcon" src="https://i.imgur.com/N5tesXB.png" onclick="signOutUser()">
-	</div>
-	<h1 id="title">Astra Exchange Network</h1>
+	<center>
+		<div class="top_navigation_bar" id="top_navigation_bar">
+			<ul>
+				<img class="primary_heading" style="height: 60px" src="https://i.imgur.com/hrRbh4F.png" onclick="window.location.href = 'main.html'"/>
+				<a onclick="openInVoiceInterface()" class="primary_heading">Invoices</a>
+				<a href="company.html" class="primary_heading">Companies</a>
+				<a onclick="window.location.href='investData.html?comp=index'" class="primary_heading">Stock Market</a>
+				<a href="bazaarTableManagement.html" class="primary_heading">Bazaar Tables</a>
+				<a onclick="showPin()" class="primary_heading">Debit Cards</a>
+				<a onclick="signOutUser()" class="primary_heading" style="color: #cc3333">Sign Out</a>
+			</ul>
+		</div>
+		<div style="background:#ddd;height: 1px;width: 100%;"></div>
+	</center>
+	<h1 id="title">Direct Pay</h1>
 	<div class="flexContainer">
 	<img id="profileImage"/>
 	</div>
@@ -718,10 +723,6 @@
 				userWealthArray.push(Number(target))
 			}
 			userWealthArray = userWealthArray.sort(function(a,b){return a - b}).reverse()
-
-			//document.getElementById("wealthiestStudentOne").innerHTML = wealthToUserData[userWealthArray[0]] + " : " + userWealthArray[0] + "A"
-			//document.getElementById("wealthiestStudentTwo").innerHTML = wealthToUserData[userWealthArray[1]] + " : " + userWealthArray[1] + "A"
-			//document.getElementById("wealthiestStudentThree").innerHTML = wealthToUserData[userWealthArray[2]] + " : " + userWealthArray[2] + "A"
 
 			for (let i=0; i<userWealthArray.length; i++) {
 				let newStudentRow = document.createElement("tr")
