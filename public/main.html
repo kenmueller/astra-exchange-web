@@ -24,12 +24,24 @@
 	}
 	body {
 		overflow: scroll;
+		opacity: 0;
+		animation-name: introduction;
+		animation-duration: 0.7s;
+		animation-fill-mode: forwards;
+		animation-delay: 0.2s;
+	}
+	@keyframes introduction {
+		from { opacity: 0; }
+		to { opacity: 1; }
 	}
 	button {
 		width: 280px;
 		margin-top: 30px;
 		margin-bottom: 13px;
 		background: lightgray;
+	}
+	.primary_heading {
+		transition: background 1s ease-out;
 	}
 	#exchangeBox {
 		height: 320px;
@@ -38,7 +50,7 @@
 		margin-top: 30px;
 	}
 	#title {
-		margin-top: 15px;
+		margin-top: 30px;
 		font-size: 50px;
 	}
 	#astrasToExchange {
@@ -149,18 +161,21 @@
 		margin: 0 auto;
 	}
 	.menuIcon {
-		width: 75px;
-		margin-left: 2px;
-		margin-right: 2px;
+		width: 94px;
+		margin-left: 15px;
+		margin-right: 15px;
 		transition: outline-color 0.2s ease-out;
 		outline-color: rgba(0, 0, 250, 0);
+	}
+	.menuIcon, span {
+		margin-top: -50px;
 	}
 	.menuIcon:hover {
 		outline: solid;
 		outline-color: rgba(0, 0, 250, 0.1);
 	}
 	#iconBar {
-		margin-top: -51px;
+		margin-top: -63px;
 		margin-left: 310px;
 	}
 	#savePinButton {
@@ -173,7 +188,7 @@
 	#exitIcon {
 		height: 40px;
 		width: 42px;
-		margin-top: 10px;
+		margin-top: 25px;
 		margin-left: 5px;
 	}
 	#wealthContainer {
@@ -181,10 +196,6 @@
 	}
 	#independenceDisplay {
 		margin-top: -30px;
-	}
-	#debitCardConfigure {
-		margin-right: 149px;
-		margin-left: 4px;
 	}
 	#ivButton {
 		margin-top: 10px;
@@ -203,10 +214,35 @@
 	#invMessageInput, #invAstrasInvolvedInput {
 		margin-top: 10px;
 	}
+	.invoiceButton {
+		width: 80px;
+		height: 40px;
+		line-height: 10px;
+		margin-top: 0px;
+		vertical-align: middle;
+	}
+	#invoiceCreationBox {
+		border-left-style: solid;
+		border-left-color: lightgray;
+		padding-left: 10px;
+	}
+	#leaderboardIcon {
+		margin-bottom: 1px;
+		margin-right: 80px;
+	}
+	#debitCardConfigure {
+		margin-left: -92px;
+		margin-right: 10px;
+	}
 	#top_navigation_bar {
 		overflow: hidden;
+		display: none;
 		background-color: white;
 		height: 60px;
+		border-top-style: solid;
+		border-bottom-style: solid;
+		border-width: 0.4px;
+		border-color: lightgray;
 	}
 	#top_navigation_bar a {
 		color: #434343;
@@ -218,16 +254,58 @@
 	}
 	#top_navigation_bar a:hover {
 		color: #eee;
-		
+
 	}
 	#top_navigation_bar a.active {
 		color: #3A0300;
 	}
+	#navbarRotator {
+		position: absolute;
+		top: 2px;
+		left: 0px;
+		width: 30px;
+	}
+	span {
+		position: absolute;
+		margin-left: -123px;
+		margin-top: 45px;
+		border-bottom-style: solid;
+		border-color: lightgray;
+		border-width: 2px;
+		font-size: 13px;
+	}
+	#pinConfigureLabel {
+		margin-left: -113px;
+	}
+	#companyInterface {
+		margin-left: 100px;
+	}
+	#graphWorksLabel {
+		margin-left: -105px;
+	}
+	#leaderboardLabel {
+		margin-left: -169px;
+	}
+	#top_navigation_bar {
+		display: none;
+	}
+	#headerBox {
+		display: none;
+	}
+	#iconBar {
+		display: none;
+	}
+	#leaderboardIcon, #debitCardConfigure {
+		margin-bottom: -1px;
+	}
 	</style>
 </head>
 <body>
-	<center>
-		<div class="top_navigation_bar" id="top_navigation_bar">
+	<div id="headerBox" class="flexContainer">
+		<img id="logo" src="https://i.imgur.com/ufHYGd9.png"/>
+	</div>
+	<img src="https://i.imgur.com/PJcBW0M.png" id="navbarRotator" onclick="changeNavbar()"/>
+	<div class="top_navigation_bar" id="top_navigation_bar">
 			<ul>
 				<img class="primary_heading" style="height: 60px" src="https://i.imgur.com/hrRbh4F.png" onclick="window.location.href = 'main.html'"/>
 				<a onclick="openInVoiceInterface()" class="primary_heading">Invoices</a>
@@ -238,9 +316,21 @@
 				<a onclick="signOutUser()" class="primary_heading" style="color: #cc3333">Sign Out</a>
 			</ul>
 		</div>
-		<div style="background:#ddd;height: 1px;width: 100%;"></div>
-	</center>
-	<h1 id="title">Direct Pay</h1>
+	<div id="iconBar">
+		<!-- The code for invoices is just about complete, but I don't think they're a good feature, and thus I'm commenting this out! <img id="invoiceIcon" class="menuIcon" onclick="openInVoiceInterface()" src="https://i.imgur.com/sdl2GDF.png" />-->
+		<img id="debitCardConfigure" class="menuIcon" onclick="showPin()" src="https://i.imgur.com/XNRzL8b.png" />
+		<span id="pinConfigureLabel">Pin Configuration</span>
+		<img id="leaderboardIcon" onclick="openLeaderboard()" class="menuIcon" src="https://i.imgur.com/yhrOBSJ.png">
+		<span id="leaderboardLabel">Leaderboard</span>
+		<img id="companyInterface" onclick="window.location.href='company.html'" class="menuIcon" src="https://i.imgur.com/ElJDPc5.png">
+		<span>Company Interface</span>
+		<img id="graphWorksIcon" onclick="window.location.href='investData.html?comp=index'" class="menuIcon" src="https://i.imgur.com/HI4zOkz.png">
+		<span id="graphWorksLabel">Stock Market</span>
+		<a href="bazaarTableManagement.html"><img id="btmIcon" class="menuIcon" src="https://i.imgur.com/F3TNjOs.png"></a>
+		<span>Table Reservations</span>
+		<img id="exitIcon" class="menuIcon" src="https://i.imgur.com/N5tesXB.png" onclick="signOutUser()">
+	</div>
+	<h1 id="title">Astra Exchange Network</h1>
 	<div class="flexContainer">
 	<img id="profileImage"/>
 	</div>
@@ -351,7 +441,8 @@
 	</div>
 </div>
 	<script>
-	let id = document.cookie
+	let id = document.cookie.split("|")[0] ? document.cookie.split("|")[0] : document.cookie;
+	let navbarSelect = document.cookie.split("|")[1] ? (/true/i).test(document.cookie.split("|")[1]) : true;
 	let name
 	let email
 	let userBalance
@@ -381,6 +472,26 @@
 		}, function(error) {
 		  console.error('Sign Out Error', error)
 		})
+	}
+	function loadNavbar() {
+		if (navbarSelect) {
+			document.getElementById("navbarRotator").style.transform = "rotate(180deg)";
+			document.getElementById("title").innerHTML = "Astra Exchange Network";
+			document.getElementById("headerBox").style.display = "block";
+			document.getElementById("iconBar").style.display = "block";
+			document.getElementById("top_navigation_bar").style.display = "none";
+		} else {
+			document.getElementById("title").innerHTML = "Direct Pay";
+			document.getElementById("navbarRotator").style.transform = "rotate(0deg)";
+			document.getElementById("headerBox").style.display = "none";
+			document.getElementById("iconBar").style.display = "none";
+			document.getElementById("top_navigation_bar").style.display = "block";
+		}
+	}
+	function changeNavbar() {
+			navbarSelect = !navbarSelect;
+			document.cookie = id + "|" + navbarSelect;
+			loadNavbar();
 	}
 	function loadTransHist() {
 		database.ref('transactions/'+id).on('child_added', function(snapshot) {
@@ -724,6 +835,10 @@
 			}
 			userWealthArray = userWealthArray.sort(function(a,b){return a - b}).reverse()
 
+			//document.getElementById("wealthiestStudentOne").innerHTML = wealthToUserData[userWealthArray[0]] + " : " + userWealthArray[0] + "A"
+			//document.getElementById("wealthiestStudentTwo").innerHTML = wealthToUserData[userWealthArray[1]] + " : " + userWealthArray[1] + "A"
+			//document.getElementById("wealthiestStudentThree").innerHTML = wealthToUserData[userWealthArray[2]] + " : " + userWealthArray[2] + "A"
+
 			for (let i=0; i<userWealthArray.length; i++) {
 				let newStudentRow = document.createElement("tr")
 				let studentIndex = document.createElement("td")
@@ -745,6 +860,7 @@
 	loadTransHist()
 	loadUserData()
 	loadReceiverData()
+	loadNavbar();
 	</script>
 </body>
 </html>

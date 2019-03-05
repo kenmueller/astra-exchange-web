@@ -135,6 +135,7 @@
       <canvas id="pvGraph" width="800" height="400" style="border:3px solid lightgray; background:rgba(0,0,0,0.01)"
     </div>
     <script>
+      const id = document.cookie.split("|")[0] ? document.cookie.split("|")[0] : document.cookie;
       let compName
       let pvHistObject
       let defaultImageLink = "https://i.imgur.com/lBJXFA9.png"

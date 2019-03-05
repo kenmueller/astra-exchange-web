@@ -32,8 +32,7 @@
 			}
 			#logo {
 				margin-top: 20px;
-				height: 225px;
-				width: 225px;
+				width: 135px;
 			}
 			.flexContainer {
 				display: flex;
@@ -74,19 +73,16 @@
 			#downloadAppMessage {
 				margin: auto;
 				margin-top: 8px;
-				display: block;
-				width: 250px;
+				text-align: center;
 				font-size: 15px;
-				line-height: 17px;
-				font-family: Nunito;
-				text-align: left;
+				width: 250px;
 			}
 		</style>
 </head>
 
 <body>
 	<div id="headerBox" class="flexContainer">
-		<img id="logo" src="https://i.imgur.com/hrRbh4F.png" />
+		<img id="logo" src="https://i.imgur.com/ufHYGd9.png" />
 	</div>
 	<h1 id="title">Astra Exchange</h1>
 	<h2>Welcome to Astra Exchange!</h2>
@@ -108,7 +104,7 @@
 	<div>
 		<button class="btn btn-light" id="switchCurrentInputForm" onclick="changeForm()">Create An Account Instead!</button>
 		<a class="btn btn-primary" id="downloadiOSAppButton" href="itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist">Download App</a>
-		<p id="downloadAppMessage">Visit astra.exchange on your mobile device to download the app</p>
+		<p id="downloadAppMessage"><i>Visit astra.exchange on your mobile device to download the app!</i></p>
 	</div>
 	<div class="flexContainer"></div>
 	</div>
@@ -129,15 +125,16 @@
 	</div>
 	<script>
 		if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-			window.location.href='itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist'
-			document.getElementById('downloadAppMessage').style.display = 'none'
+			window.location.href='itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist';
+			document.getElementById('downloadAppMessage').style.display = 'none';
 		} else {
-			document.getElementById('downloadiOSAppButton').disabled = true
+			document.getElementById('downloadiOSAppButton').remove();
 		}
-		let name
-		let id
-		let email
-		let isSignIn = true
+		let name;
+		let id = document.cookie.split("|")[0] ? document.cookie.split("|")[0] : document.cookie;
+		let navbarSelect = document.cookie.split("|")[1] ? (/true/i).test(document.cookie.split("|")[1]) : true;
+		let email;
+		let isSignIn = true;
 		let inputActiveObject = {"emailSignInInput":false, "passwordSignInInput":false, "nameInput":false, "emailInput":false, "passwordInput":false}
 		$("#accountCreationForm").hide()
 		let config = {
@@ -150,9 +147,9 @@
 		}
 		firebase.initializeApp(config)
 		let defaultDatabase = firebase.database()
-		firebase.auth().onAuthStateChanged(function (user) {
+		firebase.auth().onAuthStateChanged(async function(user) {
 			if (user) {
-				id = user.uid
+				id = user.uid;
 				if (isSignIn) {
 					firebase.database().ref('users/' + id + '/name').once('value').then(function(snapshot) {
 						name = snapshot.val()
@@ -194,7 +191,11 @@
 			document.cookie = id
 			window.location = "main.html"
 		}
-
+		function loadLogo() {
+			if (!navbarSelect) {
+				document.getElementById("logo").src = "https://i.imgur.com/hrRbh4F.png";
+			}
+		}
 		function changeForm() {
 			if (isSignIn) {
 				$("#loginBox").hide()
@@ -236,7 +237,7 @@
 				$("#creationFailure").modal("show")
 			}
 		}
+		loadLogo()
 	</script>
 </body>
-
 </html>

@@ -539,7 +539,7 @@
       </div>
     </div>
     <script>
-      let id = document.cookie
+      const id = document.cookie.split("|")[0] ? document.cookie.split("|")[0] : document.cookie;
       const d = new Date()
       let name
       let enteredPin

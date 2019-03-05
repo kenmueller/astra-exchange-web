@@ -204,7 +204,7 @@
       let tableOwner
       let selectedTableName
       let payerUsername
-      const id = document.cookie
+      const id = document.cookie.split("|")[0] ? document.cookie.split("|")[0] : document.cookie;
       let userBalance
       let tablesReserved
       let config = {
