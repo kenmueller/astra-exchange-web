@@ -31,6 +31,7 @@
 				margin-top: 20px;
 			}
 			#logo {
+				height: 135px;
 				margin-top: 20px;
 				width: 135px;
 			}
@@ -128,7 +129,7 @@
 			window.location.href='itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist';
 			document.getElementById('downloadAppMessage').style.display = 'none';
 		} else {
-			document.getElementById('downloadiOSAppButton').remove();
+			document.getElementById('downloadiOSAppButton').disabled = "true";
 		}
 		let name;
 		let id = document.cookie.split("|")[0] ? document.cookie.split("|")[0] : document.cookie;
@@ -194,6 +195,14 @@
 		function loadLogo() {
 			if (!navbarSelect) {
 				document.getElementById("logo").src = "https://i.imgur.com/hrRbh4F.png";
+				document.getElementById("logo").style.width = "225px";
+				document.getElementById("logo").style.height = "225px";
+				document.getElementById("title").style.marginTop = "-20px";
+			} else {
+				document.getElementById("logo").src = "https://i.imgur.com/ufHYGd9.png";
+				document.getElementById("logo").style.width = "135px";
+				document.getElementById("logo").style.height = "135px";
+				document.getElementById("title").style.marginTop = "0px";
 			}
 		}
 		function changeForm() {
@@ -237,7 +246,7 @@
 				$("#creationFailure").modal("show")
 			}
 		}
-		loadLogo()
+		loadLogo();
 	</script>
 </body>
 </html>
