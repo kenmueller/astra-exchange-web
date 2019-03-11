@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 	<link rel="shortcut icon" href="https://i.imgur.com/ufHYGd9.png">
@@ -33,7 +32,8 @@
 			#logo {
 				height: 135px;
 				margin-top: 20px;
-				width: 135px;
+				height: 225px;
+				width: 225px;
 			}
 			.flexContainer {
 				display: flex;
@@ -74,16 +74,19 @@
 			#downloadAppMessage {
 				margin: auto;
 				margin-top: 8px;
-				text-align: center;
-				font-size: 15px;
+				display: block;
 				width: 250px;
+				font-size: 15px;
+				line-height: 17px;
+				font-family: Nunito;
+				text-align: left;
 			}
 		</style>
 </head>
 
 <body>
 	<div id="headerBox" class="flexContainer">
-		<img id="logo" src="https://i.imgur.com/ufHYGd9.png" />
+		<img id="logo" src="https://i.imgur.com/hrRbh4F.png" />
 	</div>
 	<h1 id="title">Astra Exchange</h1>
 	<h2>Welcome to Astra Exchange!</h2>
@@ -105,7 +108,7 @@
 	<div>
 		<button class="btn btn-light" id="switchCurrentInputForm" onclick="changeForm()">Create An Account Instead!</button>
 		<a class="btn btn-primary" id="downloadiOSAppButton" href="itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist">Download App</a>
-		<p id="downloadAppMessage"><i>Visit astra.exchange on your mobile device to download the app!</i></p>
+		<p id="downloadAppMessage">Visit astra.exchange on your mobile device to download the app</p>
 	</div>
 	<div class="flexContainer"></div>
 	</div>
@@ -126,14 +129,14 @@
 	</div>
 	<script>
 		if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-			window.location.href='itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist';
-			document.getElementById('downloadAppMessage').style.display = 'none';
+			window.location.href='itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist'
+			document.getElementById('downloadAppMessage').style.display = 'none'
 		} else {
-			document.getElementById('downloadiOSAppButton').disabled = "true";
+			document.getElementById('downloadiOSAppButton').disabled = true
 		}
 		let name;
-		let id = document.cookie.split("|")[0] ? document.cookie.split("|")[0] : document.cookie;
-		let navbarSelect = document.cookie.split("|")[1] ? (/true/i).test(document.cookie.split("|")[1]) : true;
+		let id;
+		let navbarSelect = document.cookie.split("|")[1] ? document.cookie.split("|")[1] : true
 		let email;
 		let isSignIn = true;
 		let inputActiveObject = {"emailSignInInput":false, "passwordSignInInput":false, "nameInput":false, "emailInput":false, "passwordInput":false}
@@ -145,10 +148,10 @@
 			projectId: "astra-exchange",
 			storageBucket: "astra-exchange.appspot.com",
 			messagingSenderId: "946665066699"
-		}
-		firebase.initializeApp(config)
-		let defaultDatabase = firebase.database()
-		firebase.auth().onAuthStateChanged(async function(user) {
+		};
+		firebase.initializeApp(config);
+		let defaultDatabase = firebase.database();
+		firebase.auth().onAuthStateChanged(function (user) {
 			if (user) {
 				id = user.uid;
 				if (isSignIn) {
@@ -170,23 +173,23 @@
 			}
 		})
 		function registerInput(idOfInput) {
-			inputActiveObject[idOfInput] = (document.getElementById(idOfInput).value != "")
-			let determDisabledACB
-			let determDisabledSIB
+			inputActiveObject[idOfInput] = (document.getElementById(idOfInput).value != "");
+			let determDisabledACB;
+			let determDisabledSIB;
 
 			if (inputActiveObject["nameInput"] && inputActiveObject["emailInput"] && inputActiveObject["passwordInput"]) {
-				determDisabledACB = ""
+				determDisabledACB = "";
 			} else {
-				determDisabledACB = "true"
+				determDisabledACB = "true";
 			}
 			if (inputActiveObject["emailSignInInput"] && inputActiveObject["passwordSignInInput"]) {
-				determDisabledSIB = ""
+				determDisabledSIB = "";
 			} else {
-				determDisabledSIB = "true"
+				determDisabledSIB = "true";
 			}
 
-			document.getElementById("accountCreationButton").disabled = determDisabledACB
-			document.getElementById("accountSignInButton").disabled = determDisabledSIB
+			document.getElementById("accountCreationButton").disabled = determDisabledACB;
+			document.getElementById("accountSignInButton").disabled = determDisabledSIB;
 		}
 		function goToMain() {
 			document.cookie = id
@@ -205,48 +208,50 @@
 				document.getElementById("title").style.marginTop = "0px";
 			}
 		}
+
 		function changeForm() {
 			if (isSignIn) {
-				$("#loginBox").hide()
-				$("#accountCreationForm").show()
+				$("#loginBox").hide();
+				$("#accountCreationForm").show();
 
-				document.getElementById("switchCurrentInputForm").innerHTML = "Sign In Instead!"
+				document.getElementById("switchCurrentInputForm").innerHTML = "Sign In Instead!";
 			} else {
-				$("#loginBox").show()
-				$("#accountCreationForm").hide()
+				$("#loginBox").show();
+				$("#accountCreationForm").hide();
 
-				document.getElementById("switchCurrentInputForm").innerHTML = "Create An Account Instead!"
+				document.getElementById("switchCurrentInputForm").innerHTML = "Create An Account Instead!";
 			}
-			isSignIn = !isSignIn
+			isSignIn = !isSignIn;
 		}
 
 		function signIn() {
-			email = document.getElementById("emailSignInInput").value
+			email = document.getElementById("emailSignInInput").value;
 
 			firebase.auth().signInWithEmailAndPassword(email, document.getElementById("passwordSignInInput").value).catch(function (error) {
-				alert("Your email or password in invalid and you can't log in! Make sure you entered your email and password correctly!")
-			})
+				alert("Your email or password in invalid and you can't log in! Make sure you entered your email and password correctly!");
+			});
 		}
 
 		function createUser() {
-			const password = document.getElementById("passwordInput").value
-			email = document.getElementById("emailInput").value
-			name = document.getElementById("nameInput").value
-			userExist = false
+			const password = document.getElementById("passwordInput").value;
+			email = document.getElementById("emailInput").value;
+			name = document.getElementById("nameInput").value;
+			userExist = false;
 			if (name && email && password) {
 				if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) && email.split("@")[1]=="adastraschool.org") {
 					firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
-						document.getElementById("errorMessage").innerHTML = "There was an error in attempting to create your account!"
+						document.getElementById("errorMessage").innerHTML = "There was an error in attempting to create your account!";
 					})
 				} else {
-					alert("Your email is invalid or is not registered with adastraschool.org! Please try again!")
+					alert("Your email is invalid or is not registered with adastraschool.org! Please try again!");
 				}
 			} else {
 				document.getElementById("errorMessage").innerHTML = "All input fields must be filled to create an account!"
-				$("#creationFailure").modal("show")
+				$("#creationFailure").modal("show");
 			}
 		}
 		loadLogo();
 	</script>
 </body>
+
 </html>
