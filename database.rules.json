@@ -1,14 +1,25 @@
 {
 	"rules": {
 		"reviews": {
-      ".read": true,
-      "$reviewId": {
-        ".write": true,
-        "$authorId": {
-          ".validate": "newData.val() === auth.uid"
-        }
-      }
-    },
+			".read": true,
+			"$companyId": {
+				"$uid": {
+					".write": "$uid === auth.uid && $uid !== companyId",
+					"time": {
+						".validate": "newData.isString() && newData.val() !== ''"
+					},
+					"anonymous": {
+						".validate": "newData.isBoolean()"
+					},
+					"title": {
+						".validate": "newData.isString() && newData.val() !== ''"
+					},
+					"description": {
+						".validate": "newData.isString() && newData.val() !== ''"
+					}
+				}
+			}
+		},
 		"bazaarData": {
 			".read": true
 		},
@@ -23,7 +34,7 @@
 				"products": {
 					"$productId": {
 						"name": {
-							".validate": "newData.isString() && newData.val() != ''"
+							".validate": "newData.isString() && newData.val() !== ''"
 						},
 						"cost": {
 							".validate": "newData.isNumber() && newData.val() > 0"
@@ -42,13 +53,13 @@
 				"$transactionId": {
 					".write": "!data.exists()",
 					"time": {
-						".validate": "newData.isString() && newData.val() != ''"
+						".validate": "newData.isString() && newData.val() !== ''"
 					},
 					"from": {
 						".validate": "newData.isString() && root.child('users/' + newData.val()).exists()"
 					},
 					"to": {
-						".validate": "newData.isString() && newData.val() != $uid && root.child('users/' + newData.val()).exists()"
+						".validate": "newData.isString() && newData.val() !== $uid && root.child('users/' + newData.val()).exists()"
 					},
 		  			"amount": {
 						".validate": "(newData.isNumber() && ((newData.val() > 0 && newData.val() <= root.child('users/' + $uid + '/balance').val()) || auth.uid === 'h621pgey1vPfxrmoW5LUkZaHkhT2')) || (newData.isString() && newData.val().length === 2 && auth.uid === 'h621pgey1vPfxrmoW5LUkZaHkhT2')"
@@ -67,7 +78,7 @@
 				".read": true,
 				".write": "!data.exists()",
 				"time": {
-					".validate": "newData.isString() && newData.val() != ''"
+					".validate": "newData.isString() && newData.val() !== ''"
 				},
 				"from": {
 					".validate": "newData.isString() && root.child('cards/' + newData.val()).exists()"
@@ -89,10 +100,10 @@
 		"invoices": {
 			"$uid": {
 				".read": "$uid === auth.uid",
-				".write": "auth != null",
+				".write": "auth !== null",
 				"$invoiceId": {
 					"time": {
-						".validate": "newData.isString() && newData.val() != ''"
+						".validate": "newData.isString() && newData.val() !== ''"
 					},
 					"status": {
 						".validate": "newData.val() === 'pending' || newData.val() === 'declined' || newData.val() === 'accepted'"
@@ -122,10 +133,10 @@
 			"$uid": {
 				".write": "!data.exists()",
 				"name": {
-					".validate": "newData.isString() && newData.val() != ''"
+					".validate": "newData.isString() && newData.val() !== ''"
 				},
 				"email": {
-					".validate": "newData.isString() && newData.val() != ''"
+					".validate": "newData.isString() && newData.val() !== ''"
 				},
 				"balance": {
 					".validate": "newData.val() === 0"
@@ -141,7 +152,7 @@
 					".read": "$uid === auth.uid",
 					"$cardId": {
 						"name": {
-							".validate": "newData.isString() && newData.val() != ''"
+							".validate": "newData.isString() && newData.val() !== ''"
 						},
 						"pin": {
 							".validate": "newData.isString() && newData.val().length === 4"
