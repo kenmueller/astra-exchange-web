@@ -16,6 +16,9 @@
 					},
 					"description": {
 						".validate": "newData.isString() && newData.val() !== ''"
+					},
+					"rating": {
+						".validate": "newData.isNumber() && newData.val() => 0 && newData.val() <= 4"
 					}
 				}
 			}
