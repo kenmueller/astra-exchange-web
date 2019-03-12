@@ -526,7 +526,7 @@
 		})
 	}
 	function savePin() {
-		const newPin = document.getElementById("pinInput").value
+		const newPin = ""+document.getElementById("pinInput").value
 		return firebase.database().ref('users/' + id + "/cards").once('value').then(function(snapshot) {
 			const firstCardId = Object.keys(snapshot.val())[0]
 			console.log(firstCardId)

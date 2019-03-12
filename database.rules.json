@@ -1,11 +1,14 @@
 {
 	"rules": {
 		"reviews": {
-			".read": true,
-			"$reviewId": {
-				".write": "auth.uid === newData.val().author"
-			}
-		},
+      ".read": true,
+      "$reviewId": {
+        ".write": true,
+        "authorId": {
+          ".validate": "newData.val() === auth.uid"
+        }
+      }
+    },
 		"bazaarData": {
 			".read": true
 		},
