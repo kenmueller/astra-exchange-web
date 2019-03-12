@@ -228,7 +228,7 @@
 	}
 	#leaderboardIcon {
 		margin-bottom: 1px;
-		margin-right: 80px;
+		margin-right: 100px;
 	}
 	#debitCardConfigure {
 		margin-left: -92px;
@@ -293,9 +293,14 @@
 	}
 	#iconBar {
 		display: none;
+		margin-left: 85px;
+		margin-right: 10px;
 	}
 	#leaderboardIcon, #debitCardConfigure {
 		margin-bottom: -1px;
+	}
+	#compReviewIcon {
+		margin-right: 120px;
 	}
 	</style>
 </head>
@@ -316,6 +321,8 @@
 			</ul>
 		</div>
 	<div id="iconBar">
+		<img id="compReviewIcon" class="menuIcon" onclick="window.location.href='raincloudData.html?compKey=index'" src="images/raincloudIcon.png" />
+		<span id="cloudLabel">Review Companies</span>
 		<!-- The code for invoices is just about complete, but I don't think they're a good feature, and thus I'm commenting this out! <img id="invoiceIcon" class="menuIcon" onclick="openInVoiceInterface()" src="https://i.imgur.com/sdl2GDF.png" />-->
 		<img id="debitCardConfigure" class="menuIcon" onclick="showPin()" src="https://i.imgur.com/XNRzL8b.png" />
 		<span id="pinConfigureLabel">Pin Configuration</span>

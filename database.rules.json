@@ -4,7 +4,7 @@
       ".read": true,
       "$reviewId": {
         ".write": true,
-        "authorId": {
+        "$authorId": {
           ".validate": "newData.val() === auth.uid"
         }
       }
