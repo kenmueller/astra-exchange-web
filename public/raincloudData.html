@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link rel="shortcut icon" href="images/newBoreas.png">
+    <script defer src="/__/firebase/5.7.3/firebase-app.js"></script>
+    <script defer src="/__/firebase/5.7.3/firebase-auth.js"></script>
+    <script defer src="/__/firebase/5.7.3/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.7.3/firebase.js"></script>
+    <script defer src="/__/firebase/init.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+     crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+     crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:600,700" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+     crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+     crossorigin="anonymous"></script>
+    <title>Raincloud</title>
+    <style>
+      /* Checkbox styling */
+      .container {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-top: 10px;
+        cursor: pointer;
+        font-size: 22px;
+        margin-left: 10px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      /* Hide the browser's default checkbox */
+      .container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+      }
+
+      /* Create a custom checkbox */
+      .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        margin-top: 2px;
+        background-color: #eee;
+      }
+
+      /* On mouse-over, add a grey background color */
+      .container:hover input ~ .checkmark {
+        background-color: #ccc;
+      }
+
+      /* When the checkbox is checked, add a blue background */
+      .container input:checked ~ .checkmark {
+        background-color: #2196F3;
+      }
+
+      /* Create the checkmark/indicator (hidden when not checked) */
+      .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+      }
+
+      /* Show the checkmark when checked */
+      .container input:checked ~ .checkmark:after {
+        display: block;
+      }
+
+      /* Style the checkmark/indicator */
+      .container .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+      }
+      /* End of checkbox styling */
+      /*  @media definitions which limit how many price filter buttons are in the navbar  */
+      @media screen and (max-width: 1362px) {
+        .fOne {
+          display: none;
+        }
+      }
+      @media screen and (max-width: 1250px) {
+        .fTwo {
+          display: none;
+        }
+      }
+      @media screen and (max-width: 1150px) {
+        .fThree {
+          display: none;
+        }
+      }
+      @media screen and (max-width: 1020px) {
+        .fFour {
+          display: none;
+        }
+      }
+      @media screen and (max-width: 950px) {
+        .fFive {
+          display: none;
+        }
+      }
+      /* End of nav-bar capability definitions */
+      *, h1, h2, h3, h4 {
+        font-family: Nunito;
+      /*  text-shadow:
+    		-1px -1px 0 lightgray,
+    		1px -1px 0 lightgray,
+    		-1px 1px 0 lightgray,
+    		1px 1px 0 lightgray;*/
+      }
+      body {
+        display: flex;
+        justify-content: center;
+      }
+      input, #subtitle, #title {
+        color: white;
+      }
+      img {
+        width: 150px;
+      }
+      #logo {
+        margin-top: 150px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 105px;
+      }
+      .strikeThrough {
+        text-decoration: line-through;
+      }
+      #background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('images/raincloudBackground.jpg');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: 100%;
+        filter:alpha(opacity=80);
+        z-index: -1;
+      }
+      .compRow {
+        color: lightblue;
+      }
+      #subtitle {
+        margin-top: -10px;
+      }
+      .form-control {
+        width: 340px;
+        height: 39.9px;
+        margin: auto;
+        margin-top: -40px;
+        margin-left: 4px;
+        -webkit-order: 1 !important;
+        border-radius: 0px;
+      }
+      #searchButton {
+        height: 40.8px;
+        margin-top: 3px;
+        margin-right: -222px;
+        width: 38px;
+        transition: opacity 100ms linear;
+        -webkit-order: 2;
+        margin-bottom: -0.8px;
+        padding-bottom: -6px;
+      }
+      #searchButton:hover {
+        opacity: 0.95;
+        cursor: pointer;
+      }
+      #backgroundWeb {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: black;
+        opacity: 0.3;
+        z-index: -1;
+      }
+      #browseButton {
+        width: 120px;
+        height: 40px;
+        line-height: 15px;
+        vertical-align: middle;
+        margin-top: -66px;
+        font-size: 15px;
+        margin-right: -380px;
+        border-radius: 0px;
+      }
+      #indexBox {
+        display: none;
+        text-align: center;
+      }
+      #searchTitle {
+        margin-top: -90px;
+        margin-left: 170px;
+        display: block;
+      }
+      .industryDisplay {
+        margin-left: 180px;
+      }
+      #navbar {
+        height: 70px;
+        width: 100%;
+        background: lightblue;
+        text-align: center;
+        box-sizing: border-box;
+      }
+      #industryNote {
+        display: block;
+        margin-left: 200px;
+        margin-top: 5px;
+      }
+      #dataBox {
+        width: 100%;
+      }
+      #navLogo {
+        display: block;
+        width: 100px;
+        margin-left: 100px;
+      }
+      #navSearch {
+        margin-top: -45px;
+        width: 703px;
+        font-size: 15px;
+        height: 40px;
+        margin-left: 220px;
+      }
+      #navSearchInput {
+        width: 50%;
+      }
+      #navSearchButton {
+        height: 40px;
+        width: 40px;
+        margin-left: -173px;
+        margin-top: -65px;
+      }
+      #navSearchButton:hover {
+        opacity: 0.95;
+        cursor: pointer;
+      }
+      #navBrowseButton {
+        margin-top: -65px;
+        margin-left: 83px;
+        border-radius: 0px;
+      }
+      #priceFilters {
+        margin-top: -39px;
+        margin-left: 700px;
+        display: block;
+      }
+      .compLogo {
+        height: 150px;
+        width: 150px;
+        border-style: solid;
+        border-width: 3px;
+        border-color: lightblue;
+        border-radius: 2px;
+      }
+      .fOne {
+        text-decoration: underline;
+      }
+      .navPriceButton:hover {
+        text-decoration: underline;
+      }
+      .compEntry {
+        border-bottom-style: solid;
+        width: 50%;
+        border-width: 1px;
+        border-color: lightgray;
+        margin-bottom: 10px;
+        margin-top: 24px;
+        padding-bottom: 90px;
+        margin-left: 50px;
+      }
+      .compTitle:hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+      .compTitle {
+        margin-top: -140px;
+        margin-left: 170px;
+      }
+      .compIndustry {
+        margin-left: 170px;
+      }
+      .iCompTitle, .iCompLogo, .iCompIndustry, .compRating {
+        margin: auto;
+        text-align: center;
+        margin-top: 10px;
+      }
+      .reviewAbsence {
+    		text-align: center;
+    		opacity: 0.8;
+    	}
+      .iCompLogo {
+        border-width: 3px;
+        border-color: lightblue;
+        border-style: solid;
+        margin: auto;
+        display: block;
+        margin-top: 20px;
+      }
+      .productList {
+        width: 400px;
+        overflow: scroll;
+        margin: auto;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+      .reviewButton {
+        margin: auto;
+        display: block;
+        width: 200px;
+        margin-top: 10px;
+      }
+      .headerBox {
+        margin: auto;
+      }
+      #makeReviewBox {
+        display: none;
+      }
+      #reviewDescription {
+        height: 300px;
+        width: 500px;
+        max-height: 300px;
+        max-width: 500px;
+        margin-left: 10px;
+      }
+      #navLogo:hover {
+        cursor: pointer;
+      }
+      #failBox {
+        display: none;
+        text-align: center;
+        margin: auto;
+        margin-top: 10px;
+      }
+      .resultsHeader {
+        margin-top: 10px;
+        margin-left: 5px;
+      }
+      .rateSelect {
+        font-size: 20px;
+        transition: text-decoration 0.2s ease-out;
+        margin-left: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+      .rateSelect:hover {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+      .selectedRate {
+        text-decoration: underline;
+        opacity: 1;
+      }
+      .unselectedRate {
+        text-decoration: none;
+        opacity: 0.7;
+      }
+      #buttonList {
+        margin-bottom: 10px;
+        margin-top: 10px;
+      }
+      #elemStorage {
+        display: none;
+      }
+      .postReviewButton {
+        display: block;
+        margin-left: 10px;
+        width: 250px;
+      }
+      .review {
+        border-top-style: solid;
+        border-bottom-style: solid;
+        border-width: 1px;
+        width: 800px;
+        border-color: lightgray;
+        margin: auto;
+        margin-top: 10px;
+        text-align: center;
+      }
+      .rmReview {
+        width: 250px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="indexBox">
+      <img id="logo" src="images/newBoreas.png">
+      <h1 id="title">Raincloud</h1>
+      <img onclick="searchRainCloud(document.getElementById('searchInput').value)" src="images/searchLight.png" id="searchButton">
+      <input class="form-control" placeholder="Search Ad Astra Shops And Businesses" id="searchInput">
+      <button id="browseButton" onclick="browseComps()" class="btn btn-primary">Browse Shops</button>
+      <h5 id="subtitle"><span class="strikeThrough">Ad Astra Yelp</span> Instant Reviews For Ad Astra Companies</h5>
+      <div id="background"></div>
+      <div id="backgroundWeb"></div>
+    </div>
+    <div id="dataBox">
+      <div id="navbar">
+        <img src="images/newBoreas.png" onclick="window.location.href='raincloudData.html?compKey=index'" id="navLogo">
+        <div id="navSearch">
+          <input class="form-control" placeholder="Search Ad Astra Shops And Businesses" id="navSearchInput">
+          <button id="navBrowseButton" onclick="browseComps()" class="btn btn-primary">Browse Shops</button>
+          <img onclick="searchRainCloud(document.getElementById('navSearchInput').value)" src="images/searchLight.png" id="navSearchButton">
+        </div>
+        <div id="priceFilters">
+          <button class="navPriceButton btn btn-secondary fOne" id="[0, inf]" onclick="setPFilter(this.id)" class="btn btn-primary">Any Price</button>
+          <button class="navPriceButton btn btn-secondary fTwo" id="[0, 3]" onclick="setPFilter(this.id)" class="btn btn-primary">Inexpensive</button>
+          <button class="navPriceButton btn btn-secondary fThree" id="[4, 5]" onclick="setPFilter(this.id)" class="btn btn-primary">Moderate</button>
+          <button class="navPriceButton btn btn-secondary fFour" id="[6, 9]" onclick="setPFilter(this.id)" class="btn btn-primary">Premium</button>
+          <button class="navPriceButton btn btn-secondary fFive" id="[10, inf]" onclick="setPFilter(this.id)" class="btn btn-primary">Ultra-Premium</button>
+        </div>
+      </div>
+      <div id="compList">
+        <h1 id="searchResults"></h1>
+      </div>
+      <div id="makeReviewBox">
+        <h1 id="reviewTitle"></h1>
+        <label class="container">Writing As Anonymous
+          <input type="checkbox" id="anonymousInput">
+          <span class="checkmark"></span>
+        </label>
+        <div id="buttonList">
+          <span id="1Star" onclick="setRating(this.id)" class="rateSelect unselectedRate">1</span>
+          <span id="2Star" onclick="setRating(this.id)" class="rateSelect unselectedRate">2</span>
+          <span id="3Star" onclick="setRating(this.id)" class="rateSelect unselectedRate">3</span>
+          <span id="4Star" onclick="setRating(this.id)" class="rateSelect unselectedRate">4</span>
+          <span id="5Star" onclick="setRating(this.id)" class="rateSelect unselectedRate">5</span>
+          <span id="6Star" onclick="setRating(this.id)" class="rateSelect unselectedRate">6</span>
+          <span id="7Star" onclick="setRating(this.id)" class="rateSelect unselectedRate">7</span>
+          <span id="8Star" onclick="setRating(this.id)" class="rateSelect unselectedRate">8</span>
+          <span id="9Star" onclick="setRating(this.id)" class="rateSelect unselectedRate">9</span>
+          <span id="10Star" onclick="setRating(this.id)" class="rateSelect unselectedRate">10</span>
+        </div>
+        <textarea maxlength="200" placeholder="Review Here!&#10;&#10;Please do not review if you are affiliated with the company." id="reviewDescription"></textarea>
+
+        <button class="btn btn-primary postReviewButton" id="postReviewButton" onclick="postReview(this.id)">Make Review</button>
+      </div>
+
+      <div id="failBox">
+        <img src="images/newSadBoreas.png">
+        <h1 id="failExplain"></h1>
+      </div>
+    </div>
+    <div id="elemStorage">
+      <div id="insufficientData" class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Insufficient Data!</strong> Please ensure that you have rated the company and explained it!
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <script>
+      const inf = Number.MAX_SAFE_INTEGER;
+      let compData;
+      let searchKey;
+      let reviewData;
+      let priceRange = [0, inf];
+      let dotCount = 0;
+      let companiesReviewedFor = [];
+      let currentRateSelect;
+      let nameOfUser;
+      const defaultImageLink = "https://i.imgur.com/lBJXFA9.png"
+      const id = document.cookie.split("|")[0] ? document.cookie.split("|")[0] : document.cookie;
+      let config = {
+        apiKey: "AIzaSyDOfmd3fntDblft3mhjccRiEggWu_t5fW0",
+        authDomain: "astra-exchange.firebaseapp.com",
+        databaseURL: "https://astra-exchange.firebaseio.com",
+        projectId: "astra-exchange",
+        storageBucket: "astra-exchange.appspot.com",
+        messagingSenderId: "946665066699"
+      };
+      firebase.initializeApp(config);
+      let database = firebase.database();
+      function loadUserData() {
+        database.ref('users/' + id).on('value', function(snapshot) {
+          nameOfUser = snapshot.val().name;
+        });
+      }
+      function loadingAnimation() {
+        if (dotCount == 3) {
+          dotCount = 0;
+        } else {
+          dotCount++;
+        }
+        document.getElementById("loadingDisplay").innerHTML = "Loading Company Data"+('.'.repeat(dotCount));
+      }
+      function loadPage() {
+        searchKey = decodeURIComponent(window.location.href.split("?compKey=")[1]);
+        if (searchKey==undefined || searchKey == "" || searchKey == "index") {
+          $("#dataBox").hide();
+          $("#indexBox").show();
+        } else {
+          if (searchKey == "browse") {
+            searchKey = "";
+          }
+          $("#indexBox").hide();
+          loadCompData();
+        }
+      }
+      function searchForComp() {
+        $("#failBox").hide();
+
+        const compCountData = compCount;
+        let ifCompExist = false;
+        let compsFound = 0;
+        let compOfKey;
+        let compOfKeyId;
+
+
+        for (target of Object.keys(compData)) {
+          if (compData[target].name.includes(searchKey) && compData[target].industry != "Unspecified") {
+            compsFound = compsFound + 1;
+          }
+          if (compData[target].name == searchKey) {
+            compOfKey = compData[target];
+            compOfKeyId = target;
+          }
+        }
+
+        document.getElementById("compList").innerHTML = "";
+        let returnResults = document.createElement("h1");
+
+        returnResults.className = "resultsHeader";
+
+        let resultMessage;
+        if (!searchKey) {
+          resultMessage = "Showing All " + compsFound + " Companies"
+        } else {
+          resultMessage = compsFound + " Results Found For '" + searchKey + "'";
+        }
+        returnResults.innerHTML = resultMessage;
+
+        if (compsFound > 1) {
+          document.getElementById("compList").appendChild(returnResults);
+        }
+
+        if (compsFound != 0) {
+          if (!compOfKey) {
+            for (target of Object.keys(compData)) {
+              const currentCompData = compData[target];
+
+              if (currentCompData.name.includes(searchKey) && currentCompData.industry != "Unspecified") {
+                let newCompDiv = document.createElement("div");
+                let compLogo = document.createElement("img");
+                let compTitle = document.createElement("h3");
+                let compIndustry = document.createElement("h5");
+
+                newCompDiv.className = "compEntry";
+                compLogo.className = "compDiv";
+                compLogo.className = "compLogo";
+                compTitle.className = "compTitle";
+                compIndustry.className = "compIndustry";
+
+                compTitle.id = target;
+                compTitle.onclick = function() { searchRainCloud(this.innerHTML)};
+
+                compTitle.innerHTML = currentCompData.name;
+                compLogo.src = currentCompData.logo ? currentCompData.logo : "https://i.imgur.com/lBJXFA9.png";
+                compIndustry.innerHTML = currentCompData.industry;
+
+                newCompDiv.appendChild(compLogo);
+                newCompDiv.appendChild(compTitle);
+                newCompDiv.appendChild(compIndustry);
+                newCompDiv.appendChild(compIndustry);
+
+                document.getElementById("compList").appendChild(newCompDiv);
+              }
+            }
+          } else {
+            loadIndividualComp(compOfKey, compOfKeyId);
+          }
+        } else {
+          $("#failBox").show();
+          document.getElementById("failExplain").innerHTML = "No Results Found For " + "'" + searchKey + "'!"
+        }
+      }
+      function browseComps() {
+        window.location.href = "raincloudData.html?compKey=browse";
+      }
+      function loadCompData() {
+        return firebase.database().ref('companies/').once('value').then(function(snapshot) {
+          compDataExist = false
+          secTicker = 0
+          newCompRow = document.createElement("div")
+          newCompRow.className = "compRow"
+          compCount = Object.keys(snapshot.val()).length
+          compData = snapshot.val();
+
+          return firebase.database().ref('reviews/').once('value').then(function(snapshot) {
+            reviewData = snapshot.val();
+
+            searchForComp();
+          })
+        });
+      }
+      $('#searchInput').keypress(function(event){
+          const keycode = (event.keyCode ? event.keyCode : event.which);
+          if (keycode == "13") {
+            searchRainCloud();
+          }
+      });
+      function searchRainCloud(searchKey) {
+        window.location.href = "raincloudData.html?compKey="+searchKey;
+      }
+      function setPFilter(pFilter) {
+        console.log(pFilter);
+      }
+      function loadIndividualComp(Company, companyId) {
+        let compTitle = document.createElement("h1");
+        let headerBox = document.createElement("div");
+        let makeReviewButton = document.createElement("button");
+        let compLogo = document.createElement("img");
+        let productList = document.createElement("table");
+        let compIndustry = document.createElement("h2");
+        let compRating = document.createElement("h3");
+        let compReviewList = document.createElement("div");
+        let ratingData = [];
+
+        makeReviewButton.id = companyId;
+        makeReviewButton.onclick = function() { openReviewDisplay(this.id) };
+        headerBox.className = "headerBox";
+        makeReviewButton.className = "reviewButton btn btn-primary";
+        productList.className = "table productList";
+        compTitle.className = "iCompTitle";
+        compLogo.className = "iCompLogo";
+        compIndustry.className = "iCompIndustry";
+        compRating.className = "compRating";
+        compReviewList.className = "reviewList";
+
+        makeReviewButton.innerHTML = "Write a Review"
+        compTitle.innerHTML = Company.name;
+        compLogo.src = Company.logo ? Company.logo : "https://i.imgur.com/lBJXFA9.png";
+        compIndustry.innerHTML = Company.industry;
+
+        if (Company.products) {
+          for (target of Object.keys(Company.products)) {
+            const currentProduct = Company.products[target];
+            let newProductItem = document.createElement("tr");
+            let productName = document.createElement("td");
+            let productCost = document.createElement("td");
+
+            productName.innerHTML = currentProduct.name;
+            productCost.innerHTML = currentProduct.cost+"A";
+
+            newProductItem.appendChild(productName);
+            newProductItem.appendChild(productCost);
+
+            productList.appendChild(newProductItem);
+          }
+        } else {
+          productList = document.createElement("h3");
+          productList.innerHTML = "This company has no products to sell!"
+        }
+        if (reviewData[companyId]) {
+          for (target of Object.keys(reviewData[companyId])) {
+            const currentReview = reviewData[companyId][target];
+            let newReview = document.createElement("div");
+            let reviewAuthor = document.createElement("h4");
+            let reviewDescription = document.createElement("h5");
+            let reviewRating = document.createElement("h5");
+
+            newReview.className = "review";
+
+            if (currentReview.authorId == id) {
+              companiesReviewedFor.push(Company.name);
+            }
+
+            makeReviewButton.disabled = companiesReviewedFor.includes(Company.name);
+            reviewAuthor.innerHTML = "Author: "+currentReview.author;
+            reviewDescription.innerHTML = currentReview.description;
+            reviewRating.innerHTML = currentReview.rating+"/10"
+
+            ratingData.push(currentReview.rating);
+            newReview.appendChild(reviewAuthor);
+            newReview.appendChild(reviewDescription);
+            newReview.appendChild(reviewRating);
+
+            compReviewList.appendChild(newReview);
+
+            if (currentReview.authorId == id) {
+              let deleteButton = document.createElement("button");
+              deleteButton.innerHTML = "Remove Review"
+              deleteButton.style.marginBottom = "0px"
+              deleteButton.style.marginTop = "0px"
+              deleteButton.style.height = "40px"
+              deleteButton.className = "btn btn-danger rmReview"
+              deleteButton.id = target+"|"+companyId;
+              deleteButton.setAttribute('onclick','deleteProduct(this.id)')
+
+              newReview.appendChild(deleteButton)
+            }
+          }
+        } else {
+          let alertOfReviewAbsence = document.createElement("h4");
+          alertOfReviewAbsence.className = "reviewAbsence";
+          alertOfReviewAbsence.innerHTML = "No reviews have been made yet!";
+          compReviewList.appendChild(alertOfReviewAbsence);
+        }
+
+        let ratingDisplay;
+
+        if (ratingData.length > 0) {
+          ratingDisplay = "Rating: "+average(ratingData)+"/10";
+        } else {
+          ratingDisplay = "N/A";
+        }
+        compRating.innerHTML = ratingDisplay;
+
+        headerBox.appendChild(compLogo);
+        headerBox.appendChild(makeReviewButton)
+
+        document.getElementById("compList").appendChild(headerBox);
+        document.getElementById("compList").appendChild(compTitle);
+        document.getElementById("compList").appendChild(productList);
+        document.getElementById("compList").appendChild(compIndustry);
+        document.getElementById("compList").appendChild(compRating);
+        document.getElementById("compList").appendChild(compReviewList);
+      }
+      function average(array) {
+        let sum = 0;
+
+        for (target of array) {
+          sum += target;
+        }
+
+        return sum/array.length;
+      }
+      function openReviewDisplay(compId) {
+          const currentCompData = compData[compId];
+          $("#makeReviewBox").show();
+          $("#compList").hide();
+
+          document.getElementById("reviewTitle").innerHTML = "Review for "+currentCompData.name;
+          document.getElementById("postReviewButton").id = compId;
+      }
+      function setRating(starId) {
+        const rating = parseInt(starId.split("Star")[0]);
+
+        if (currentRateSelect) {
+          document.getElementById(currentRateSelect+"Star").className = "rateSelect unselectedRate";
+        }
+        currentRateSelect = rating;
+
+        document.getElementById(starId).className = "rateSelect selectedRate";
+      }
+      function postReview(compId) {
+        const reviewDescription = document.getElementById("reviewDescription").value;
+        const anonymous = document.getElementById("anonymousInput").checked;
+        let authorAlias = nameOfUser;
+
+        if (anonymous) {
+          authorAlias = "Anonymous";
+        }
+        if (!reviewDescription || !currentRateSelect) {
+          const alertInsufficient = document.getElementById("insufficientData").cloneNode(true);
+          alertInsufficient.id = "insuffAlert"
+
+          if (!document.getElementById("insuffAlert")) {
+            document.getElementById("makeReviewBox").appendChild(alertInsufficient);
+          }
+        } else {
+          if (document.getElementById("insuffAlert")) {
+            document.getElementById("insuffAlert").remove();
+          }
+          firebase.database().ref('reviews/'+compId).push({
+            author: authorAlias,
+            authorId: id,
+            description: reviewDescription,
+            rating: currentRateSelect
+          }).then(function() {
+            alert("Review Successfully Made!");
+            window.location.href = "http://localhost:5000/raincloudData.html?compKey="+compData[compId].name;
+          })
+        }
+      }
+      function deleteProduct(compString) {
+        const companyId = compString.split("|")[1];
+        const reviewId = compString.split("|")[0];
+
+        const confirmRemoval = confirm("Are you confident you'd like to remove this review?");
+        if (confirmRemoval) {
+          firebase.database().ref('reviews/'+companyId+'/'+reviewId).remove().then(function() {
+            alert("Review Removal Successful!");
+            window.location.reload();
+          });
+        } else {
+          alert("Removal Cancelled!");
+        }
+      }
+      loadCompData();
+      loadPage();
+      loadUserData();
+      //setInterval(loadingAnimation, 1000);
+    </script>
+  </body>
+</html>
