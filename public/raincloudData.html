@@ -770,11 +770,7 @@
       function postReview(compId) {
         const reviewDescription = document.getElementById("reviewDescription").value;
         const anonymous = document.getElementById("anonymousInput").checked;
-        let authorAlias = nameOfUser;
 
-        if (anonymous) {
-          authorAlias = "Anonymous";
-        }
         if (!reviewDescription || !currentRateSelect) {
           const alertInsufficient = document.getElementById("insufficientData").cloneNode(true);
           alertInsufficient.id = "insuffAlert"
@@ -786,16 +782,31 @@
           if (document.getElementById("insuffAlert")) {
             document.getElementById("insuffAlert").remove();
           }
-          firebase.database().ref('reviews/'+compId).push({
-            author: authorAlias,
-            authorId: id,
+          firebase.database().ref('reviews/'+compId+'/'+id).set({
+            anonymous: anonymous,
             description: reviewDescription,
-            rating: currentRateSelect
+            rating: currentRateSelect,
+            time: getTime()
           }).then(function() {
             alert("Review Successfully Made!");
             window.location.href = "raincloudData.html?compKey="+compData[compId].name;
           })
         }
+      }
+      function getTime() {
+        const today = new Date();
+        const dd = today.getDate();
+        const mm = today.getMonth() + 1;
+        const yyyy = today.getFullYear();
+
+        const hour = today.getHours();
+        const minute = today.getMinutes() < 10 ? "00" : today.getMinutes();
+
+        const afternoon = hour > 12 ? "PM" : "AM";
+
+        const dateFormat = `${mm}/${dd}/${yyyy} ${hour}:${minute} ${afternoon}`;
+
+        return dateFormat;
       }
       function deleteProduct(compString) {
         const companyId = compString.split("|")[1];
