@@ -800,7 +800,7 @@
         const yyyy = today.getFullYear();
 
         const hour = today.getHours();
-        const minute = today.getMinutes() < 10 ? "00" : today.getMinutes();
+        const minute = today.getMinutes() < 10 ? "0"+today.getMinutes() : today.getMinutes();
 
         const afternoon = hour > 12 ? "PM" : "AM";
 
