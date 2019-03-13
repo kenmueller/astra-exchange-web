@@ -162,10 +162,9 @@
 					})
 				} else {
 					firebase.database().ref('users/' + id).set({
-						balance: 0,
-						email: email,
 						name: name,
-						pin: (Math.floor(Math.random() * 10000) + 10000).toString().substring(1)
+						email: email,
+						balance: 0
 					}).then(function() {
 						goToMain()
 					})
