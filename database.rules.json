@@ -186,6 +186,9 @@
 				},
 				"class": {
 					".validate": "newData.isString()"
+				},
+				"price": {
+					".validate": "newData.isNumber() && newData.val() >= 0"
 				}
 			}
 		},
