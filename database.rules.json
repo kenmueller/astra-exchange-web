@@ -161,7 +161,37 @@
 							".validate": "newData.isString() && newData.val().length === 4"
 						}
 					}
+				},
+				"notes": {
+					".read": "$uid === auth.uid",
+					".write": "$uid === auth.uid",
+					"$noteId": {
+						".validate": "newData.isString() && newData.val() !== ''"
+					}
 				}
+			}
+		},
+		"notes": {
+			".read": "auth !== null",
+			"$noteId": {
+				".write": "auth !== null && !data.exists()",
+				"name": {
+					".validate": "newData.isString() && newData.val() !== ''"
+				},
+				"owner": {
+					".validate": "newData.isString() && newData.val() !== ''"
+				},
+				"images": {
+					".validate": "newData.isString() && newData.val() !== ''"
+				},
+				"class": {
+					".validate": "newData.isString()"
+				}
+			}
+		},
+		"versions": {
+			"$product": {
+				".read": true
 			}
 		},
 		"version": {
