@@ -178,6 +178,9 @@
 				"name": {
 					".validate": "newData.isString() && newData.val() !== ''"
 				},
+				"time": {
+					".validate": "newData.val() !== null"
+				},
 				"owner": {
 					".validate": "newData.isString() && newData.val() !== ''"
 				},
