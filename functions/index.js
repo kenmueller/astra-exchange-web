@@ -25,7 +25,7 @@ exports.transactionCreated = functions.database.ref('transactions/{uid}/{transac
 		])
 	} else {
 		return root.child(`users/${to}/balance`).once('value').then(balanceSnapshot => {
-			const from = context.params.uid
+			const from = snapshot.val().from
 			return root.child(`cards/${from}`).once('value').then(cardSnapshot => {
 				const toBalance = balanceSnapshot.val() + amount / 2
 				const newFrom = cardSnapshot.exists() ? cardSnapshot.val() : from
