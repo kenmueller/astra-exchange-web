@@ -11,6 +11,8 @@
 		<script defer src="/__/firebase/init.js"></script>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
 		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+		<link rel="stylesheet" href="css/navbar.css">
+		<link rel="icon" type="image/png" href="images/astra.png">
 		<title>Astra Exchange</title>
 	</head>
 	<body>
@@ -25,7 +27,7 @@
 			</div>
 			<div id="navbar" class="navbar-menu">
 				<div class="navbar-start">
-					<a class="navbar-item">Dashboard</a>
+					<a class="navbar-item" href="dashboard.html"><strong>Dashboard</strong></a>
 					<a class="navbar-item">Send Money</a>
 					<div class="navbar-item has-dropdown is-hoverable">
 						<a class="navbar-link">iOS Apps</a>
@@ -40,13 +42,13 @@
 						<div class="buttons">
 							<a class="button is-primary auth sign-up is-hidden"><strong>Sign up</strong></a>
 							<a class="button is-light auth sign-in is-hidden">Sign in</a>
-							<div class="navbar-item has-dropdown is-hoverable auth user-dropdown is-hidden">
-								<a class="navbar-link auth user-link"></a>
-								<div class="navbar-dropdown">
-									<a class="navbar-item settings">Settings</a>
-									<hr class="navbar-divider">
-									<a class="navbar-item auth sign-out"><strong>Sign out</strong></a>
-								</div>
+						</div>
+						<div class="navbar-item has-dropdown is-hoverable auth user-dropdown is-hidden">
+							<a class="navbar-link auth user-link"></a>
+							<div class="navbar-dropdown">
+								<a class="navbar-item settings">Settings</a>
+								<hr class="navbar-divider">
+								<a class="navbar-item auth sign-out"><strong>Sign out</strong></a>
 							</div>
 						</div>
 					</div>
@@ -84,7 +86,7 @@
 					</div>
 				</section>
 				<footer class="modal-card-foot">
-					<button class="button is-success auth complete-sign-up">Sign up</button>
+					<button class="button is-success auth complete-sign-up" id="complete-sign-up" disabled>Sign up</button>
 					<button class="button close-sign-up">Cancel</button>
 				</footer>
 			</div>
@@ -113,12 +115,12 @@
 					</div>
 				</section>
 				<footer class="modal-card-foot">
-					<button class="button is-success auth complete-sign-in">Sign in</button>
+					<button class="button is-success auth complete-sign-in" id="complete-sign-in" disabled>Sign in</button>
 					<button class="button close-sign-in">Cancel</button>
 				</footer>
 			</div>
 		</div>
-		<a class="button is-primary dashboard" href="dashboard.html"><strong>Dashboard</strong></a>
+		<a class="button is-primary dashboard is-hidden" href="dashboard.html"><strong>Dashboard</strong></a>
 		<script src="js/index.js"></script>
 		<script src="js/auth.js"></script>
 	</body>
