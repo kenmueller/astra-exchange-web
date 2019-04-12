@@ -1,256 +1,65 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
-	<link rel="shortcut icon" href="https://i.imgur.com/ufHYGd9.png">
-	<script defer src="/__/firebase/5.7.3/firebase-app.js"></script>
-	<script defer src="/__/firebase/5.7.3/firebase-auth.js"></script>
-	<script defer src="/__/firebase/5.7.3/firebase-database.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/5.7.3/firebase.js"></script>
-	<script defer src="/__/firebase/init.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-	 crossorigin="anonymous"></script>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-	 crossorigin="anonymous">
-	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	<link href="https://fonts.googleapis.com/css?family=Nunito:600,700" rel="stylesheet">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-	 crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-	 crossorigin="anonymous"></script>
-	<title>Astra Exchange</title>
-	<style>
-		*, h1, h2, h3, h4, h5 {
-				font-family: Nunito;
-				text-align: center;
-			}
-			h1 {
-				font-size: 50px;
-				margin-top: 20px;
-			}
-			#logo {
-				height: 135px;
-				margin-top: 20px;
-				height: 225px;
-				width: 225px;
-			}
-			.flexContainer {
-				display: flex;
-				justify-content: center;
-			}
-			#nameInput, #emailInput, #passwordInput, #emailSignInInput, #passwordSignInInput {
-				font-family: Nunito;
-				width: 300px;
-				margin: auto;
-				margin-top: 20px;
-			}
-			#passwordSignInInput {
-				margin-top: 30px;
-			}
-			#emailSignInInput {
-				margin-top: 30px;
-			}
-			button {
-				margin-top: 20px;
-			}
-			#accountSignInButton, #accountCreationButton, #switchCurrentInputForm {
-				width: 250px;
-			}
-			#switchCurrentInputForm {
-				font-size: 15px;
-				display: block;
-				margin: auto;
-    			margin-top: 20px;
-			}
-			#downloadiOSAppButton {
-				margin: auto;
-				margin-top: 30px;
-				display: block;
-				width: 250px;
-				font-size: 18px;
-				line-height: 30px;
-			}
-			#downloadAppMessage {
-				margin: auto;
-				margin-top: 8px;
-				display: block;
-				width: 250px;
-				font-size: 15px;
-				line-height: 17px;
-				font-family: Nunito;
-				text-align: left;
-			}
-		</style>
-</head>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome to Firebase Hosting</title>
 
-<body>
-	<div id="headerBox" class="flexContainer">
-		<img id="logo" src="https://i.imgur.com/hrRbh4F.png" />
-	</div>
-	<h1 id="title">Astra Exchange</h1>
-	<h2>Welcome to Astra Exchange!</h2>
-	<div id="accountCreationForm">
-		<input class="form-control" onKeyUp="registerInput(this.id)" placeholder="Name" id="nameInput" />
-		<input class="form-control" onKeyUp="registerInput(this.id)" placeholder="Email" id="emailInput" />
-		<input class="form-control" onKeyUp="registerInput(this.id)" placeholder="Password" type="password" id="passwordInput" />
-		<div class="flexContainer">
-			<button id="accountCreationButton" onclick="createUser()" class="btn btn-secondary" disabled="true">Create New Account</button>
-		</div>
-	</div>
-	<div id="loginBox">
-		<input class="form-control" placeholder="Email" onKeyUp="registerInput(this.id)" id="emailSignInInput" />
-		<input class="form-control" placeholder="Password" onKeyUp="registerInput(this.id)" type="password" id="passwordSignInInput" />
-		<div class="flexContainer">
-			<button id="accountSignInButton" onclick="signIn()" class="btn btn-secondary">Log In</button>
-		</div>
-	</div>
-	<div>
-		<button class="btn btn-light" id="switchCurrentInputForm" onclick="changeForm()">Create An Account Instead!</button>
-		<a class="btn btn-primary" id="downloadiOSAppButton" href="itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist">Download App</a>
-		<p id="downloadAppMessage">Visit astra.exchange on your mobile device to download the app</p>
-	</div>
-	<div class="flexContainer"></div>
-	</div>
-	<div class="modal fade" id="creationFailure" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-	 aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="ceModalLabel">Account Creation Error</h5>
-				</div>
-				<div class="modal-body" id="errorMessage">There has been an error in creating your account! This is caused by
-					either an invalid email or insufficient account data! Please try again! Error Code:</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<script>
-		if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-			window.location.href='itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist'
-			document.getElementById('downloadAppMessage').style.display = 'none'
-		} else {
-			document.getElementById('downloadiOSAppButton').disabled = true
-		}
-		let name;
-		let id;
-		let navbarSelect = document.cookie.split("|")[1] ? document.cookie.split("|")[1] : true
-		let email;
-		let isSignIn = true;
-		let inputActiveObject = {"emailSignInInput":false, "passwordSignInInput":false, "nameInput":false, "emailInput":false, "passwordInput":false}
-		$("#accountCreationForm").hide()
-		let config = {
-			apiKey: "AIzaSyDOfmd3fntDblft3mhjccRiEggWu_t5fW0",
-			authDomain: "astra-exchange.firebaseapp.com",
-			databaseURL: "https://astra-exchange.firebaseio.com",
-			projectId: "astra-exchange",
-			storageBucket: "astra-exchange.appspot.com",
-			messagingSenderId: "946665066699"
-		};
-		firebase.initializeApp(config);
-		let defaultDatabase = firebase.database();
-		firebase.auth().onAuthStateChanged(function (user) {
-			if (user) {
-				id = user.uid;
-				if (isSignIn) {
-					firebase.database().ref('users/' + id + '/name').once('value').then(function(snapshot) {
-						name = snapshot.val()
-					}).then(function() {
-						goToMain()
-					})
-				} else {
-					firebase.database().ref('users/' + id).set({
-						name: name,
-						email: email,
-						balance: 0
-					}).then(function() {
-						goToMain()
-					})
-				}
-			}
-		})
-		function registerInput(idOfInput) {
-			inputActiveObject[idOfInput] = (document.getElementById(idOfInput).value != "");
-			let determDisabledACB;
-			let determDisabledSIB;
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/5.9.4/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/5.9.4/firebase-auth.js"></script>
+    <script defer src="/__/firebase/5.9.4/firebase-database.js"></script>
+    <script defer src="/__/firebase/5.9.4/firebase-messaging.js"></script>
+    <script defer src="/__/firebase/5.9.4/firebase-storage.js"></script>
+    <!-- initialize the SDK after all desired features are loaded -->
+    <script defer src="/__/firebase/init.js"></script>
 
-			if (inputActiveObject["nameInput"] && inputActiveObject["emailInput"] && inputActiveObject["passwordInput"]) {
-				determDisabledACB = "";
-			} else {
-				determDisabledACB = "true";
-			}
-			if (inputActiveObject["emailSignInInput"] && inputActiveObject["passwordSignInInput"]) {
-				determDisabledSIB = "";
-			} else {
-				determDisabledSIB = "true";
-			}
+    <style media="screen">
+      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
+      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
+      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
+      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
+      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
+      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
+      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
+      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
+      @media (max-width: 600px) {
+        body, #message { margin-top: 0; background: white; box-shadow: none; }
+        body { border-top: 16px solid #ffa100; }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="message">
+      <h2>Welcome</h2>
+      <h1>Firebase Hosting Setup Complete</h1>
+      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
+      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
+    </div>
+    <p id="load">Firebase SDK Loading&hellip;</p>
 
-			document.getElementById("accountCreationButton").disabled = determDisabledACB;
-			document.getElementById("accountSignInButton").disabled = determDisabledSIB;
-		}
-		function goToMain() {
-			document.cookie = id
-			window.location = "main.html"
-		}
-		function loadLogo() {
-			if (!navbarSelect) {
-				document.getElementById("logo").src = "https://i.imgur.com/hrRbh4F.png";
-				document.getElementById("logo").style.width = "225px";
-				document.getElementById("logo").style.height = "225px";
-				document.getElementById("title").style.marginTop = "-20px";
-			} else {
-				document.getElementById("logo").src = "https://i.imgur.com/ufHYGd9.png";
-				document.getElementById("logo").style.width = "135px";
-				document.getElementById("logo").style.height = "135px";
-				document.getElementById("title").style.marginTop = "0px";
-			}
-		}
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+        // // The Firebase SDK is initialized and available here!
+        //
+        // firebase.auth().onAuthStateChanged(user => { });
+        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
+        // firebase.messaging().requestPermission().then(() => { });
+        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
+        //
+        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
-		function changeForm() {
-			if (isSignIn) {
-				$("#loginBox").hide();
-				$("#accountCreationForm").show();
-
-				document.getElementById("switchCurrentInputForm").innerHTML = "Sign In Instead!";
-			} else {
-				$("#loginBox").show();
-				$("#accountCreationForm").hide();
-
-				document.getElementById("switchCurrentInputForm").innerHTML = "Create An Account Instead!";
-			}
-			isSignIn = !isSignIn;
-		}
-
-		function signIn() {
-			email = document.getElementById("emailSignInInput").value;
-
-			firebase.auth().signInWithEmailAndPassword(email, document.getElementById("passwordSignInInput").value).catch(function (error) {
-				alert("Your email or password in invalid and you can't log in! Make sure you entered your email and password correctly!");
-			});
-		}
-
-		function createUser() {
-			const password = document.getElementById("passwordInput").value;
-			email = document.getElementById("emailInput").value;
-			name = document.getElementById("nameInput").value;
-			userExist = false;
-			if (name && email && password) {
-				if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) && email.split("@")[1]=="adastraschool.org") {
-					firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
-						document.getElementById("errorMessage").innerHTML = "There was an error in attempting to create your account!";
-					})
-				} else {
-					alert("Your email is invalid or is not registered with adastraschool.org! Please try again!");
-				}
-			} else {
-				document.getElementById("errorMessage").innerHTML = "All input fields must be filled to create an account!"
-				$("#creationFailure").modal("show");
-			}
-		}
-		loadLogo();
-	</script>
-</body>
-
+        try {
+          let app = firebase.app();
+          let features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof app[feature] === 'function');
+          document.getElementById('load').innerHTML = `Firebase SDK loaded with ${features.join(', ')}`;
+        } catch (e) {
+          console.error(e);
+          document.getElementById('load').innerHTML = 'Error loading the Firebase SDK, check the console.';
+        }
+      });
+    </script>
+  </body>
 </html>
