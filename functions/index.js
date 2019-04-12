@@ -27,13 +27,18 @@ exports.transactionCreated = functions.database.ref('transactions/{uid}/{transac
 		return root.child(`users/${to}/balance`).once('value').then(balanceSnapshot => {
 			const from = snapshot.val().from
 			return root.child(`cards/${from}`).once('value').then(cardSnapshot => {
-				const toBalance = balanceSnapshot.val() + amount / 2
+				const toBalance = balanceSnapshot.val() + amount
 				const newFrom = cardSnapshot.exists() ? cardSnapshot.val() : from
-				return Promise.all([
-					root.child(`transactions/${to}/${context.params.transactionId}`).set({ time: snapshot.val().time, from: newFrom, to: to, amount: amount, balance: toBalance, message: snapshot.val().message }),
-					root.child(`users/${newFrom}/balance`).set(snapshot.val().balance),
-					root.child(`users/${to}/balance`).set(toBalance)
-				])
+				if (context.params.uid === from) {
+					return Promise.all([
+						root.child(`transactions/${to}/${context.params.transactionId}`).set({ time: snapshot.val().time, from: newFrom, to: to, amount: amount, balance: toBalance, message: snapshot.val().message }),
+						root.child(`users/${newFrom}/balance`).set(snapshot.val().balance),
+					])
+				} else {
+					return Promise.all([
+						root.child(`users/${to}/balance`).set(toBalance)
+					])
+				}
 			})
 		})
 	}
