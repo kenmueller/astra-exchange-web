@@ -40,12 +40,14 @@
 				"destination": "/settings.html"
 			},
 			{
-				"source": "/notes",
-				"destination": "https://notes.astra.exchange"
-			},
-			{
 				"source": "**",
 				"destination": "/index.html"
+			}
+		],
+		"redirects": [
+			{
+				"source": "/notes",
+				"destination": "https://notes.astra.exchange"
 			}
 		]
 	},
