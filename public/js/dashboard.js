@@ -54,8 +54,13 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	document.querySelectorAll('.action.send').forEach(element => element.addEventListener('click', showSendModal))
+	document.querySelectorAll('.close-send').forEach(element => element.addEventListener('click', hideSendModal))
 	document.querySelectorAll('.action.create-invoice').forEach(element => element.addEventListener('click', showCreateInvoiceModal))
+	document.querySelectorAll('.close-create-invoice').forEach(element => element.addEventListener('click', hideCreateInvoiceModal))
 	document.querySelectorAll('.action.transactions').forEach(element => element.addEventListener('click', showTransactionsModal))
+	document.querySelectorAll('.close-transactions').forEach(element => element.addEventListener('click', hideTransactionsModal))
 	document.querySelectorAll('.action.invoices').forEach(element => element.addEventListener('click', showInvoicesModal))
+	document.querySelectorAll('.close-invoices').forEach(element => element.addEventListener('click', hideInvoicesModal))
 	document.querySelectorAll('.action.your-id').forEach(element => element.addEventListener('click', showYourIdModal))
+	document.querySelectorAll('.close-your-id').forEach(element => element.addEventListener('click', hideYourIdModal))
 })
