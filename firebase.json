@@ -16,12 +16,32 @@
 		],
 		"rewrites": [
 			{
-				"source": "**",
-				"destination": "/index.html"
-			},
-			{
 				"source": "/dashboard",
 				"destination": "/dashboard.html"
+			},
+			{
+				"source": "/send",
+				"destination": "/send.html"
+			},
+			{
+				"source": "/invoice",
+				"destination": "/invoice.html"
+			},
+			{
+				"source": "/transactions",
+				"destination": "/transactions.html"
+			},
+			{
+				"source": "/invoices",
+				"destination": "/invoices.html"
+			},
+			{
+				"source": "/notes",
+				"destination": "https://notes.astra.exchange"
+			},
+			{
+				"source": "**",
+				"destination": "/index.html"
 			}
 		]
 	},

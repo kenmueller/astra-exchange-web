@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
-	const db = firebase.database()
 	const auth = firebase.auth()
+	const db = firebase.database()
 
 	auth.onAuthStateChanged(function(user) {
 		if (user) {
