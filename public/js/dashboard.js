@@ -41,19 +41,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function updateTransactionsPreview(transaction) {
 		const outgoing = transaction.from === user.uid
-		const tr = document.createElement('tr')
-		tr.className = 'transaction'
-		tr.innerHTML = `
-			<td width="3%"><i class="fa fa-dollar-sign"></i></td>
-			<td>${outgoing ? 'OUTGOING' : 'INCOMING'}</td>
-			<td>${outgoing ? `TO ${transaction.to}` : `FROM ${transaction.from}`}</td>
-			<td>${transaction.amount} Astras</td>
-			<td><a class="button is-small is-primary view-transaction">view</a></td>
-		`
-		if (document.getElementById('transactions-preview').childNodes.length === 10) {
-			document.getElementById('transactions-preview').removeChild(document.getElementById('transactions-preview').childNodes[9])
-		}
-		document.getElementById('transactions-preview').insertBefore(tr, document.getElementById('transactions-preview').childNodes[0])
+		db.ref(`users/${outgoing ? transaction.to : transaction.from}/name`).on('value', function(snapshot) {
+			const tr = document.createElement('tr')
+			tr.className = 'transaction'
+			tr.innerHTML = `
+				<td width="3%"><i class="fa fa-dollar-sign"></i></td>
+				<td>${outgoing ? 'OUTGOING' : 'INCOMING'}</td>
+				<td>${snapshot.val()}</td>
+				<td>${transaction.amount} Astras</td>
+				<td><a class="button is-small is-primary view-transaction">view</a></td>
+			`
+			if (document.getElementById('transactions-preview').childNodes.length === 10) {
+				document.getElementById('transactions-preview').removeChild(document.getElementById('transactions-preview').childNodes[9])
+			}
+			document.getElementById('transactions-preview').insertBefore(tr, document.getElementById('transactions-preview').childNodes[0])
+		})
 	}
 
 	function updateOpenInvoiceCount() {
@@ -63,7 +65,22 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	function updateInvoicesPreview(invoice) {
-
+		const outgoing = invoice.from === user.uid
+		db.ref(`users/${outgoing ? invoice.to : invoice.from}/name`).on('value', function(snapshot) {
+			const tr = document.createElement('tr')
+			tr.className = 'invoice'
+			tr.innerHTML = `
+				<td width="3%"><i class="fa fa-dollar-sign"></i></td>
+				<td>${outgoing ? 'OUTGOING' : 'INCOMING'}</td>
+				<td>${snapshot.val()}</td>
+				<td>${invoice.amount} Astras</td>
+				<td><a class="button is-small is-primary view-invoice">view</a></td>
+			`
+			if (document.getElementById('transactions-preview').childNodes.length === 10) {
+				document.getElementById('transactions-preview').removeChild(document.getElementById('transactions-preview').childNodes[9])
+			}
+			document.getElementById('transactions-preview').insertBefore(tr, document.getElementById('transactions-preview').childNodes[0])
+		})
 	}
 
 	function showSendModal() {
