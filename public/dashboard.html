@@ -125,14 +125,14 @@
 					<aside class="menu is-hidden-mobile">
 						<p class="menu-label">actions</p>
 						<ul class="menu-list">
-							<li><a>Send Money</a></li>
-							<li><a>Create Invoice</a></li>
+							<li><a class="action send">Send Money</a></li>
+							<li><a class="action create-invoice">Create Invoice</a></li>
 						</ul>
 						<p class="menu-label">lookup</p>
 						<ul class="menu-list">
-							<li><a>Transaction History</a></li>
-							<li><a>Invoices</a></li>
-							<li><a>Your ID</a></li>
+							<li><a class="action transactions">Transaction History</a></li>
+							<li><a class="action invoices">Invoices</a></li>
+							<li><a class="action your-id">Your ID</a></li>
 						</ul>
 					</aside>
 				</div>
@@ -221,6 +221,134 @@
 						</div>
 					</div>
 				</div>
+			</div>
+		</div>
+		<div class="modal send">
+			<div class="modal-background close-send"></div>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title">Send Money</p>
+					<button class="delete close-send" aria-label="close"></button>
+				</header>
+				<section class="modal-card-body">
+					<div class="field">
+						<label class="label">Recipient</label>
+						<div class="dropdown">
+							<div class="dropdown-trigger">
+								<button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+									<span>Select User</span>
+									<span class="icon is-small"><i class="fas fa-angle-down" aria-hidden="true"></i></span>
+								</button>
+							</div>
+							<div class="dropdown-menu" id="dropdown-menu" role="menu">
+								<div class="dropdown-content">
+									<a class="dropdown-item send">Select User</a>
+									<hr class="dropdown-divider">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="field">
+						<label class="label">Amount</label>
+						<div class="control has-icons-left">
+							<input class="input" id="send-amount" type="number" placeholder="Enter amount">
+							<span class="icon is-small is-left"><i class="fas fa-comment-dollar"></i></span>
+						</div>
+					</div>
+					<div class="field">
+						<label class="label">Message</label>
+						<div class="control has-icons-left">
+							<input class="input" id="send-message" type="number" placeholder="Enter message (Optional)">
+							<span class="icon is-small is-left"><i class="fas fa-envelope"></i></span>
+						</div>
+					</div>
+				</section>
+				<footer class="modal-card-foot">
+					<button class="button is-success complete-send" id="complete-send" disabled>Send</button>
+					<button class="button close-send">Cancel</button>
+				</footer>
+			</div>
+		</div>
+		<div class="modal create-invoice">
+			<div class="modal-background close-create-invoice"></div>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title">Create Invoice</p>
+					<button class="delete close-create-invoice" aria-label="close"></button>
+				</header>
+				<section class="modal-card-body">
+					<div class="field">
+						<label class="label">Recipient</label>
+						<div class="dropdown">
+							<div class="dropdown-trigger">
+								<button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+									<span>Select User</span>
+									<span class="icon is-small"><i class="fas fa-angle-down" aria-hidden="true"></i></span>
+								</button>
+							</div>
+							<div class="dropdown-menu" id="dropdown-menu" role="menu">
+								<div class="dropdown-content">
+									<a class="dropdown-item send">Select User</a>
+									<hr class="dropdown-divider">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="field">
+						<label class="label">Amount</label>
+						<div class="control has-icons-left">
+							<input class="input" id="create-invoice-amount" type="number" placeholder="Enter amount">
+							<span class="icon is-small is-left"><i class="fas fa-comment-dollar"></i></span>
+						</div>
+					</div>
+					<div class="field">
+						<label class="label">Message</label>
+						<div class="control has-icons-left">
+							<input class="input" id="create-invoice-message" type="number" placeholder="Enter message (Optional)">
+							<span class="icon is-small is-left"><i class="fas fa-envelope"></i></span>
+						</div>
+					</div>
+				</section>
+				<footer class="modal-card-foot">
+					<button class="button is-success auth complete-create-invoice" id="complete-create-invoice" disabled>Request</button>
+					<button class="button close-sign-in">Cancel</button>
+				</footer>
+			</div>
+		</div>
+		<div class="modal transactions">
+			<div class="modal-background close-transactions"></div>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title">Transaction History</p>
+					<button class="delete close-transactions" aria-label="close"></button>
+				</header>
+				<section class="modal-card-body">
+
+				</section>
+			</div>
+		</div>
+		<div class="modal invoices">
+			<div class="modal-background close-invoices"></div>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title">Invoices</p>
+					<button class="delete close-invoices" aria-label="close"></button>
+				</header>
+				<section class="modal-card-body">
+
+				</section>
+			</div>
+		</div>
+		<div class="modal your-id">
+			<div class="modal-background close-your-id"></div>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title">Your ID</p>
+					<button class="delete close-your-id" aria-label="close"></button>
+				</header>
+				<section class="modal-card-body">
+
+				</section>
 			</div>
 		</div>
 		<script src="js/dashboard.js"></script>
