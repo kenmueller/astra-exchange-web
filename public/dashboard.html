@@ -140,7 +140,7 @@
 					<section class="hero is-info welcome is-small">
 						<div class="hero-body">
 							<div class="container">
-								<h1 class="title user name"></h1>
+								<h1 class="title user name">Hello, ...</h1>
 							</div>
 						</div>
 					</section>
@@ -148,26 +148,26 @@
 						<div class="tile is-ancestor has-text-centered">
 							<div class="tile is-parent">
 								<article class="tile is-child box">
-									<p class="title user balance"></p>
+									<p class="title user balance">...</p>
 									<p class="subtitle">Balance</p>
 								</article>
 							</div>
 							<div class="tile is-parent">
 								<article class="tile is-child box">
-									<p class="title user independence"></p>
+									<p class="title user independence">...</p>
 									<p class="subtitle">Independence</p>
 								</article>
 							</div>
 							<div class="tile is-parent">
 								<article class="tile is-child box">
-									<p class="title user transaction-count"></p>
-									<p class="subtitle">Transactions</p>
+									<p class="title user transaction-count">...</p>
+									<p class="subtitle user transaction-count-label">Transactions</p>
 								</article>
 							</div>
 							<div class="tile is-parent">
 								<article class="tile is-child box">
-									<p class="title user open-invoice-count"></p>
-									<p class="subtitle">Open Invoices</p>
+									<p class="title user open-invoice-count">...</p>
+									<p class="subtitle user open-invoice-count-label">Open Invoices</p>
 								</article>
 							</div>
 						</div>
@@ -181,13 +181,7 @@
 								<div class="card-table">
 									<div class="content">
 										<table class="table is-fullwidth is-striped">
-											<tbody>
-												<tr>
-													<td width="5%"><i class="fa fa-dollar-sign"></i></td>
-													<td>Lorum ipsum dolem aire</td>
-													<td><a class="button is-small is-primary" href="#">Action</a></td>
-												</tr>
-											</tbody>
+											<tbody id="transactions-preview"></tbody>
 										</table>
 									</div>
 								</div>
@@ -204,13 +198,7 @@
 								<div class="card-table">
 									<div class="content">
 										<table class="table is-fullwidth is-striped">
-											<tbody>
-												<tr>
-													<td width="5%"><i class="fa fa-hand-holding-usd"></i></td>
-													<td>Lorum ipsum dolem aire</td>
-													<td><a class="button is-small is-primary" href="#">Action</a></td>
-												</tr>
-											</tbody>
+											<tbody id="invoices-preview"></tbody>
 										</table>
 									</div>
 								</div>
