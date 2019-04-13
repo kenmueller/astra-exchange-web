@@ -46,11 +46,22 @@ document.addEventListener('DOMContentLoaded', function() {
 			tr.className = 'transaction'
 			tr.innerHTML = `
 				<td width="3%"><i class="fa fa-dollar-sign"></i></td>
-				<td>${outgoing ? 'OUTGOING' : 'INCOMING'}</td>
+				<td style="text-transform: uppercase;"><strong>${outgoing ? 'outgoing' : 'incoming'}</strong></td>
 				<td>${snapshot.val()}</td>
 				<td>${transaction.amount} Astras</td>
-				<td><a class="button is-small is-primary view-transaction">view</a></td>
 			`
+			const viewButton = document.createElement('a')
+			const strong = document.createElement('strong')
+			strong.appendChild(document.createTextNode('view'))
+			viewButton.appendChild(strong)
+			viewButton.onclick = function() { showTransactionModal(transaction) }
+			viewButton.classList.add('button')
+			viewButton.classList.add('is-small')
+			viewButton.classList.add('is-primary')
+			viewButton.style.textTransform = 'uppercase'
+			const viewCell = document.createElement('td')
+			viewCell.appendChild(viewButton)
+			tr.appendChild(viewCell)
 			if (document.getElementById('transactions-preview').childNodes.length === 10) {
 				document.getElementById('transactions-preview').removeChild(document.getElementById('transactions-preview').childNodes[9])
 			}
@@ -71,16 +82,35 @@ document.addEventListener('DOMContentLoaded', function() {
 			tr.className = 'invoice'
 			tr.innerHTML = `
 				<td width="3%"><i class="fa fa-dollar-sign"></i></td>
-				<td>${outgoing ? 'OUTGOING' : 'INCOMING'}</td>
+				<td class="record-type">${outgoing ? 'OUTGOING' : 'INCOMING'}</td>
 				<td>${snapshot.val()}</td>
 				<td>${invoice.amount} Astras</td>
-				<td><a class="button is-small is-primary view-invoice">view</a></td>
 			`
-			if (document.getElementById('transactions-preview').childNodes.length === 10) {
-				document.getElementById('transactions-preview').removeChild(document.getElementById('transactions-preview').childNodes[9])
+			const viewButton = document.createElement('a')
+			const strong = document.createElement('strong')
+			strong.appendChild(document.createTextNode('view'))
+			viewButton.appendChild(strong)
+			viewButton.onclick = function() { showInvoiceModal(transaction) }
+			viewButton.classList.add('button')
+			viewButton.classList.add('is-small')
+			viewButton.classList.add('is-primary')
+			viewButton.style.textTransform = 'uppercase'
+			const viewCell = document.createElement('td')
+			viewCell.appendChild(viewButton)
+			tr.appendChild(viewCell)
+			if (document.getElementById('invoices-preview').childNodes.length === 10) {
+				document.getElementById('invoices-preview').removeChild(document.getElementById('invoices-preview').childNodes[9])
 			}
-			document.getElementById('transactions-preview').insertBefore(tr, document.getElementById('transactions-preview').childNodes[0])
+			document.getElementById('invoices-preview').insertBefore(tr, document.getElementById('invoices-preview').childNodes[0])
 		})
+	}
+
+	function showTransactionModal(transaction) {
+
+	}
+
+	function showInvoiceModal(invoice) {
+
 	}
 
 	function showSendModal() {
