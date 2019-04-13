@@ -28,7 +28,7 @@
 			</div>
 			<div id="navbar" class="navbar-menu">
 				<div class="navbar-start">
-					<a class="navbar-item" href="/dashboard"><strong>Dashboard</strong></a>
+					<a class="navbar-item" href="/dashboard">Dashboard</a>
 					<a class="navbar-item">Send Money</a>
 					<div class="navbar-item has-dropdown is-hoverable">
 						<a class="navbar-link">iOS Apps</a>
@@ -40,16 +40,14 @@
 				</div>
 				<div class="navbar-end">
 					<div class="navbar-item">
-						<div class="buttons">
-							<a class="button is-primary auth sign-up is-hidden"><strong>Sign up</strong></a>
-							<a class="button is-light auth sign-in is-hidden">Sign in</a>
-							<div class="navbar-item has-dropdown is-hoverable auth user-dropdown is-hidden">
-								<a class="navbar-link auth user-link"></a>
-								<div class="navbar-dropdown">
-									<a class="navbar-item settings" href="/settings">Settings</a>
-									<hr class="navbar-divider">
-									<a class="navbar-item auth sign-out"><strong>Sign out</strong></a>
-								</div>
+						<a class="button is-primary auth sign-up is-hidden">Sign up</a>
+						<a class="button is-light auth sign-in is-hidden">Sign in</a>
+						<div class="navbar-item has-dropdown is-hoverable auth user-dropdown is-hidden">
+							<a class="navbar-link auth user-link"></a>
+							<div class="navbar-dropdown">
+								<a class="navbar-item settings" href="/settings">Settings</a>
+								<hr class="navbar-divider">
+								<a class="navbar-item auth sign-out">Sign out</a>
 							</div>
 						</div>
 					</div>
@@ -121,7 +119,110 @@
 				</footer>
 			</div>
 		</div>
-		<div id="action-cards"></div>
+		<div class="container">
+			<div class="columns">
+				<div class="column is-3">
+					<aside class="menu is-hidden-mobile">
+						<p class="menu-label">actions</p>
+						<ul class="menu-list">
+							<li><a>Send Money</a></li>
+							<li><a>Create Invoice</a></li>
+						</ul>
+						<p class="menu-label">lookup</p>
+						<ul class="menu-list">
+							<li><a>Transaction History</a></li>
+							<li><a>Invoices</a></li>
+							<li><a>Your ID</a></li>
+						</ul>
+					</aside>
+				</div>
+				<div class="column is-9">
+					<section class="hero is-info welcome is-small">
+						<div class="hero-body">
+							<div class="container">
+								<h1 class="title user name"></h1>
+							</div>
+						</div>
+					</section>
+					<section class="info-tiles">
+						<div class="tile is-ancestor has-text-centered">
+							<div class="tile is-parent">
+								<article class="tile is-child box">
+									<p class="title user balance"></p>
+									<p class="subtitle">Balance</p>
+								</article>
+							</div>
+							<div class="tile is-parent">
+								<article class="tile is-child box">
+									<p class="title user independence"></p>
+									<p class="subtitle">Independence</p>
+								</article>
+							</div>
+							<div class="tile is-parent">
+								<article class="tile is-child box">
+									<p class="title user transaction-count"></p>
+									<p class="subtitle">Transactions</p>
+								</article>
+							</div>
+							<div class="tile is-parent">
+								<article class="tile is-child box">
+									<p class="title user open-invoice-count"></p>
+									<p class="subtitle">Open Invoices</p>
+								</article>
+							</div>
+						</div>
+					</section>
+					<div class="columns">
+						<div class="column is-6">
+							<div class="card events-card">
+								<header class="card-header">
+									<p class="card-header-title">Transaction History</p>
+								</header>
+								<div class="card-table">
+									<div class="content">
+										<table class="table is-fullwidth is-striped">
+											<tbody>
+												<tr>
+													<td width="5%"><i class="fa fa-dollar-sign"></i></td>
+													<td>Lorum ipsum dolem aire</td>
+													<td><a class="button is-small is-primary" href="#">Action</a></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<footer class="card-footer">
+									<a href="#" class="card-footer-item">View All</a>
+								</footer>
+							</div>
+						</div>
+						<div class="column is-6">
+							<div class="card events-card">
+								<header class="card-header">
+									<p class="card-header-title">Invoices</p>
+								</header>
+								<div class="card-table">
+									<div class="content">
+										<table class="table is-fullwidth is-striped">
+											<tbody>
+												<tr>
+													<td width="5%"><i class="fa fa-hand-holding-usd"></i></td>
+													<td>Lorum ipsum dolem aire</td>
+													<td><a class="button is-small is-primary" href="#">Action</a></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<footer class="card-footer">
+									<a href="#" class="card-footer-item">View All</a>
+								</footer>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<script src="js/dashboard.js"></script>
 		<script src="js/auth.js"></script>
 	</body>
