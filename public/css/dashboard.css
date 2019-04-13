@@ -1,0 +1,9 @@
+#action-cards {
+	width: 33.33%;
+	width: calc(100% / 3);
+	margin-left: 45%;
+}
+.action-card-button {
+	text-transform: uppercase;
+	font-weight: bold;
+}

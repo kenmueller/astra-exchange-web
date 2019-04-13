@@ -2,14 +2,22 @@ document.addEventListener('DOMContentLoaded', function() {
 	const auth = firebase.auth()
 	const db = firebase.database()
 	const actions = [
-		{ title: 'Send Money', detail: 'Direct pay to an individual or company', href: 'send' },
-		{ title: 'Create Invoice', detail: 'Request money from an individual or company', href: 'invoice' }
+		{ title: 'Send Money', detail: 'Direct pay to an individual or company', onclick: 'showSendModal()' },
+		{ title: 'Create Invoice', detail: 'Request money from an individual or company', onclick: 'showInvoiceModal()' },
+		{ title: 'Your ID', detail: 'Show your Quick Pay ID', onclick: 'showYourIdModal()', button: 'show' },
+		{ title: 'Transaction History', detail: 'Record every transaction you\'ve ever made', onclick: 'showTransactionsModal()', button: 'view' },
+		{ title: 'Invoices', detail: 'Record and respond to all of your invoices', onclick: 'showTransactionsModal()', button: 'view' }
 	]
+	let user
+
 	createActionCards()
-	
-	auth.onAuthStateChanged(function(user) {
+
+	auth.onAuthStateChanged(function(newUser) {
+		user = newUser
 		if (user) {
-			document.querySelectorAll('.card.action').forEach(element => element.disabled = false)
+
+		} else {
+
 		}
 	})
 
@@ -24,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				<div class="content">${action.detail}</div>
 			</div>
 			<footer class="card-footer">
-				<a href="${action.href}" class="card-footer-item" disabled>${action.button ? action.button : 'Go'}</a>
+				<a ${action.href ? `href="${action.href}"` : `onclick="${action.onclick}"`} class="card-footer-item action-card-button">${action.button ? action.button : 'go'}</a>
 			</footer>
 		`
 		document.getElementById('action-cards').appendChild(div)

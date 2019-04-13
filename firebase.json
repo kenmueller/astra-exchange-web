@@ -36,6 +36,10 @@
 				"destination": "/invoices.html"
 			},
 			{
+				"source": "/settings",
+				"destination": "/settings.html"
+			},
+			{
 				"source": "/notes",
 				"destination": "https://notes.astra.exchange"
 			},
