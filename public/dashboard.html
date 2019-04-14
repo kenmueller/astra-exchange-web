@@ -299,7 +299,7 @@
 				</section>
 				<footer class="modal-card-foot">
 					<button class="button is-success auth complete-create-invoice" id="complete-create-invoice" disabled>Request</button>
-					<button class="button close-sign-in">Cancel</button>
+					<button class="button close-create-invoice">Cancel</button>
 				</footer>
 			</div>
 		</div>
@@ -313,6 +313,7 @@
 				<section class="modal-card-body">
 
 				</section>
+				<footer class="modal-card-foot"></footer>
 			</div>
 		</div>
 		<div class="modal invoices">
@@ -325,6 +326,7 @@
 				<section class="modal-card-body">
 
 				</section>
+				<footer class="modal-card-foot"></footer>
 			</div>
 		</div>
 		<div class="modal your-id">
@@ -337,6 +339,81 @@
 				<section class="modal-card-body">
 
 				</section>
+				<footer class="modal-card-foot"></footer>
+			</div>
+		</div>
+		<div class="modal transaction">
+			<div class="modal-background close-transaction"></div>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title transaction type"></p>
+					<button class="delete close-transaction" aria-label="close"></button>
+				</header>
+				<section class="modal-card-body">
+					<div class="field">
+						<label class="label">Time</label>
+						<p class="transaction time"></p>
+					</div>
+					<div class="field">
+						<label class="label">From</label>
+						<p class="transaction from"></p>
+					</div>
+					<div class="field">
+						<label class="label">To</label>
+						<p class="transaction to"></p>
+					</div>
+					<div class="field">
+						<label class="label">Amount</label>
+						<p class="transaction amount"></p>
+					</div>
+					<div class="field">
+						<label class="label transaction balance-label"></label>
+						<p class="transaction balance"></p>
+					</div>
+					<div class="field">
+						<label class="label">Message</label>
+						<p class="transaction msg"></p>
+					</div>
+				</section>
+				<footer class="modal-card-foot"></footer>
+			</div>
+		</div>
+		<div class="modal invoice">
+			<div class="modal-background close-invoice"></div>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title invoice type"></p>
+					<button class="delete close-invoice" aria-label="close"></button>
+				</header>
+				<section class="modal-card-body">
+					<div class="field">
+						<label class="label">Time</label>
+						<p class="invoice time"></p>
+					</div>
+					<div class="field">
+						<label class="label">Status</label>
+						<p class="invoice status"></p>
+					</div>
+					<div class="field">
+						<label class="label">From</label>
+						<p class="invoice from"></p>
+					</div>
+					<div class="field">
+						<label class="label">To</label>
+						<p class="invoice to"></p>
+					</div>
+					<div class="field">
+						<label class="label">Amount</label>
+						<p class="invoice amount"></p>
+					</div>
+					<div class="field">
+						<label class="label">Message</label>
+						<p class="invoice msg"></p>
+					</div>
+				</section>
+				<footer class="modal-card-foot">
+					<a class="button is-primary download-app" href="itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist"><strong>Download the iOS app</strong></a>
+				</footer>
 			</div>
 		</div>
 		<script src="js/dashboard.js"></script>
