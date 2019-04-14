@@ -26,10 +26,6 @@
 		"bazaarData": {
 			".read": true
 		},
-		"pvHist": {
-			".read": true,
-			".write": true
-		},
 		"companies": {
       		".read": true,
 			"$uid": {
@@ -146,10 +142,6 @@
 				},
 				"independence": {
 					".read": "$uid === auth.uid"
-				},
-				"pin": {
-					".read": "$uid === auth.uid",
-					".write": "$uid === auth.uid"
 				},
 				"cards": {
 					".read": "$uid === auth.uid",

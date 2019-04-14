@@ -19,7 +19,7 @@
 	<body>
 		<nav class="navbar" role="navigation" aria-label="main navigation">
 			<div class="navbar-brand">
-				<a class="navbar-item" href="/dashboard"><img src="images/astra.png" width="28" height="28"></a>
+				<a class="navbar-item" href="/"><img src="images/astra.png" width="28" height="28"></a>
 				<a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbar">
 					<span aria-hidden="true"></span>
 					<span aria-hidden="true"></span>
@@ -29,6 +29,7 @@
 			<div id="navbar" class="navbar-menu">
 				<div class="navbar-start">
 					<a class="navbar-item" href="/dashboard">Dashboard</a>
+					<a class="navbar-item action leaderboard">Leaderboard</a>
 					<a class="navbar-item action send">Send Money</a>
 					<div class="navbar-item has-dropdown is-hoverable">
 						<a class="navbar-link">iOS Apps</a>
@@ -45,7 +46,7 @@
 						<div class="navbar-item has-dropdown is-hoverable auth user-dropdown is-hidden">
 							<a class="navbar-link auth user-link"></a>
 							<div class="navbar-dropdown">
-								<a class="navbar-item settings" href="/settings">Settings</a>
+								<a class="navbar-item action settings">Settings</a>
 								<hr class="navbar-divider">
 								<a class="navbar-item auth sign-out">Sign out</a>
 							</div>
@@ -133,6 +134,7 @@
 							<li><a class="action transactions">Transaction History</a></li>
 							<li><a class="action invoices">Invoices</a></li>
 							<li><a class="action your-id">Your ID</a></li>
+							<li><a class="action leaderboard">Leaderboard</a></li>
 						</ul>
 					</aside>
 				</div>
@@ -418,6 +420,36 @@
 				<footer class="modal-card-foot">
 					<a class="button is-primary download-app" href="itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist"><strong>Download the iOS app</strong></a>
 				</footer>
+			</div>
+		</div>
+		<div class="modal leaderboard">
+			<div class="modal-background close-leaderboard"></div>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title">Leaderboard</p>
+					<button class="delete close-leaderboard" aria-label="close"></button>
+				</header>
+				<section class="modal-card-body">
+					<table class="table is-fullwidth is-striped">
+						<tbody id="leaderboard"></tbody>
+					</table>
+				</section>
+				<footer class="modal-card-foot"></footer>
+			</div>
+		</div>
+		<div class="modal settings">
+			<div class="modal-background close-settings"></div>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title">Settings</p>
+					<button class="delete close-settings" aria-label="close"></button>
+				</header>
+				<section class="modal-card-body">
+					<table class="table is-fullwidth is-striped">
+						<tbody id="settings"></tbody>
+					</table>
+				</section>
+				<footer class="modal-card-foot"></footer>
 			</div>
 		</div>
 		<script src="js/dashboard.js"></script>

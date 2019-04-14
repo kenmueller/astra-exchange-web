@@ -2,23 +2,33 @@ document.addEventListener('DOMContentLoaded', function() {
 	const auth = firebase.auth()
 	const db = firebase.database()
 	let user
-	let name
+	let users = []
 	let transactions = []
 	let invoices = []
 
-	auth.onAuthStateChanged(function(newUser) {
-		user = newUser
-		if (user) {
-			db.ref(`users/${user.uid}`).on('value', function(snapshot) {
+	auth.onAuthStateChanged(function(user_) {
+		if (user_) {
+			const id = user_.uid
+			db.ref(`users/${id}`).on('value', function(snapshot) {
 				const val = snapshot.val()
-				name = val.name
-				document.querySelectorAll('.user.name').forEach(element => element.innerHTML = `Hello, ${name}`)
-				document.querySelectorAll('.user.balance').forEach(element => element.innerHTML = val.balance)
-				document.querySelectorAll('.user.independence').forEach(element => element.innerHTML = val.independence === 0 ? 'Pending' : val.independence)
+				user = { id: id, name: val.name, email: val.email, balance: val.balance, independence: val.independence, card: val.cards[0] }
+				document.querySelectorAll('.user.name').forEach(element => element.innerHTML = `Hello, ${user.name}`)
+				document.querySelectorAll('.user.balance').forEach(element => element.innerHTML = user.balance)
+				document.querySelectorAll('.user.independence').forEach(element => element.innerHTML = user.independence === 0 ? '---' : user.independence)
 				updateTransactionCount()
 				updateOpenInvoiceCount()
 			})
-			db.ref(`transactions/${user.uid}`).on('child_added', function(snapshot) {
+			db.ref('users').on('child_added', function(snapshot) {
+				const val = snapshot.val()
+				const userId = snapshot.key
+				const newUser = { id: userId, name: val.name, email: val.email, balance: val.balance }
+				users.push(newUser)
+				db.ref(`users/${userId}/balance`).on('value', function(balanceSnapshot) {
+					newUser.balance = balanceSnapshot.val()
+					updateLeaderboard()
+				})
+			})
+			db.ref(`transactions/${id}`).on('child_added', function(snapshot) {
 				const val = snapshot.val()
 				const transaction = { id: snapshot.id, time: val.time, from: val.from, to: val.to, amount: val.amount, balance: val.balance, message: val.message }
 				transactions.push(transaction)
@@ -26,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				updateTransactionsPreview(transaction)
 				updateTransactions(transaction)
 			})
-			db.ref(`invoices/${user.uid}`).on('child_added', function(snapshot) {
+			db.ref(`invoices/${id}`).on('child_added', function(snapshot) {
 				const val = snapshot.val()
 				const invoice = { id: snapshot.id, time: val.time, status: val.status, from: val.from, to: val.to, amount: val.amount, message: val.message }
 				invoices.push(invoice)
@@ -44,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	function updateTransactionsPreview(transaction) {
-		const outgoing = transaction.from === user.uid
+		const outgoing = transaction.from === user.id
 		db.ref(`users/${outgoing ? transaction.to : transaction.from}/name`).on('value', function(snapshot) {
 			const tr = document.createElement('tr')
 			tr.className = 'transaction'
@@ -80,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	function updateInvoicesPreview(invoice) {
-		const outgoing = invoice.from === user.uid
+		const outgoing = invoice.from === user.id
 		db.ref(`users/${outgoing ? invoice.to : invoice.from}/name`).on('value', function(snapshot) {
 			const tr = document.createElement('tr')
 			tr.className = 'invoice'
@@ -110,13 +120,13 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	function showTransactionModal(transaction) {
-		const outgoing = transaction.from === user.uid
+		const outgoing = transaction.from === user.id
 		db.ref(`users/${outgoing ? transaction.to : transaction.from}/name`).on('value', function(snapshot) {
 			const val = snapshot.val()
 			document.querySelectorAll('.transaction.type').forEach(element => element.innerHTML = `${outgoing ? 'Outgoing' : 'Incoming'} Transaction`)
 			document.querySelectorAll('.transaction.time').forEach(element => element.innerHTML = transaction.time)
-			document.querySelectorAll('.transaction.from').forEach(element => element.innerHTML = outgoing ? `${name} (you)` : val)
-			document.querySelectorAll('.transaction.to').forEach(element => element.innerHTML = outgoing ? val : `${name} (you)`)
+			document.querySelectorAll('.transaction.from').forEach(element => element.innerHTML = outgoing ? `${user.name} (you)` : val)
+			document.querySelectorAll('.transaction.to').forEach(element => element.innerHTML = outgoing ? val : `${user.name} (you)`)
 			document.querySelectorAll('.transaction.amount').forEach(element => element.innerHTML = `${transaction.amount} Astras`)
 			document.querySelectorAll('.transaction.balance-label').forEach(element => element.innerHTML = `${outgoing ? 'Remaining' : 'New'} Balance`)
 			document.querySelectorAll('.transaction.balance').forEach(element => element.innerHTML = `${transaction.balance} Astras`)
@@ -127,14 +137,14 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	function showInvoiceModal(invoice) {
-		const outgoing = invoice.from === user.uid
+		const outgoing = invoice.from === user.id
 		db.ref(`users/${outgoing ? invoice.to : invoice.from}/name`).on('value', function(snapshot) {
 			const val = snapshot.val()
 			document.querySelectorAll('.invoice.type').forEach(element => element.innerHTML = `${outgoing ? 'Outgoing' : 'Incoming'} Invoice`)
 			document.querySelectorAll('.invoice.time').forEach(element => element.innerHTML = invoice.time)
 			document.querySelectorAll('.invoice.status').forEach(element => element.innerHTML = invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1))
-			document.querySelectorAll('.invoice.from').forEach(element => element.innerHTML = outgoing ? `${name} (you)` : val)
-			document.querySelectorAll('.invoice.to').forEach(element => element.innerHTML = outgoing ? val : `${name} (you)`)
+			document.querySelectorAll('.invoice.from').forEach(element => element.innerHTML = outgoing ? `${user.name} (you)` : val)
+			document.querySelectorAll('.invoice.to').forEach(element => element.innerHTML = outgoing ? val : `${user.name} (you)`)
 			document.querySelectorAll('.invoice.amount').forEach(element => element.innerHTML = `${invoice.amount} Astras`)
 			document.querySelectorAll('.invoice.msg-label').forEach(element => element.style.display = invoice.message.trim() === '' ? 'none' : 'block')
 			document.querySelectorAll('.invoice.msg').forEach(element => element.innerHTML = invoice.message)
@@ -148,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	function updateTransactions(transaction) {
-		const outgoing = transaction.from === user.uid
+		const outgoing = transaction.from === user.id
 		db.ref(`users/${outgoing ? transaction.to : transaction.from}/name`).on('value', function(snapshot) {
 			const tr = document.createElement('tr')
 			tr.className = 'transaction'
@@ -175,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	function updateInvoices(invoice) {
-		const outgoing = invoice.from === user.uid
+		const outgoing = invoice.from === user.id
 		db.ref(`users/${outgoing ? invoice.to : invoice.from}/name`).on('value', function(snapshot) {
 			const tr = document.createElement('tr')
 			tr.className = 'invoice'
@@ -199,6 +209,27 @@ document.addEventListener('DOMContentLoaded', function() {
 			tr.appendChild(viewCell)
 			document.getElementById('invoices').insertBefore(tr, document.getElementById('invoices').childNodes[0])
 		})
+	}
+
+	function updateLeaderboard() {
+		removeAllNodes(document.getElementById('leaderboard'))
+		const sortedUsers = users.sort(function(a, b) { return b.balance - a.balance })
+		for (i in sortedUsers) {
+			const user_ = sortedUsers[i]
+			const tr = document.createElement('tr')
+			tr.innerHTML = `
+				<td width="3%"><strong>#${parseInt(i) + 1}</strong></i></td>
+				<td>${user_.name}</td>
+				<td><strong>${user_.balance}</strong></td>
+			`
+			document.getElementById('leaderboard').appendChild(tr)
+		}
+	}
+
+	function removeAllNodes(element) {
+		while (element.firstChild) {
+			element.removeChild(element.firstChild)
+		}
 	}
 
 	function showModal(modal) {
@@ -257,6 +288,22 @@ document.addEventListener('DOMContentLoaded', function() {
 		hideModal('invoice')
 	}
 
+	function showLeaderboardModal() {
+		showModal('leaderboard')
+	}
+
+	function hideLeaderboardModal() {
+		hideModal('leaderboard')
+	}
+
+	function showSettingsModal() {
+		showModal('settings')
+	}
+
+	function hideSettingsModal() {
+		hideModal('settings')
+	}
+
 	document.querySelectorAll('.action.send').forEach(element => element.addEventListener('click', showSendModal))
 	document.querySelectorAll('.close-send').forEach(element => element.addEventListener('click', hideSendModal))
 	document.querySelectorAll('.action.create-invoice').forEach(element => element.addEventListener('click', showCreateInvoiceModal))
@@ -267,6 +314,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	document.querySelectorAll('.close-invoices').forEach(element => element.addEventListener('click', hideInvoicesModal))
 	document.querySelectorAll('.action.your-id').forEach(element => element.addEventListener('click', showYourIdModal))
 	document.querySelectorAll('.close-your-id').forEach(element => element.addEventListener('click', hideYourIdModal))
+	document.querySelectorAll('.action.leaderboard').forEach(element => element.addEventListener('click', showLeaderboardModal))
+	document.querySelectorAll('.close-leaderboard').forEach(element => element.addEventListener('click', hideLeaderboardModal))
+	document.querySelectorAll('.action.settings').forEach(element => element.addEventListener('click', showSettingsModal))
+	document.querySelectorAll('.close-settings').forEach(element => element.addEventListener('click', hideSettingsModal))
 	document.querySelectorAll('.close-transaction').forEach(element => element.addEventListener('click', hideTransactionModal))
 	document.querySelectorAll('.close-invoice').forEach(element => element.addEventListener('click', hideInvoiceModal))
 })
