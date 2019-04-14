@@ -20,34 +20,22 @@
 				"destination": "/dashboard.html"
 			},
 			{
-				"source": "/send",
-				"destination": "/send.html"
-			},
-			{
-				"source": "/invoice",
-				"destination": "/invoice.html"
-			},
-			{
-				"source": "/transactions",
-				"destination": "/transactions.html"
-			},
-			{
-				"source": "/invoices",
-				"destination": "/invoices.html"
-			},
-			{
-				"source": "/settings",
-				"destination": "/settings.html"
-			},
-			{
 				"source": "**",
 				"destination": "/index.html"
 			}
 		],
 		"redirects": [
 			{
+				"source": "/dashboard.html",
+				"destination": "/dashboard"
+			},
+			{
 				"source": "/notes",
 				"destination": "https://notes.astra.exchange"
+			},
+			{
+				"source": "/index.html",
+				"destination": "/"
 			}
 		]
 	},
