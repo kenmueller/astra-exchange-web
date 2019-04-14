@@ -11,12 +11,18 @@ document.addEventListener('DOMContentLoaded', function() {
 			const id = user_.uid
 			db.ref(`users/${id}`).on('value', function(snapshot) {
 				const val = snapshot.val()
-				user = { id: id, name: val.name, email: val.email, balance: val.balance, independence: val.independence, card: val.cards[0] }
+				user = { id: id, name: val.name, email: val.email, balance: val.balance, independence: val.independence, card: null }
 				document.querySelectorAll('.user.name').forEach(element => element.innerHTML = `Hello, ${user.name}`)
 				document.querySelectorAll('.user.balance').forEach(element => element.innerHTML = user.balance)
 				document.querySelectorAll('.user.independence').forEach(element => element.innerHTML = user.independence === 0 ? '---' : user.independence)
 				updateTransactionCount()
 				updateOpenInvoiceCount()
+				updateSettings()
+				db.ref(`users/${id}/cards`).on('child_added', function(cardSnapshot) {
+					const cardVal = cardSnapshot.val()
+					user.card = { id: cardSnapshot.key, name: cardVal.name, pin: cardVal.pin }
+					updateSettings()
+				})
 			})
 			db.ref('users').on('child_added', function(snapshot) {
 				const val = snapshot.val()
@@ -257,6 +263,16 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	}
 
+	function updateSettings() {
+		document.querySelectorAll('.settings.name').forEach(element => element.innerHTML = user.name)
+		document.querySelectorAll('.settings.email').forEach(element => element.innerHTML = user.email)
+		document.querySelectorAll('.settings.balance').forEach(element => element.innerHTML = user.balance)
+		document.querySelectorAll('.settings.independence').forEach(element => element.innerHTML = user.independence === 0 ? 'Pending' : user.independence)
+		if (user.card) {
+			document.querySelectorAll('.settings.pin').forEach(element => element.innerHTML = user.card.pin)
+		}
+	}
+
 	function removeAllNodes(element) {
 		while (element.firstChild) {
 			element.removeChild(element.firstChild)
@@ -335,6 +351,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		hideModal('settings')
 	}
 
+	function resetPassword() {
+		auth.sendPasswordResetEmail(user.email)
+		alert(`Password reset email sent to ${user.email}`)
+	}
+
 	document.querySelectorAll('.action.send').forEach(element => element.addEventListener('click', showSendModal))
 	document.querySelectorAll('.close-send').forEach(element => element.addEventListener('click', hideSendModal))
 	document.querySelectorAll('.action.create-invoice').forEach(element => element.addEventListener('click', showCreateInvoiceModal))
@@ -351,4 +372,5 @@ document.addEventListener('DOMContentLoaded', function() {
 	document.querySelectorAll('.close-settings').forEach(element => element.addEventListener('click', hideSettingsModal))
 	document.querySelectorAll('.close-transaction').forEach(element => element.addEventListener('click', hideTransactionModal))
 	document.querySelectorAll('.close-invoice').forEach(element => element.addEventListener('click', hideInvoiceModal))
+	document.querySelectorAll('.button.password-reset').forEach(element => element.addEventListener('click', resetPassword))
 })

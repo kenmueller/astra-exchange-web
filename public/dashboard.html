@@ -445,11 +445,30 @@
 					<button class="delete close-settings" aria-label="close"></button>
 				</header>
 				<section class="modal-card-body">
-					<table class="table is-fullwidth is-striped">
-						<tbody id="settings"></tbody>
-					</table>
+					<div class="field">
+						<label class="label">Name</label>
+						<p class="settings name"></p>
+					</div>
+					<div class="field">
+						<label class="label">Email</label>
+						<p class="settings email"></p>
+					</div>
+					<div class="field">
+						<label class="label">Balance</label>
+						<p class="settings balance"></p>
+					</div>
+					<div class="field">
+						<label class="label">Independence</label>
+						<p class="settings independence"></p>
+					</div>
+					<div class="field">
+						<label class="label">Card Pin</label>
+						<p class="settings pin">...</p>
+					</div>
 				</section>
-				<footer class="modal-card-foot"></footer>
+				<footer class="modal-card-foot">
+					<a class="button is-primary password-reset"><strong>Send a password reset email</strong></a>
+				</footer>
 			</div>
 		</div>
 		<script src="js/dashboard.js"></script>
