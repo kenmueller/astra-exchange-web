@@ -120,6 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			document.querySelectorAll('.transaction.amount').forEach(element => element.innerHTML = `${transaction.amount} Astras`)
 			document.querySelectorAll('.transaction.balance-label').forEach(element => element.innerHTML = `${outgoing ? 'Remaining' : 'New'} Balance`)
 			document.querySelectorAll('.transaction.balance').forEach(element => element.innerHTML = `${transaction.balance} Astras`)
+			document.querySelectorAll('.transaction.msg-label').forEach(element => element.style.display = transaction.message.trim() === '' ? 'none' : 'block')
 			document.querySelectorAll('.transaction.msg').forEach(element => element.innerHTML = transaction.message)
 			document.querySelectorAll('.modal.transaction').forEach(element => element.classList.add('is-active'))
 		})
@@ -135,6 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			document.querySelectorAll('.invoice.from').forEach(element => element.innerHTML = outgoing ? `${name} (you)` : val)
 			document.querySelectorAll('.invoice.to').forEach(element => element.innerHTML = outgoing ? val : `${name} (you)`)
 			document.querySelectorAll('.invoice.amount').forEach(element => element.innerHTML = `${invoice.amount} Astras`)
+			document.querySelectorAll('.invoice.msg-label').forEach(element => element.style.display = invoice.message.trim() === '' ? 'none' : 'block')
 			document.querySelectorAll('.invoice.msg').forEach(element => element.innerHTML = invoice.message)
 			if (!outgoing && invoice.status === 'pending') {
 				document.querySelectorAll('.download-app').forEach(element => element.classList.remove('is-hidden'))
@@ -168,11 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			const viewCell = document.createElement('td')
 			viewCell.appendChild(viewButton)
 			tr.appendChild(viewCell)
-			if (document.getElementById('transactions').childNodes) {
-				document.getElementById('transactions').insertBefore(tr, document.getElementById('transactions').childNodes[0])
-			} else {
-				document.getElementById('transactions').appendChild(tr)
-			}
+			document.getElementById('transactions').insertBefore(tr, document.getElementById('transactions').childNodes[0])
 		})
 	}
 
@@ -199,60 +197,64 @@ document.addEventListener('DOMContentLoaded', function() {
 			const viewCell = document.createElement('td')
 			viewCell.appendChild(viewButton)
 			tr.appendChild(viewCell)
-			if (document.getElementById('invoices').childNodes) {
-				document.getElementById('invoices').insertBefore(tr, document.getElementById('invoices').childNodes[0])
-			} else {
-				document.getElementById('invoices').appendChild(tr)
-			}
+			document.getElementById('invoices').insertBefore(tr, document.getElementById('invoices').childNodes[0])
 		})
 	}
 
+	function showModal(modal) {
+		document.querySelectorAll(`.modal.${modal}`).forEach(element => element.classList.add('is-active'))
+	}
+
+	function hideModal(modal) {
+		document.querySelectorAll(`.modal.${modal}`).forEach(element => element.classList.remove('is-active'))
+	}
+
 	function showSendModal() {
-		document.querySelectorAll('.modal.send').forEach(element => element.classList.add('is-active'))
+		showModal('send')
 	}
 
 	function hideSendModal() {
-		document.querySelectorAll('.modal.send').forEach(element => element.classList.remove('is-active'))
+		hideModal('send')
 	}
 
 	function showCreateInvoiceModal() {
-		document.querySelectorAll('.modal.create-invoice').forEach(element => element.classList.add('is-active'))
+		showModal('create-invoice')
 	}
 
 	function hideCreateInvoiceModal() {
-		document.querySelectorAll('.modal.create-invoice').forEach(element => element.classList.remove('is-active'))
+		hideModal('create-invoice')
 	}
 
 	function showTransactionsModal() {
-		document.querySelectorAll('.modal.transactions').forEach(element => element.classList.add('is-active'))
+		showModal('transactions')
 	}
 
 	function hideTransactionsModal() {
-		document.querySelectorAll('.modal.transactions').forEach(element => element.classList.remove('is-active'))
+		hideModal('transactions')
 	}
 
 	function showInvoicesModal() {
-		document.querySelectorAll('.modal.invoices').forEach(element => element.classList.add('is-active'))
+		showModal('invoices')
 	}
 
 	function hideInvoicesModal() {
-		document.querySelectorAll('.modal.invoices').forEach(element => element.classList.remove('is-active'))
+		hideModal('invoices')
 	}
 
 	function showYourIdModal() {
-		document.querySelectorAll('.modal.your-id').forEach(element => element.classList.add('is-active'))
+		showModal('your-id')
 	}
 
 	function hideYourIdModal() {
-		document.querySelectorAll('.modal.your-id').forEach(element => element.classList.remove('is-active'))
+		hideModal('your-id')
 	}
 
 	function hideTransactionModal() {
-		document.querySelectorAll('.modal.transaction').forEach(element => element.classList.remove('is-active'))
+		hideModal('transaction')
 	}
 
 	function hideInvoiceModal() {
-		document.querySelectorAll('.modal.invoice').forEach(element => element.classList.remove('is-active'))
+		hideModal('invoice')
 	}
 
 	document.querySelectorAll('.action.send').forEach(element => element.addEventListener('click', showSendModal))
