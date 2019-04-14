@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				const userId = snapshot.key
 				const newUser = { id: userId, name: val.name, email: val.email, balance: val.balance }
 				users.push(newUser)
+				updateUserDropdowns()
 				db.ref(`users/${userId}/balance`).on('value', function(balanceSnapshot) {
 					newUser.balance = balanceSnapshot.val()
 					updateLeaderboard()
@@ -209,6 +210,36 @@ document.addEventListener('DOMContentLoaded', function() {
 			tr.appendChild(viewCell)
 			document.getElementById('invoices').insertBefore(tr, document.getElementById('invoices').childNodes[0])
 		})
+	}
+
+	function updateUserDropdowns() {
+		removeAllNodes(document.querySelector('.user.send-dropdown'))
+		removeAllNodes(document.querySelector('.user.create-invoice-dropdown'))
+		const sortedUsers = users.sort(function(a, b) { return a.name - b.name })
+		for (i in sortedUsers) {
+			const user_ = sortedUsers[i]
+			const item = document.createElement('a')
+			item.className = 'dropdown-item'
+			item.innerHTML = user_.name
+			item.onclick = function() { selectUser(user_, true)}
+			document.querySelector('.user.send-dropdown').appendChild(item)
+		}
+		for (i in sortedUsers) {
+			const user_ = sortedUsers[i]
+			const item = document.createElement('a')
+			item.className = 'dropdown-item'
+			item.innerHTML = user_.name
+			item.onclick = function() { selectUser(user_, false)}
+			document.querySelector('.user.create-invoice-dropdown').appendChild(item)
+		}
+	}
+
+	function selectUser(user_, transaction) {
+		if (transaction) {
+
+		} else {
+
+		}
 	}
 
 	function updateLeaderboard() {
