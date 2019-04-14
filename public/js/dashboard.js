@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				transactions.push(transaction)
 				updateTransactionCount()
 				updateTransactionsPreview(transaction)
+				updateTransactions(transaction)
 			})
 			db.ref(`invoices/${user.uid}`).on('child_added', function(snapshot) {
 				const val = snapshot.val()
@@ -31,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				invoices.push(invoice)
 				updateOpenInvoiceCount()
 				updateInvoicesPreview(invoice)
+				updateInvoices(invoice)
 			})
 		}
 	})
@@ -83,8 +85,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			const tr = document.createElement('tr')
 			tr.className = 'invoice'
 			tr.innerHTML = `
-				<td width="3%"><i class="fa fa-dollar-sign"></i></td>
-				<td class="record-type">${outgoing ? 'OUTGOING' : 'INCOMING'}</td>
+				<td width="3%"><i class="fa fa-hand-holding-usd"></i></td>
+				<td style="text-transform: uppercase;"><strong>${outgoing ? 'outgoing' : 'incoming'}</strong></td>
 				<td>${snapshot.val()}</td>
 				<td>${invoice.amount} Astras</td>
 			`
@@ -140,6 +142,68 @@ document.addEventListener('DOMContentLoaded', function() {
 				document.querySelectorAll('.download-app').forEach(element => element.classList.add('is-hidden'))
 			}
 			document.querySelectorAll('.modal.invoice').forEach(element => element.classList.add('is-active'))
+		})
+	}
+
+	function updateTransactions(transaction) {
+		const outgoing = transaction.from === user.uid
+		db.ref(`users/${outgoing ? transaction.to : transaction.from}/name`).on('value', function(snapshot) {
+			const tr = document.createElement('tr')
+			tr.className = 'transaction'
+			tr.innerHTML = `
+				<td width="3%"><i class="fa fa-dollar-sign"></i></td>
+				<td style="text-transform: uppercase;"><strong>${outgoing ? 'outgoing' : 'incoming'}</strong></td>
+				<td>${snapshot.val()}</td>
+				<td>${transaction.amount} Astras</td>
+			`
+			const viewButton = document.createElement('a')
+			const strong = document.createElement('strong')
+			strong.appendChild(document.createTextNode('view'))
+			viewButton.appendChild(strong)
+			viewButton.onclick = function() { showTransactionModal(transaction) }
+			viewButton.classList.add('button')
+			viewButton.classList.add('is-small')
+			viewButton.classList.add('is-primary')
+			viewButton.style.textTransform = 'uppercase'
+			const viewCell = document.createElement('td')
+			viewCell.appendChild(viewButton)
+			tr.appendChild(viewCell)
+			if (document.getElementById('transactions').childNodes) {
+				document.getElementById('transactions').insertBefore(tr, document.getElementById('transactions').childNodes[0])
+			} else {
+				document.getElementById('transactions').appendChild(tr)
+			}
+		})
+	}
+
+	function updateInvoices(invoice) {
+		const outgoing = invoice.from === user.uid
+		db.ref(`users/${outgoing ? invoice.to : invoice.from}/name`).on('value', function(snapshot) {
+			const tr = document.createElement('tr')
+			tr.className = 'invoice'
+			tr.innerHTML = `
+				<td width="3%"><i class="fa fa-hand-holding-usd"></i></td>
+				<td style="text-transform: uppercase;"><strong>${outgoing ? 'outgoing' : 'incoming'}</strong></td>
+				<td>${snapshot.val()}</td>
+				<td>${invoice.amount} Astras</td>
+			`
+			const viewButton = document.createElement('a')
+			const strong = document.createElement('strong')
+			strong.appendChild(document.createTextNode('view'))
+			viewButton.appendChild(strong)
+			viewButton.onclick = function() { showInvoiceModal(invoice) }
+			viewButton.classList.add('button')
+			viewButton.classList.add('is-small')
+			viewButton.classList.add('is-primary')
+			viewButton.style.textTransform = 'uppercase'
+			const viewCell = document.createElement('td')
+			viewCell.appendChild(viewButton)
+			tr.appendChild(viewCell)
+			if (document.getElementById('invoices').childNodes) {
+				document.getElementById('invoices').insertBefore(tr, document.getElementById('invoices').childNodes[0])
+			} else {
+				document.getElementById('invoices').appendChild(tr)
+			}
 		})
 	}
 
