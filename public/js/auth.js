@@ -73,11 +73,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	function toggleNavbarMenu() {
-		if (document.querySelector('.navbar-burger.burger').classList.contains('is-active')) {
-			document.querySelector('.navbar-burger.burger').classList.remove('is-active')
-		} else {
-			document.querySelector('.navbar-burger.burger').classList.add('is-active')
-		}
+		document.querySelector('.navbar-burger.burger').classList.toggle('is-active')
+		document.querySelector('.navbar-menu').classList.toggle('is-active')
 	}
 
 	document.querySelectorAll('.auth.sign-up').forEach(element => element.addEventListener('click', showSignUpModal))
