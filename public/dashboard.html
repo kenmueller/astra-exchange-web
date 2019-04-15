@@ -223,20 +223,7 @@
 				<section class="modal-card-body">
 					<div class="field">
 						<label class="label">Recipient</label>
-						<div class="dropdown">
-							<div class="dropdown-trigger">
-								<button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-									<span>Select User</span>
-									<span class="icon is-small"><i class="fas fa-angle-down" aria-hidden="true"></i></span>
-								</button>
-							</div>
-							<div class="dropdown-menu" id="dropdown-menu" role="menu">
-								<div class="dropdown-content user send-dropdown">
-									<a class="dropdown-item send">Select User</a>
-									<hr class="dropdown-divider">
-								</div>
-							</div>
-						</div>
+						<select class="user-dropdown" id="send-recipient"></select>
 					</div>
 					<div class="field">
 						<label class="label">Amount</label>
@@ -254,7 +241,7 @@
 					</div>
 				</section>
 				<footer class="modal-card-foot">
-					<button class="button is-success complete-send" id="complete-send" disabled>Send</button>
+					<button class="button is-success complete complete-send" id="complete-send" disabled>Send</button>
 					<button class="button close-send">Cancel</button>
 				</footer>
 			</div>
@@ -269,20 +256,7 @@
 				<section class="modal-card-body">
 					<div class="field">
 						<label class="label">Recipient</label>
-						<div class="dropdown">
-							<div class="dropdown-trigger">
-								<button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-									<span>Select User</span>
-									<span class="icon is-small"><i class="fas fa-angle-down" aria-hidden="true"></i></span>
-								</button>
-							</div>
-							<div class="dropdown-menu" id="dropdown-menu" role="menu">
-								<div class="dropdown-content user create-invoice-dropdown">
-									<a class="dropdown-item send">Select User</a>
-									<hr class="dropdown-divider">
-								</div>
-							</div>
-						</div>
+						<select class="user-dropdown" id="create-invoice-recipient"></select>
 					</div>
 					<div class="field">
 						<label class="label">Amount</label>
@@ -300,7 +274,7 @@
 					</div>
 				</section>
 				<footer class="modal-card-foot">
-					<button class="button is-success auth complete-create-invoice" id="complete-create-invoice" disabled>Request</button>
+					<button class="button is-success complete complete-create-invoice" id="complete-create-invoice" disabled>Request</button>
 					<button class="button close-create-invoice">Cancel</button>
 				</footer>
 			</div>

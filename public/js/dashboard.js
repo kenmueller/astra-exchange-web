@@ -219,33 +219,73 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	function updateUserDropdowns() {
-		removeAllNodes(document.querySelector('.user.send-dropdown'))
-		removeAllNodes(document.querySelector('.user.create-invoice-dropdown'))
-		const sortedUsers = users.sort(function(a, b) { return a.name - b.name })
+		document.querySelectorAll('.user-dropdown').forEach(element => {
+			removeAllNodes(element)
+			const option = document.createElement('option')
+			option.selected = true
+			option.disabled = true
+			option.value = 'null'
+			option.innerHTML = 'Select User'
+			element.appendChild(option)
+		})
+		const sortedUsers = users.filter(function(a) { return a.id !== user.id }).sort(function(a, b) { return a.name - b.name })
 		for (i in sortedUsers) {
 			const user_ = sortedUsers[i]
-			const item = document.createElement('a')
-			item.className = 'dropdown-item'
-			item.innerHTML = user_.name
-			item.onclick = function() { selectUser(user_, true)}
-			document.querySelector('.user.send-dropdown').appendChild(item)
-		}
-		for (i in sortedUsers) {
-			const user_ = sortedUsers[i]
-			const item = document.createElement('a')
-			item.className = 'dropdown-item'
-			item.innerHTML = user_.name
-			item.onclick = function() { selectUser(user_, false)}
-			document.querySelector('.user.create-invoice-dropdown').appendChild(item)
+			const option = document.createElement('option')
+			option.value = user_.id
+			option.innerHTML = user_.name
+			document.getElementById('send-recipient').appendChild(option)
+			document.getElementById('create-invoice-recipient').appendChild(option.cloneNode(true))
 		}
 	}
 
-	function selectUser(user_, transaction) {
-		if (transaction) {
+	function completeSend() {
+		document.getElementById('complete-send').classList.add('is-loading')
+		const amount = parseInt(document.getElementById('send-amount').value)
+		db.ref(`transactions/${user.id}`).push({ time: moment().format('MMM d, yyyy @ h:mm a'), from: user.id, to: document.getElementById('send-recipient').value, amount: amount, balance: user.balance - amount, message: document.getElementById('send-message').value.trim() }).then(function() {
+			document.getElementById('complete-send').classList.remove('is-loading')
+			hideSendModal()
+			resetAllInputs()
+		}, function(error) {
+			document.getElementById('complete-send').classList.remove('is-loading')
+			alert(error)
+		})
+	}
 
-		} else {
+	function sendChanged() {
+		const amount = parseInt(document.getElementById('send-amount').value)
+		document.getElementById('complete-send').disabled = !(document.getElementById('send-recipient').selectedIndex !== 0 && amount && amount <= user.balance)
+	}
 
-		}
+	function completeCreateInvoice() {
+		document.getElementById('complete-create-invoice').classList.add('is-loading')
+		const amount = parseInt(document.getElementById('create-invoice-amount').value)
+		const to = document.getElementById('create-invoice-recipient').value
+		const invoice = { time: moment().format('MMM d, yyyy @ h:mm a'), status: 'pending', from: user.id, to: to, amount: amount, message: document.getElementById('create-invoice-message').value.trim() }
+		const invoiceRef = db.ref(`invoices/${user.id}`).push(invoice).then(function() {
+			db.ref(`invoices/${to}/${invoiceRef.key}`).set(invoice).then(function() {
+				document.getElementById('complete-create-invoice').classList.remove('is-loading')
+				hideCreateInvoiceModal()
+				resetAllInputs()
+			}, function(error) {
+				document.getElementById('complete-create-invoice').classList.remove('is-loading')
+				alert(error)
+			})
+		}, function(error) {
+			document.getElementById('complete-create-invoice').classList.remove('is-loading')
+			alert(error)
+		})
+	}
+
+	function createInvoiceChanged() {
+		document.getElementById('complete-create-invoice').disabled = !(document.getElementById('create-invoice-recipient').selectedIndex !== 0 && parseInt(document.getElementById('create-invoice-amount').value))
+	}
+
+	function resetAllInputs() {
+		document.querySelectorAll('#send-recipient').forEach(element => element.selectedIndex = 0)
+		document.querySelectorAll('#create-invoice-recipient').forEach(element => element.selectedIndex = 0)
+		document.querySelectorAll('.input').forEach(element => element.value = '')
+		document.querySelectorAll('.button.complete').forEach(element => element.disabled = true)
 	}
 
 	function updateLeaderboard() {
@@ -293,6 +333,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function hideSendModal() {
 		hideModal('send')
+		resetAllInputs()
 	}
 
 	function showCreateInvoiceModal() {
@@ -301,6 +342,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function hideCreateInvoiceModal() {
 		hideModal('create-invoice')
+		resetAllInputs()
 	}
 
 	function showTransactionsModal() {
@@ -373,4 +415,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	document.querySelectorAll('.close-transaction').forEach(element => element.addEventListener('click', hideTransactionModal))
 	document.querySelectorAll('.close-invoice').forEach(element => element.addEventListener('click', hideInvoiceModal))
 	document.querySelectorAll('.button.password-reset').forEach(element => element.addEventListener('click', resetPassword))
+	document.querySelectorAll('.button.complete-send').forEach(element => element.addEventListener('click', completeSend))
+	document.querySelectorAll('.button.complete-create-invoice').forEach(element => element.addEventListener('click', completeCreateInvoice))
+	document.getElementById('send-recipient').addEventListener('change', sendChanged)
+	document.getElementById('send-amount').addEventListener('input', sendChanged)
+	document.getElementById('create-invoice-recipient').addEventListener('change', createInvoiceChanged)
+	document.getElementById('create-invoice-amount').addEventListener('input', createInvoiceChanged)
 })
