@@ -5,10 +5,15 @@ document.addEventListener('DOMContentLoaded', function() {
 	auth.onAuthStateChanged(function(user) {
 		if (user) {
 			db.ref(`users/${user.uid}/name`).on('value', function(snapshot) {
+				if (snapshot.exists()) {
+					document.querySelectorAll('.auth.user-link').forEach(element => element.innerHTML = snapshot.val())
+				} else {
+					db.ref(`users/${user.uid}`).set({ name: document.getElementById('sign-up-name').value.trim(), email: document.getElementById('sign-up-email').value.trim(), balance: 0 })
+					document.querySelectorAll('.auth.user-link').forEach(element => element.innerHTML = document.getElementById('sign-up-name').value.trim())
+				}
 				document.querySelectorAll('.auth.sign-up').forEach(element => element.classList.add('is-hidden'))
 				document.querySelectorAll('.auth.sign-in').forEach(element => element.classList.add('is-hidden'))
 				document.querySelectorAll('.auth.user-dropdown').forEach(element => element.classList.remove('is-hidden'))
-				document.querySelectorAll('.auth.user-link').forEach(element => element.innerHTML = snapshot.val())
 				hideSignUpModal()
 				hideSignInModal()
 			})
