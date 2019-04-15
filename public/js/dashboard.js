@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	function updateUserDropdowns() {
-		document.querySelectorAll('.user-dropdown').forEach(element => {
+		document.querySelectorAll('.user-list').forEach(element => {
 			removeAllNodes(element)
 			const option = document.createElement('option')
 			option.selected = true
