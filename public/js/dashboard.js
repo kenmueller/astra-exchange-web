@@ -6,6 +6,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	let transactions = []
 	let invoices = []
 
+	if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+		window.location.href='itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist'
+	}
+
 	auth.onAuthStateChanged(function(user_) {
 		if (user_) {
 			const id = user_.uid
