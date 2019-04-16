@@ -55,6 +55,8 @@ document.addEventListener('DOMContentLoaded', function() {
 				updateInvoicesPreview(invoice)
 				updateInvoices(invoice)
 			})
+		} else {
+			window.location.href = '/'
 		}
 	})
 
