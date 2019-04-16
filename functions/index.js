@@ -98,7 +98,7 @@ exports.users = functions.https.onRequest((_req, res) =>
 	})
 )
 
-exports.transaction = functions.https.onRequest((req, res) => {
+exports.transact = functions.https.onRequest((req, res) => {
 	const pin = req.query.pin
 	if (pin) {
 		const from = req.query.from
@@ -200,5 +200,33 @@ exports.user = functions.https.onRequest((req, res) => {
 		} else {
 			return res.status(400).send('Must specify the user ID or email')
 		}
+	}
+})
+
+exports.transactions = functions.https.onRequest((req, res) => {
+	const pin = req.query.pin
+	if (pin) {
+		const id = req.query.id
+		if (id) {
+			return db.ref(`users/${id}`).once('value', userSnapshot => {
+				if (userSnapshot.exists()) {
+					return db.ref(`users/${userId}/cards`).once('child_added', cardSnapshot => {
+						if (pin === cardSnapshot.val().pin) {
+							return db.ref(`transactions/${id}`).once('value', transactionsSnapshot =>
+								res.status(200).send(transactionsSnapshot.val())
+							)
+						} else {
+							return res.status(401).send(`Invalid pin for user ${id}`)
+						}
+					})
+				} else {
+					return res.status(404).send(`No user with ID ${id}`)
+				}
+			})
+		} else {
+			return res.status(400).send('Must specify the user ID')
+		}
+	} else {
+		return res.status(400).send('Must specify the pin')
 	}
 })
