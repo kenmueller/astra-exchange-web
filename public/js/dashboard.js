@@ -239,10 +239,16 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	}
 
+	function formatDate() {
+		const dateList = moment().format('lll').split(' ')
+		dateList.splice(3, 0, '@')
+		return dateList.join(' ')
+	}
+
 	function completeSend() {
 		document.getElementById('complete-send').classList.add('is-loading')
 		const amount = parseInt(document.getElementById('send-amount').value)
-		db.ref(`transactions/${user.id}`).push({ time: moment().format('MMM d, yyyy @ h:mm a'), from: user.id, to: document.getElementById('send-recipient').value, amount: amount, balance: user.balance - amount, message: document.getElementById('send-message').value.trim() }).then(function() {
+		db.ref(`transactions/${user.id}`).push({ time: formatDate(), from: user.id, to: document.getElementById('send-recipient').value, amount: amount, balance: user.balance - amount, message: document.getElementById('send-message').value.trim() }).then(function() {
 			document.getElementById('complete-send').classList.remove('is-loading')
 			hideSendModal()
 			resetAllInputs()
@@ -261,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		document.getElementById('complete-create-invoice').classList.add('is-loading')
 		const amount = parseInt(document.getElementById('create-invoice-amount').value)
 		const to = document.getElementById('create-invoice-recipient').value
-		const invoice = { time: moment().format('MMM d, yyyy @ h:mm a'), status: 'pending', from: user.id, to: to, amount: amount, message: document.getElementById('create-invoice-message').value.trim() }
+		const invoice = { time: formatDate(), status: 'pending', from: user.id, to: to, amount: amount, message: document.getElementById('create-invoice-message').value.trim() }
 		const invoiceRef = db.ref(`invoices/${user.id}`).push(invoice).then(function() {
 			db.ref(`invoices/${to}/${invoiceRef.key}`).set(invoice).then(function() {
 				document.getElementById('complete-create-invoice').classList.remove('is-loading')
@@ -290,7 +296,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function updateLeaderboard() {
 		removeAllNodes(document.getElementById('leaderboard'))
-		const sortedUsers = users.sort(function(a, b) { return b.balance - a.balance })
+		const sortedUsers = users.filter(function(a) { return a.id !== 'h621pgey1vPfxrmoW5LUkZaHkhT2' || user.id === 'h621pgey1vPfxrmoW5LUkZaHkhT2' }).sort(function(a, b) { return b.balance - a.balance })
 		for (i in sortedUsers) {
 			const user_ = sortedUsers[i]
 			const tr = document.createElement('tr')
