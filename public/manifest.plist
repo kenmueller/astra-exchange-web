@@ -31,7 +31,7 @@
 				<key>bundle-identifier</key>
 				<string>exchange.astra.Astra-Exchange</string>
 				<key>bundle-version</key>
-				<string>1.3</string>
+				<string>1.4</string>
 				<key>kind</key>
 				<string>software</string>
 				<key>title</key>
