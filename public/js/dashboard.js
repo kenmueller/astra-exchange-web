@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			option.innerHTML = 'Select User'
 			element.appendChild(option)
 		})
-		const sortedUsers = users.filter(function(a) { return a.id !== user.id }).sort(function(a, b) { return a.name - b.name })
+		const sortedUsers = users.slice().filter(function(a) { return a.id !== user.id }).sort(function(a, b) { return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0 })
 		for (i in sortedUsers) {
 			const user_ = sortedUsers[i]
 			const option = document.createElement('option')
@@ -296,7 +296,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function updateLeaderboard() {
 		removeAllNodes(document.getElementById('leaderboard'))
-		const sortedUsers = users.filter(function(a) { return a.id !== 'h621pgey1vPfxrmoW5LUkZaHkhT2' || user.id === 'h621pgey1vPfxrmoW5LUkZaHkhT2' }).sort(function(a, b) { return b.balance - a.balance })
+		const sortedUsers = users.slice().filter(function(a) { return a.id !== 'h621pgey1vPfxrmoW5LUkZaHkhT2' || user.id === 'h621pgey1vPfxrmoW5LUkZaHkhT2' }).sort(function(a, b) { return b.balance - a.balance })
 		for (i in sortedUsers) {
 			const user_ = sortedUsers[i]
 			const tr = document.createElement('tr')
