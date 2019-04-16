@@ -73,11 +73,13 @@ exports.pendingCreated = functions.database.ref('pending/{pendingId}').onCreate(
 exports.userCreated = functions.database.ref('users/{uid}').onCreate((snapshot, context) => {
 	const root = snapshot.ref.parent.parent
 	const uid = context.params.uid
-	const name = snapshot.val().name
+	const val = snapshot.val()
+	const name = val.name
 	return Promise.all([
 		root.child(`companies/${uid}`).set({ industry: 'Unspecified', name: `${name}'s Company`, pv: 0, logo: '' }),
 		root.child(`companies/${uid}/products`).push({ name: `${name}'s First Product`, inStock: false, cost: 1 }),
 		root.child(`users/${uid}/independence`).set(0),
+		root.child(`emails/${val.email.replace('.', '%2e')}`).set(uid),
 		root.child('cards').push(uid)
 	])
 })
@@ -148,4 +150,55 @@ exports.transaction = functions.https.onRequest((req, res) => {
 	}
 })
 
-exports
+exports.user = functions.https.onRequest((req, res) => {
+	const id = req.query.id
+	if (id) {
+		return db.ref(`users/${id}`).once('value', snapshot => {
+			if (snapshot.exists()) {
+				const val = snapshot.val()
+				const pin = req.query.pin
+				if (pin) {
+					return db.ref(`users/${id}/cards`).once('child_added', cardSnapshot => {
+						if (pin === cardSnapshot.val().pin) {
+							return res.status(200).send(val)
+						} else {
+							return res.status(401).send(`Invalid pin for user ${id}`)
+						}
+					})
+				} else {
+					return { id: id, name: val.name, email: val.email, balance: val.balance }
+				}
+			} else {
+				return res.status(404).send(`No user with ID ${id}`)
+			}
+		})
+	} else {
+		const email = req.query.email
+		if (email) {
+			return db.ref(`emails/${email.replace('.', '%2e')}`).once('value', emailSnapshot => {
+				if (emailSnapshot.exists()) {
+					const userId = emailSnapshot.val()
+					return db.ref(`users/${userId}`).once('value', userSnapshot => {
+						const val = userSnapshot.val()
+						const pin = req.query.pin
+						if (pin) {
+							return db.ref(`users/${userId}/cards`).once('child_added', cardSnapshot => {
+								if (pin === cardSnapshot.val().pin) {
+									return res.status(200).send(val)
+								} else {
+									return res.status(401).send(`Invalid pin for user ${userId}`)
+								}
+							})
+						} else {
+							return { id: id, name: val.name, email: val.email, balance: val.balance }
+						}
+					})
+				} else {
+					return res.status(404).send(`No user with email ${email}`)
+				}
+			})
+		} else {
+			return res.status(400).send('Must specify the user ID or email')
+		}
+	}
+})

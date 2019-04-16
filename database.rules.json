@@ -122,6 +122,9 @@
 				}
 			}
 		},
+		"emails": {
+			".read": true
+		},
 		"cards": {
 			"$cardId": {
 				".read": true
