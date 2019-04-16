@@ -20,6 +20,10 @@
 				"destination": "/dashboard.html"
 			},
 			{
+				"source": "/documentation",
+				"destination": "/documentation.html"
+			},
+			{
 				"source": "**",
 				"destination": "/index.html"
 			}
@@ -28,6 +32,10 @@
 			{
 				"source": "/dashboard.html",
 				"destination": "/dashboard"
+			},
+			{
+				"source": "/documentation.html",
+				"destination": "/documentation"
 			},
 			{
 				"source": "/notes",
