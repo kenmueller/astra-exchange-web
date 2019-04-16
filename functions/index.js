@@ -114,7 +114,7 @@ exports.transact = functions.https.onRequest((req, res) => {
 								if (toSnapshot.exists()) {
 									const message = req.query.message
 									return db.ref(`users/${from}/cards`).once('child_added', cardSnapshot => {
-										if (req.query.pin === cardSnapshot.val().pin) {
+										if (pin === cardSnapshot.val().pin) {
 											const dateList = moment().format('lll').split(' ')
 											dateList.splice(3, 0, '@')
 											return db.ref(`transactions/${from}`).push({ time: dateList.join(' '), from: from, to: to, amount: amount, balance: balance - amount, message: message ? message : '' }, error => {
@@ -133,7 +133,7 @@ exports.transact = functions.https.onRequest((req, res) => {
 								}
 							})
 						} else {
-							return res.status(403).send(`Insufficient balance`)
+							return res.status(403).send('Insufficient balance')
 						}
 					} else {
 						return res.status(404).send(`No user with ID ${from}`)
