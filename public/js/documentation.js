@@ -107,6 +107,17 @@ const docs = [
 			<code>https://us-central1-astra-exchange.cloudfunctions.net/transact?pin=<b><i>{4_DIGIT_PIN}</i></b>&from=<b><i>{FROM_ID}</i></b>&to=<b><i>{TO_ID}</i></b>&amount=<b><i>{AMOUNT}</i></b></code>
 			<br><br>
 			<a class="doc-link" onclick="selectDoc(1)">Read more</a>
+			<br><br>
+			<h1 class="subtitle">Getting your User ID</h1>
+			<p>To access your public info:</p>
+			<br>
+			<code>https://us-central1-astra-exchange.cloudfunctions.net/user?email=<b><i>{YOUR_EMAIL}</i></b></code>
+			<br><br>
+			<p>To access your private info, you also need to specify your pin. <code>email</code> can be swapped with <code>id</code> if you already know your ID:<p>
+			<br>
+			<code>https://us-central1-astra-exchange.cloudfunctions.net/user?pin=<b><i>{4_DIGIT_PIN}</i></b>&email=<b><i>{YOUR_EMAIL}</i></b></code>
+			<br><br>
+			<a class="doc-link" onclick="selectDoc(2)">Read more</a>
 		`
 	},
 	{
@@ -127,6 +138,17 @@ const docs = [
 			<br><br>
 			<p>(Not my real pin). That was an example transaction sent by me (Ken), received by Kai, and with an amount of 20 Astras and message "Take my money". Again, you can disregard the message field if needed.</p>
 			<br>
+			<p>First, get your user ID:</p>
+			<br>
+			<code>https://us-central1-astra-exchange.cloudfunctions.net/user?email=<b><i>{YOUR_EMAIL}</i></b></code>
+			<br><br>
+			<p>If you haven't read <a class="doc-link" onclick="selectDoc(2)">Authentication & User Data</a> yet, now is a good time to read it. You will need to be able to get multiple User IDs.</p>
+			<br>
+			<p>Try using your pin and ID, along with someone else's ID, and send 1 Astra to them. Type the url you create into a new tab. You should get a screen like this:</p>
+			<img src="/images/documentation/success-transaction.png">
+			<p>Or, if you entered your pin incorrectly:</p>
+			<img src="/images/documentation/invalid-pin.png">
+			<p>There are a number of different error messages that you can receive, one of them being if you enter your ID wrong. </p>
 		`
 	},
 	{
