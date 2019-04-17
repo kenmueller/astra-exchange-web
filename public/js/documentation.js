@@ -97,8 +97,23 @@ const docs = [
 		body: `
 			<p><i>Tip:</i> <code>?</code> goes after the function name, and <code>&</code> goes in between every parameter.<p>
 			<br>
-			<h1 class="subtitle"><a onclick="selectDoc(1)">Making Transactions</a></h1>
-			<p>Using the <code>transact</code> function <b>(the 4 digit pin is of the user that sends the transaction {FROM_ID})</b>:</p>
+			<h1 class="subtitle">Making Transactions</h1>
+			<p>Using the <code>transact</code> function:</p>
+			<br>
+			<code>https://us-central1-astra-exchange.cloudfunctions.net/transact?pin=<b><i>{4_DIGIT_PIN}</i></b>&from=<b><i>{FROM_ID}</i></b>&to=<b><i>{TO_ID}</i></b>&amount=<b><i>{AMOUNT}</i></b>&message=<b><i>{MESSAGE}</i></b></code>
+			<br><br>
+			<p>The message field is optional:</p>
+			<br>
+			<code>https://us-central1-astra-exchange.cloudfunctions.net/transact?pin=<b><i>{4_DIGIT_PIN}</i></b>&from=<b><i>{FROM_ID}</i></b>&to=<b><i>{TO_ID}</i></b>&amount=<b><i>{AMOUNT}</i></b></code>
+			<br><br>
+			<a class="doc-link" onclick="selectDoc(1)">Read more</a>
+		`
+	},
+	{
+		title: 'Making Transactions',
+		body: `
+			<h1 class="subtitle">Using the <code>transact</code> function</h1>
+			<p><b>The 4 digit pin is of the user that sends the transaction (the {FROM_ID})</b>:</p>
 			<br>
 			<code>https://us-central1-astra-exchange.cloudfunctions.net/transact?pin=<b><i>{4_DIGIT_PIN}</i></b>&from=<b><i>{FROM_ID}</i></b>&to=<b><i>{TO_ID}</i></b>&amount=<b><i>{AMOUNT}</i></b>&message=<b><i>{MESSAGE}</i></b></code>
 			<br><br>
@@ -112,11 +127,16 @@ const docs = [
 			<br><br>
 			<p>(Not my real pin). That was an example transaction sent by me (Ken), received by Kai, and with an amount of 20 Astras and message "Take my money". Again, you can disregard the message field if needed.</p>
 			<br>
-			<a class="doc-link" onclick="selectDoc(1)">Read more</a>
 		`
 	},
 	{
-		title: 'Making Transactions',
+		title: 'Authentication & User Data',
+		body: `
+
+		`
+	},
+	{
+		title: 'Retrieve all Users',
 		body: `
 
 		`
