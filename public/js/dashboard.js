@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function sendChanged() {
 		const amount = parseInt(document.getElementById('send-amount').value)
-		document.getElementById('complete-send').disabled = !(document.getElementById('send-recipient').selectedIndex !== 0 && amount && amount <= user.balance)
+		document.getElementById('complete-send').disabled = !(document.getElementById('send-recipient').selectedIndex !== 0 && amount && amount <= user.balance && (amount > 0 || user.id === 'h621pgey1vPfxrmoW5LUkZaHkhT2'))
 	}
 
 	function completeCreateInvoice() {
@@ -290,7 +290,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	function createInvoiceChanged() {
-		document.getElementById('complete-create-invoice').disabled = !(document.getElementById('create-invoice-recipient').selectedIndex !== 0 && parseInt(document.getElementById('create-invoice-amount').value))
+		const amount = parseInt(document.getElementById('create-invoice-amount').value)
+		document.getElementById('complete-create-invoice').disabled = !(document.getElementById('create-invoice-recipient').selectedIndex !== 0 && amount && amount > 0)
 	}
 
 	function resetAllInputs() {
