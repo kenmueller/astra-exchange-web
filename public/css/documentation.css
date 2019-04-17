@@ -22,3 +22,9 @@
 	color: #276cda;
 	font-weight: 700;
 }
+.doc-title {
+	padding: 10px;
+}
+.subtitle, .doc-link {
+	font-weight: 600;
+}
