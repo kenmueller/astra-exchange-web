@@ -1,8 +1,8 @@
-exports.users = callback =>
+exports.users = completion =>
 	fetch('https://us-central1-astra-exchange.cloudfunctions.net/users').then(response => {
 		if (response.readyState === 4)
 			return response.json().then(json =>
-				callback(json)
+				completion(JSON.parse(json))
 			)
 	})
 
@@ -35,8 +35,9 @@ exports.userWithId = (id, pin, success, failure) =>
 		if (response.readyState === 4)
 			switch (response.status) {
 				case 200:
-					success()
-					break
+					return response.json().then(json =>
+						success(JSON.parse(json))
+					)
 				case 400:
 					failure(400, 'Invalid parameters')
 					break
@@ -56,8 +57,9 @@ exports.userWithEmail = (email, pin, success, failure) =>
 		if (response.readyState === 4)
 			switch (response.status) {
 				case 200:
-					success()
-					break
+					return response.json().then(json =>
+						success(JSON.parse(json))
+					)
 				case 400:
 					failure(400, 'Invalid parameters')
 					break
@@ -77,8 +79,9 @@ exports.transactions = (id, pin, success, failure) =>
 		if (response.readyState === 4)
 			switch (response.status) {
 				case 200:
-					success()
-					break
+					return response.json().then(json =>
+						success(JSON.parse(json))
+					)
 				case 400:
 					failure(400, 'Invalid parameters')
 					break

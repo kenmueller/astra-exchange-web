@@ -94,30 +94,119 @@ function selectDoc(index) {
 const docs = [
 	{
 		title: 'Getting Started',
-		body: `
-			<p><i>Tip:</i> <code>?</code> goes after the function name, and <code>&</code> goes in between every parameter.<p>
-			<br>
-			<h1 class="subtitle">Making Transactions</h1>
+        body: `
+            <h1 class="subtitle">Use the Astra Exchange <code>&lt;script&gt;</code> tag</h1>
+            <p><b>Copy and paste into the <code>head</code> of your HTML file:</b></p>
+            <br>
+            <code>&lt;script defer src="https://astra.exchange/use/js/all.min.js"&gt;&lt;/script&gt;</code>
+            <br>
+            <hr>
+            <h1 class="subtitle">Making Transactions</h1>
 			<p>Using the <code>transact</code> function:</p>
+            <br>
+<pre>
+transact('1234', 'e95Y6tKOvIS7CBlEdBn2UknzxMQ2', 'GwZX5OnFzGUl0UlXH97EGIeW70p1', 20, 'Take my money', () => {
+    alert('Successful transaction')
+}, (status, response) => {
+    alert(\`\${status} error: \${response}\`)
+})
+</pre>
+            <br>
+            <p><b>Type signature:</b></p>
+            <br>
+<pre>
+transact(pin: string,
+         from: string,
+         to: string,
+         amount: double,
+         message: string|null,
+         success: () => void,
+         failure: (status: int, response: string) => void)
+</pre>
 			<br>
-			<code>https://us-central1-astra-exchange.cloudfunctions.net/transact?pin=<b><i>{4_DIGIT_PIN}</i></b>&from=<b><i>{FROM_ID}</i></b>&to=<b><i>{TO_ID}</i></b>&amount=<b><i>{AMOUNT}</i></b>&message=<b><i>{MESSAGE}</i></b></code>
-			<br><br>
-			<p>The message field is optional:</p>
-			<br>
-			<code>https://us-central1-astra-exchange.cloudfunctions.net/transact?pin=<b><i>{4_DIGIT_PIN}</i></b>&from=<b><i>{FROM_ID}</i></b>&to=<b><i>{TO_ID}</i></b>&amount=<b><i>{AMOUNT}</i></b></code>
-			<br><br>
 			<a class="doc-link" onclick="selectDoc(1)">Read more</a>
-			<br><br>
-			<h1 class="subtitle">Getting your User ID</h1>
-			<p>To access your public info:</p>
-			<br>
-			<code>https://us-central1-astra-exchange.cloudfunctions.net/user?email=<b><i>{YOUR_EMAIL}</i></b></code>
-			<br><br>
-			<p>To access your private info, you also need to specify your pin. <code>email</code> can be swapped with <code>id</code> if you already know your ID:<p>
-			<br>
-			<code>https://us-central1-astra-exchange.cloudfunctions.net/user?pin=<b><i>{4_DIGIT_PIN}</i></b>&email=<b><i>{YOUR_EMAIL}</i></b></code>
-			<br><br>
-			<a class="doc-link" onclick="selectDoc(2)">Read more</a>
+			<br><br><br>
+			<h1 class="subtitle">Accessing User Data</h1>
+			<p>Using the <code>userWithId</code> function (<b>IMPORTANT - </b>Set the pin as <code>null</code> to only get public user data):</p>
+            <br>
+<pre>
+userWithId('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234', user => {
+    alert(user)
+}, (status, response) => {
+    alert(\`\${status} error: \${response}\`)
+})
+</pre>
+            <br>
+            <p><b>Type signature (user is in the form of a list of user attributes):</b></p>
+            <br>
+<pre>
+userWithId(id: string,
+           pin: string,
+           success: (user: any[]) => void,
+           failure: (status: int, response: string) => void)
+</pre>
+            <br>
+            <p>Using the <code>userWithEmail</code> function (<b>IMPORTANT - </b>Set the pin as <code>null</code> to only get public user data):</p>
+            <br>
+<pre>
+userWithEmail('ken@adastraschool.org', '1234', user => {
+    alert(user)
+}, (status, response) => {
+    alert(\`\${status} error: \${response}\`)
+})
+</pre>
+            <br>
+            <p><b>Type signature (user is in the form of a list of user attributes):</b></p>
+            <br>
+<pre>
+userWithEmail(id: string,
+              pin: string,
+              success: (user: any[]) => void,
+              failure: (status: int, response: string) => void)
+</pre>
+            <br>
+            <p>Using the <code>transactions</code> function to access all of a user's transactions:</p>
+            <br>
+<pre>
+transactions('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234', transactionList => {
+    transactionList.forEach(transaction => {
+        alert(transaction)
+    })
+}, (status, response) => {
+    alert(\`\${status} error: \${response}\`)
+})
+</pre>
+            <br>
+            <p><b>Type signature (transactionList is a list of transaction objects):</b></p>
+            <br>
+<pre>
+transactions(id: string,
+             pin: string,
+             success: (transactionList: any[]) => void,
+             failure: (status: int, response: string) => void)
+</pre>
+            <br>
+            <a class="doc-link" onclick="selectDoc(2)">Read more</a>
+            <br><br><br>
+            <h1 class="subtitle">Retrieving all Users</h1>
+			<p>Using the <code>users</code> function (<b>NOTE - </b>Returns only public user data):</p>
+            <br>
+<pre>
+users(userList => {
+    userList.forEach(user => {
+        alert(user)
+    })
+})
+</pre>
+            <br>
+            <p><b>Type signature (userList is a list of user objects):</b></p>
+            <br>
+<pre>
+users(completion: (userList: any[]) => void)
+</pre>
+            <br>
+            <a class="doc-link" onclick="selectDoc(3)">Read more</a>
+            <br><br>
 		`
 	},
 	{
