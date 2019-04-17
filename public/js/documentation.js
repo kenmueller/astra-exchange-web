@@ -154,7 +154,27 @@ const docs = [
 	{
 		title: 'Authentication & User Data',
 		body: `
-
+			<h1 class="subtitle">Getting your User ID</h1>
+			<p>To access your public info (ID, name, email, balance):</p>
+			<br>
+			<code>https://us-central1-astra-exchange.cloudfunctions.net/user?email=<b><i>{YOUR_EMAIL}</i></b></code>
+			<br><br>
+			<p>To access your private info (independence, pin, cards), you also need to specify your pin. <code>email</code> can be swapped with <code>id</code> if you already know your ID:<p>
+			<br>
+			<code>https://us-central1-astra-exchange.cloudfunctions.net/user?pin=<b><i>{4_DIGIT_PIN}</i></b>&email=<b><i>{YOUR_EMAIL}</i></b></code>
+			<br><br>
+			<p>Or, if you know your ID:</p>
+			<br>
+			<code>https://us-central1-astra-exchange.cloudfunctions.net/user?pin=<b><i>{4_DIGIT_PIN}</i></b>&id=<b><i>{YOUR_ID}</i></b></code>
+			<br><br>
+			<h1 class="subtitle">Authentication</h1>
+			<p>People logging in to your website using their Astra Exchange account should be asked to give their email & pin. But how do you know if they entered their pin correctly? Call the <code>user</code> function with their pin and email:</p>
+			<br>
+			<code>https://us-central1-astra-exchange.cloudfunctions.net/user?pin=<b><i>{4_DIGIT_PIN}</i></b>&email=<b><i>{EMAIL}</i></b></code>
+			<br><br>
+			<p>If you get back a response with status 401 along the lines of "Invalid pin for user <b><i>{USER_ID}</i></b>", alert the user that their pin was incorrect.</p>
+			<br>
+			<p>If instead you get a 404 along the lines of "No user with email <b><i>{EMAIL}</i></b>", alert the user that their email was incorrect.</p>
 		`
 	},
 	{
