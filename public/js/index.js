@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	let user
 
 	if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-		window.location.href='itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist'
+		window.location.href = 'itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist'
 	}
 
 	auth.onAuthStateChanged(function(user_) {
