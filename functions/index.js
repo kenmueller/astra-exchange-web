@@ -166,7 +166,7 @@ exports.user = functions.https.onRequest((req, res) => {
 						}
 					})
 				} else {
-					return { id: id, name: val.name, email: val.email, balance: val.balance }
+					return res.status(200).send({ id: id, name: val.name, email: val.email, balance: val.balance })
 				}
 			} else {
 				return res.status(404).send(`No user with ID ${id}`)
@@ -190,7 +190,7 @@ exports.user = functions.https.onRequest((req, res) => {
 								}
 							})
 						} else {
-							return { id: id, name: val.name, email: val.email, balance: val.balance }
+							return res.status(200).send({ id: id, name: val.name, email: val.email, balance: val.balance })
 						}
 					})
 				} else {
@@ -210,7 +210,7 @@ exports.transactions = functions.https.onRequest((req, res) => {
 		if (id) {
 			return db.ref(`users/${id}`).once('value', userSnapshot => {
 				if (userSnapshot.exists()) {
-					return db.ref(`users/${userId}/cards`).once('child_added', cardSnapshot => {
+					return db.ref(`users/${id}/cards`).once('child_added', cardSnapshot => {
 						if (pin === cardSnapshot.val().pin) {
 							return db.ref(`transactions/${id}`).once('value', transactionsSnapshot =>
 								res.status(200).send(transactionsSnapshot.val())
