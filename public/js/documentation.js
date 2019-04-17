@@ -1,11 +1,20 @@
 document.addEventListener('DOMContentLoaded', function() {
 	const auth = firebase.auth()
 	const db = firebase.database()
+	const docs = [
+		{
+			title: 'Getting Started',
+			body: `
+				<p>get started</p>
+			`
+		}
+	]
 	let user
 
 	if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
 		window.location.href = 'itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist'
 	}
+	loadDocs()
 
 	auth.onAuthStateChanged(function(user_) {
 		if (user_) {
@@ -22,6 +31,35 @@ document.addEventListener('DOMContentLoaded', function() {
 			})
 		}
 	})
+
+	function loadDocs() {
+		document.querySelectorAll('.menu-list.docs').forEach(element => removeAllNodes(element))
+		for (i in docs) {
+			const i_ = parseInt(i)
+			const doc = docs[i_]
+			const a = document.createElement('a')
+			a.className = 'doc'
+			a.onclick = function() { selectDoc(a, doc) }
+			a.innerHTML = doc.title
+			const li = document.createElement('li')
+			li.appendChild(a)
+			document.querySelectorAll('.menu-list.docs').forEach(element => element.appendChild(li))
+			if (i_ === 0) selectDoc(a, doc)
+		}
+	}
+
+	function removeAllNodes(element) {
+		while (element.firstChild) {
+			element.removeChild(element.firstChild)
+		}
+	}
+
+	function selectDoc(a, doc) {
+		document.querySelectorAll('a.doc.is-active').forEach(element => element.classList.remove('is-active'))
+		a.classList.add('is-active')
+		document.querySelectorAll('.doc-title').forEach(element => element.innerHTML = doc.title)
+		document.querySelectorAll('.doc-body').forEach(element => element.innerHTML = doc.body)
+	}
 
 	function updateSettings() {
 		document.querySelectorAll('.settings.name').forEach(element => element.innerHTML = user.name)
