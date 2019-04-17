@@ -124,6 +124,59 @@ const docs = [
 		title: 'Making Transactions',
 		body: `
 			<h1 class="subtitle">Using the <code>transact</code> function</h1>
+            <p><b>Copy and paste into .js file</b>:</p>
+            <br>
+<pre>
+const transact = (pin, from, to, amount, message, success, failure) => {
+    fetch(\`https://cors-anywhere.herokuapp.com/https://us-central1-astra-exchange.cloudfunctions.net/transact?pin=\${pin}&from=\${from}&to=\${to}&amount=\${amount}\${message ? \`&message=\${message}\` : ''}\`).then(response => {
+        if (response.readyState === 4) {
+            switch (response.status) {
+                case 200:
+                    success()
+                    break
+                case 400:
+                    failure(400, 'Bad request')
+                    break
+                case 404:
+                    failure(404, 'Invalid user ID')
+                    break
+                case 403:
+                    failure(403, 'Insufficient balance')
+                    break
+                case 401:
+                    failure(401, 'Invalid pin')
+                    break
+                default:
+                    failure(500, 'Unknown error. Please try again')
+            }
+        }
+    })
+}
+</pre>
+			<br>
+			<p>Here's how you would call the function:</p>
+			<br>
+<pre>
+transact('1234', 'e95Y6tKOvIS7CBlEdBn2UknzxMQ2', 'GwZX5OnFzGUl0UlXH97EGIeW70p1', 20, 'Take my money', () => {
+    alert('Successful transaction')
+}, (status, response) => {
+    alert(\`\${status} error: \${response}\`)
+})
+</pre>
+            <br>
+            <p>First parameter: the user's pin (must be a string).</p>
+            <br>
+            <p>Second: the user's ID. Third: the recipient's ID.</p>
+            <br>
+            <p>Fourth: the amount (must be an number).</p>
+            <br>
+            <p>Fifth: the message (can be left blank, or pass in null if you want).</p>
+            <br>
+            <p>Sixth (the first function): The success function. This function is called if the transaction was created successfully.</p>
+            <br>
+            <p>Seventh (last parameter): The error function. This function is called if there was an error when the transaction was created. It takes in 2 inputs, the first one being the error code (status), and the second being the error message created above. You can look at the function declaration to see what those error codes mean.</p>
+            <br>
+            <h1 class="subtitle">Test in your browser</h1>
 			<p><b>The 4 digit pin is of the user that sends the transaction (the {FROM_ID})</b>:</p>
 			<br>
 			<code>https://us-central1-astra-exchange.cloudfunctions.net/transact?pin=<b><i>{4_DIGIT_PIN}</i></b>&from=<b><i>{FROM_ID}</i></b>&to=<b><i>{TO_ID}</i></b>&amount=<b><i>{AMOUNT}</i></b>&message=<b><i>{MESSAGE}</i></b></code>
@@ -148,7 +201,6 @@ const docs = [
 			<img src="/images/documentation/success-transaction.png">
 			<p>Or, if you entered your pin incorrectly:</p>
 			<img src="/images/documentation/invalid-pin.png">
-			<p>There are a number of different error messages that you can receive, one of them being if you enter your ID wrong. </p>
 		`
 	},
 	{
