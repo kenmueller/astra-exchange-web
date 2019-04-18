@@ -24,6 +24,10 @@
 				"destination": "/documentation.html"
 			},
 			{
+				"source": "/suite",
+				"destination": "/suite.html"
+			},
+			{
 				"source": "**",
 				"destination": "/index.html"
 			}
@@ -36,6 +40,10 @@
 			{
 				"source": "/documentation.html",
 				"destination": "/documentation"
+			},
+			{
+				"source": "/suite.html",
+				"destination": "/suite"
 			},
 			{
 				"source": "/notes",
