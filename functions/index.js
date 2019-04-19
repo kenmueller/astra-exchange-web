@@ -212,9 +212,13 @@ exports.transactions = functions.https.onRequest((req, res) => {
 				if (userSnapshot.exists()) {
 					return db.ref(`users/${id}/cards`).once('child_added', cardSnapshot => {
 						if (pin === cardSnapshot.val().pin) {
-							return db.ref(`transactions/${id}`).once('value', transactionsSnapshot =>
-								res.status(200).send(transactionsSnapshot.val())
-							)
+							return db.ref(`transactions/${id}`).once('value', transactionsSnapshot => {
+								const val = transactionsSnapshot.val()
+								return res.status(200).send(Object.keys(val).map(key => {
+									const transaction = val[key]
+									return { id: key, time: transaction.time, from: transaction.from, to: transaction.to, amount: transaction.amount, balance: transaction.balance, message: transaction.message }
+								}))
+							})
 						} else {
 							return res.status(401).send(`Invalid pin for user ${id}`)
 						}
