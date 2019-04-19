@@ -1,10 +1,10 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
 	const auth = firebase.auth()
 	const db = firebase.database()
 
-	auth.onAuthStateChanged(function(user) {
+	auth.onAuthStateChanged(user => {
 		if (user) {
-			db.ref(`users/${user.uid}/name`).on('value', function(snapshot) {
+			db.ref(`users/${user.uid}/name`).on('value', snapshot => {
 				if (snapshot.exists()) {
 					document.querySelectorAll('.auth.user-link').forEach(element => element.innerHTML = snapshot.val())
 				} else {
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function signUp() {
 		document.getElementById('complete-sign-up').classList.add('is-loading')
-		auth.createUserWithEmailAndPassword(document.getElementById('sign-up-email').value, document.getElementById('sign-up-password').value).catch(function(error) {
+		auth.createUserWithEmailAndPassword(document.getElementById('sign-up-email').value, document.getElementById('sign-up-password').value).catch(error => {
 			document.getElementById('complete-sign-up').classList.remove('is-loading')
 			alert(error)
 		})
@@ -50,16 +50,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function signIn() {
 		document.getElementById('complete-sign-in').classList.add('is-loading')
-		auth.signInWithEmailAndPassword(document.getElementById('sign-in-email').value, document.getElementById('sign-in-password').value).catch(function(error) {
+		auth.signInWithEmailAndPassword(document.getElementById('sign-in-email').value, document.getElementById('sign-in-password').value).catch(error => {
 			document.getElementById('complete-sign-in').classList.remove('is-loading')
 			alert(error)
 		})
 	}
 
 	function signOut() {
-		auth.signOut().then(function() {
+		auth.signOut().then(() => {
 			window.location.href = '/'
-		}, function(error) {
+		}, error => {
 			alert(error)
 		})
 	}

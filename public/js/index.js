@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
 	const auth = firebase.auth()
 	let user
 
@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		window.location.href = 'itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist'
 	}
 
-	auth.onAuthStateChanged(function(user_) {
+	auth.onAuthStateChanged(user_ => {
 		user = user_
 		if (user) {
 			window.location.href = '/dashboard'

@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
 	const auth = firebase.auth()
 	const db = firebase.database()
 	let user
@@ -8,14 +8,14 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 	loadDocs()
 
-	auth.onAuthStateChanged(function(user_) {
+	auth.onAuthStateChanged(user_ => {
 		if (user_) {
 			const id = user_.uid
-			db.ref(`users/${id}`).on('value', function(snapshot) {
+			db.ref(`users/${id}`).on('value', snapshot => {
 				const val = snapshot.val()
 				user = { id: id, name: val.name, email: val.email, balance: val.balance, independence: val.independence, card: null }
 				updateSettings()
-				db.ref(`users/${id}/cards`).on('child_added', function(cardSnapshot) {
+				db.ref(`users/${id}/cards`).on('child_added', cardSnapshot => {
 					const cardVal = cardSnapshot.val()
 					user.card = { id: cardSnapshot.key, name: cardVal.name, pin: cardVal.pin }
 					updateSettings()
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			const doc = docs[i_]
 			const a = document.createElement('a')
 			a.className = 'doc'
-			a.onclick = function() { selectDoc(i_) }
+			a.onclick = () => selectDoc(i_)
 			a.innerHTML = doc.title
 			const li = document.createElement('li')
 			li.appendChild(a)

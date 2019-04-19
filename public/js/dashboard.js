@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
 	const auth = firebase.auth()
 	const db = firebase.database()
 	let user
@@ -10,10 +10,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		window.location.href = 'itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist'
 	}
 
-	auth.onAuthStateChanged(function(user_) {
+	auth.onAuthStateChanged(user_ => {
 		if (user_) {
 			const id = user_.uid
-			db.ref(`users/${id}`).on('value', function(snapshot) {
+			db.ref(`users/${id}`).on('value', snapshot => {
 				const val = snapshot.val()
 				user = { id: id, name: val.name, email: val.email, balance: val.balance, independence: val.independence, card: null }
 				document.querySelectorAll('.user.name').forEach(element => element.innerHTML = `Hello, ${user.name}`)
@@ -22,24 +22,24 @@ document.addEventListener('DOMContentLoaded', function() {
 				updateTransactionCount()
 				updateOpenInvoiceCount()
 				updateSettings()
-				db.ref(`users/${id}/cards`).on('child_added', function(cardSnapshot) {
+				db.ref(`users/${id}/cards`).on('child_added', cardSnapshot => {
 					const cardVal = cardSnapshot.val()
 					user.card = { id: cardSnapshot.key, name: cardVal.name, pin: cardVal.pin }
 					updateSettings()
 				})
 			})
-			db.ref('users').on('child_added', function(snapshot) {
+			db.ref('users').on('child_added', snapshot => {
 				const val = snapshot.val()
 				const userId = snapshot.key
 				const newUser = { id: userId, name: val.name, email: val.email, balance: val.balance }
 				users.push(newUser)
 				updateUserDropdowns()
-				db.ref(`users/${userId}/balance`).on('value', function(balanceSnapshot) {
+				db.ref(`users/${userId}/balance`).on('value', balanceSnapshot => {
 					newUser.balance = balanceSnapshot.val()
 					updateLeaderboard()
 				})
 			})
-			db.ref(`transactions/${id}`).on('child_added', function(snapshot) {
+			db.ref(`transactions/${id}`).on('child_added', snapshot => {
 				const val = snapshot.val()
 				const transaction = { id: snapshot.id, time: val.time, from: val.from, to: val.to, amount: val.amount, balance: val.balance, message: val.message }
 				transactions.push(transaction)
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				updateTransactionsPreview(transaction)
 				updateTransactions(transaction)
 			})
-			db.ref(`invoices/${id}`).on('child_added', function(snapshot) {
+			db.ref(`invoices/${id}`).on('child_added', snapshot => {
 				const val = snapshot.val()
 				const invoice = { id: snapshot.id, time: val.time, status: val.status, from: val.from, to: val.to, amount: val.amount, message: val.message }
 				invoices.push(invoice)
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function updateTransactionsPreview(transaction) {
 		const outgoing = transaction.from === user.id
-		db.ref(`users/${outgoing ? transaction.to : transaction.from}/name`).on('value', function(snapshot) {
+		db.ref(`users/${outgoing ? transaction.to : transaction.from}/name`).on('value', snapshot => {
 			const tr = document.createElement('tr')
 			tr.className = 'transaction'
 			tr.innerHTML = `
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			const strong = document.createElement('strong')
 			strong.appendChild(document.createTextNode('view'))
 			viewButton.appendChild(strong)
-			viewButton.onclick = function() { showTransactionModal(transaction) }
+			viewButton.onclick = () => showTransactionModal(transaction)
 			viewButton.classList.add('button')
 			viewButton.classList.add('is-small')
 			viewButton.classList.add('is-primary')
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function updateInvoicesPreview(invoice) {
 		const outgoing = invoice.from === user.id
-		db.ref(`users/${outgoing ? invoice.to : invoice.from}/name`).on('value', function(snapshot) {
+		db.ref(`users/${outgoing ? invoice.to : invoice.from}/name`).on('value', snapshot => {
 			const tr = document.createElement('tr')
 			tr.className = 'invoice'
 			tr.innerHTML = `
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			const strong = document.createElement('strong')
 			strong.appendChild(document.createTextNode('view'))
 			viewButton.appendChild(strong)
-			viewButton.onclick = function() { showInvoiceModal(invoice) }
+			viewButton.onclick = () => showInvoiceModal(invoice)
 			viewButton.classList.add('button')
 			viewButton.classList.add('is-small')
 			viewButton.classList.add('is-primary')
@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function showTransactionModal(transaction) {
 		const outgoing = transaction.from === user.id
-		db.ref(`users/${outgoing ? transaction.to : transaction.from}/name`).on('value', function(snapshot) {
+		db.ref(`users/${outgoing ? transaction.to : transaction.from}/name`).on('value', snapshot => {
 			const val = snapshot.val()
 			document.querySelectorAll('.transaction.type').forEach(element => element.innerHTML = `${outgoing ? 'Outgoing' : 'Incoming'} Transaction`)
 			document.querySelectorAll('.transaction.time').forEach(element => element.innerHTML = transaction.time)
@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function showInvoiceModal(invoice) {
 		const outgoing = invoice.from === user.id
-		db.ref(`users/${outgoing ? invoice.to : invoice.from}/name`).on('value', function(snapshot) {
+		db.ref(`users/${outgoing ? invoice.to : invoice.from}/name`).on('value', snapshot => {
 			const val = snapshot.val()
 			document.querySelectorAll('.invoice.type').forEach(element => element.innerHTML = `${outgoing ? 'Outgoing' : 'Incoming'} Invoice`)
 			document.querySelectorAll('.invoice.time').forEach(element => element.innerHTML = invoice.time)
@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function updateTransactions(transaction) {
 		const outgoing = transaction.from === user.id
-		db.ref(`users/${outgoing ? transaction.to : transaction.from}/name`).on('value', function(snapshot) {
+		db.ref(`users/${outgoing ? transaction.to : transaction.from}/name`).on('value', snapshot => {
 			const tr = document.createElement('tr')
 			tr.className = 'transaction'
 			tr.innerHTML = `
@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			const strong = document.createElement('strong')
 			strong.appendChild(document.createTextNode('view'))
 			viewButton.appendChild(strong)
-			viewButton.onclick = function() { showTransactionModal(transaction) }
+			viewButton.onclick = () => showTransactionModal(transaction)
 			viewButton.classList.add('button')
 			viewButton.classList.add('is-small')
 			viewButton.classList.add('is-primary')
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function updateInvoices(invoice) {
 		const outgoing = invoice.from === user.id
-		db.ref(`users/${outgoing ? invoice.to : invoice.from}/name`).on('value', function(snapshot) {
+		db.ref(`users/${outgoing ? invoice.to : invoice.from}/name`).on('value', snapshot => {
 			const tr = document.createElement('tr')
 			tr.className = 'invoice'
 			tr.innerHTML = `
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			const strong = document.createElement('strong')
 			strong.appendChild(document.createTextNode('view'))
 			viewButton.appendChild(strong)
-			viewButton.onclick = function() { showInvoiceModal(invoice) }
+			viewButton.onclick = () => showInvoiceModal(invoice)
 			viewButton.classList.add('button')
 			viewButton.classList.add('is-small')
 			viewButton.classList.add('is-primary')
@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			option.innerHTML = 'Select User'
 			element.appendChild(option)
 		})
-		const sortedUsers = users.slice().filter(function(a) { return a.id !== user.id }).sort(function(a, b) { return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0 })
+		const sortedUsers = users.slice().filter(a => a.id !== user.id).sort((a, b) => (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0)
 		for (i in sortedUsers) {
 			const user_ = sortedUsers[i]
 			const option = document.createElement('option')
@@ -254,11 +254,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	function completeSend() {
 		document.getElementById('complete-send').classList.add('is-loading')
 		const amount = parseInt(document.getElementById('send-amount').value)
-		db.ref(`transactions/${user.id}`).push({ time: formatDate(), from: user.id, to: document.getElementById('send-recipient').value, amount: amount, balance: user.balance - amount, message: document.getElementById('send-message').value.trim() }).then(function() {
+		db.ref(`transactions/${user.id}`).push({ time: formatDate(), from: user.id, to: document.getElementById('send-recipient').value, amount: amount, balance: user.balance - amount, message: document.getElementById('send-message').value.trim() }).then(() => {
 			document.getElementById('complete-send').classList.remove('is-loading')
 			hideSendModal()
 			resetAllInputs()
-		}, function(error) {
+		}, error => {
 			document.getElementById('complete-send').classList.remove('is-loading')
 			alert(error)
 		})
@@ -274,16 +274,16 @@ document.addEventListener('DOMContentLoaded', function() {
 		const amount = parseInt(document.getElementById('create-invoice-amount').value)
 		const to = document.getElementById('create-invoice-recipient').value
 		const invoice = { time: formatDate(), status: 'pending', from: user.id, to: to, amount: amount, message: document.getElementById('create-invoice-message').value.trim() }
-		const invoiceRef = db.ref(`invoices/${user.id}`).push(invoice).then(function() {
-			db.ref(`invoices/${to}/${invoiceRef.key}`).set(invoice).then(function() {
+		const invoiceRef = db.ref(`invoices/${user.id}`).push(invoice).then(() => {
+			db.ref(`invoices/${to}/${invoiceRef.key}`).set(invoice).then(() => {
 				document.getElementById('complete-create-invoice').classList.remove('is-loading')
 				hideCreateInvoiceModal()
 				resetAllInputs()
-			}, function(error) {
+			}, error => {
 				document.getElementById('complete-create-invoice').classList.remove('is-loading')
 				alert(error)
 			})
-		}, function(error) {
+		}, error => {
 			document.getElementById('complete-create-invoice').classList.remove('is-loading')
 			alert(error)
 		})
@@ -303,7 +303,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function updateLeaderboard() {
 		removeAllNodes(document.getElementById('leaderboard'))
-		const sortedUsers = users.slice().filter(function(a) { return a.id !== 'h621pgey1vPfxrmoW5LUkZaHkhT2' || user.id === 'h621pgey1vPfxrmoW5LUkZaHkhT2' }).sort(function(a, b) { return b.balance - a.balance })
+		const sortedUsers = users.slice().filter(a => a.id !== 'h621pgey1vPfxrmoW5LUkZaHkhT2' || user.id === 'h621pgey1vPfxrmoW5LUkZaHkhT2').sort((a, b) => b.balance - a.balance)
 		for (i in sortedUsers) {
 			const user_ = sortedUsers[i]
 			const tr = document.createElement('tr')

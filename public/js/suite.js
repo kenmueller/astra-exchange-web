@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
 	const auth = firebase.auth()
 	const db = firebase.database()
 	const storage = firebase.storage().ref()
@@ -10,37 +10,37 @@ document.addEventListener('DOMContentLoaded', function() {
 		window.location.href = 'itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist'
 	}
 
-	auth.onAuthStateChanged(function(user_) {
+	auth.onAuthStateChanged(user_ => {
 		if (user_) {
 			const id = user_.uid
-			db.ref(`users/${id}`).on('value', function(snapshot) {
+			db.ref(`users/${id}`).on('value', snapshot => {
 				const val = snapshot.val()
 				user = { id: id, name: val.name, email: val.email, balance: val.balance, independence: val.independence, card: null }
 				updateSettings()
-				db.ref(`users/${id}/cards`).on('child_added', function(cardSnapshot) {
+				db.ref(`users/${id}/cards`).on('child_added', cardSnapshot => {
 					const cardVal = cardSnapshot.val()
 					user.card = { id: cardSnapshot.key, name: cardVal.name, pin: cardVal.pin }
 					updateSettings()
 				})
 			})
-			db.ref('rooms').on('child_added', function(snapshot) {
+			db.ref('rooms').on('child_added', snapshot => {
 				const roomId = snapshot.key
-				storage.child(`rooms/${roomId}`).getDownloadURL().then(function(url) {
+				storage.child(`rooms/${roomId}`).getDownloadURL().then(url => {
 					const val = snapshot.val()
 					room = { id: roomId, image: url, name: val.name, url: val.url }
 					rooms.push(room)
 					updateRooms()
 				})
 			})
-			db.ref(`users/${id}/rooms`).on('child_added', function(snapshot) {
+			db.ref(`users/${id}/rooms`).on('child_added', snapshot => {
 				const roomId = snapshot.key
-				const roomRef = rooms.find(function(room) { return room.id === roomId })
+				const roomRef = rooms.find(room => room.id === roomId)
 				if (roomRef) {
 					yourRooms.push(Object.assign({}, roomRef))
 					updateYourRooms()
 				} else {
-					db.ref(`rooms/${roomId}`).on('value', function(roomSnapshot) {
-						storage.child(`rooms/${roomId}`).getDownloadURL().then(function(url) {
+					db.ref(`rooms/${roomId}`).on('value', roomSnapshot => {
+						storage.child(`rooms/${roomId}`).getDownloadURL().then(url => {
 							const val = roomSnapshot.val()
 							room = { id: roomId, image: url, name: val.name, url: val.url }
 							yourRooms.push(room)
