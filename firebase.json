@@ -28,8 +28,8 @@
 				"destination": "/suite.html"
 			},
 			{
-				"source": "/api/all.js",
-				"destination": "/api/js/all.min.js"
+				"source": "/api",
+				"destination": "/api/all.min.js"
 			},
 			{
 				"source": "**",
