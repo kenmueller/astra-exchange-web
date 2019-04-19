@@ -230,3 +230,48 @@ exports.transactions = functions.https.onRequest((req, res) => {
 		return res.status(400).send('Must specify the pin')
 	}
 })
+
+exports.register = functions.https.onRequest((req, res) => {
+	const pin = req.query.pin
+	if (pin) {
+		const id = req.query.id
+		if (id) {
+			const company = req.query.company
+			if (company) {
+				return db.ref(`users/${id}`).once('value', userSnapshot => {
+					if (userSnapshot.exists()) {
+						return db.ref(`companies/${company}`).once('value', companySnapshot => {
+							if (companySnapshot.exists()) {
+								return db.ref(`users/${from}/cards`).once('child_added', cardSnapshot => {
+									if (pin === cardSnapshot.val().pin) {
+										const dateList = moment().format('lll').split(' ')
+										dateList.splice(3, 0, '@')
+										return db.ref(`companies/${company}/users/${id}`).set(dateList.join(' '), error => {
+											if (error) {
+												return res.status(500).send(`Error registering user. ${error}`)
+											} else {
+												return res.status(200).send('Successfully registered user')
+											}
+										})
+									} else {
+										return res.status(401).send(`Invalid pin for user ${from}`)
+									}
+								})
+							} else {
+								return res.status(404).send(`No company with ID ${company}`)
+							}
+						})
+					} else {
+						return res.status(404).send(`No user with ID ${id}`)
+					}
+				})
+			} else {
+				return res.status(400).send('Must specify the company ID')
+			}
+		} else {
+			return res.status(400).send('Must specify the user ID')
+		}
+	} else {
+		return res.status(400).send('Must specify the pin')
+	}
+})
