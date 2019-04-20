@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				<td width="3%"><i class="fa fa-dollar-sign"></i></td>
 				<td style="text-transform: uppercase;"><strong>${outgoing ? 'outgoing' : 'incoming'}</strong></td>
 				<td>${snapshot.val()}</td>
-				<td>${transaction.amount} Astras</td>
+				<td>${transaction.amount} Astra${transaction.amount === 1 ? '' : 's'}</td>
 			`
 			const viewButton = document.createElement('a')
 			const strong = document.createElement('strong')
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				<td width="3%"><i class="fa fa-hand-holding-usd"></i></td>
 				<td style="text-transform: uppercase;"><strong>${outgoing ? 'outgoing' : 'incoming'}</strong></td>
 				<td>${snapshot.val()}</td>
-				<td>${invoice.amount} Astras</td>
+				<td>${invoice.amount} Astra${invoice.amount === 1 ? '' : 's'}</td>
 			`
 			const viewButton = document.createElement('a')
 			const strong = document.createElement('strong')
@@ -140,9 +140,9 @@ document.addEventListener('DOMContentLoaded', () => {
 			document.querySelectorAll('.transaction.time').forEach(element => element.innerHTML = transaction.time)
 			document.querySelectorAll('.transaction.from').forEach(element => element.innerHTML = outgoing ? `${user.name} (you)` : val)
 			document.querySelectorAll('.transaction.to').forEach(element => element.innerHTML = outgoing ? val : `${user.name} (you)`)
-			document.querySelectorAll('.transaction.amount').forEach(element => element.innerHTML = `${transaction.amount} Astras`)
+			document.querySelectorAll('.transaction.amount').forEach(element => element.innerHTML = `${transaction.amount} Astra${transaction.amount === 1 ? '' : 's'}`)
 			document.querySelectorAll('.transaction.balance-label').forEach(element => element.innerHTML = `${outgoing ? 'Remaining' : 'New'} Balance`)
-			document.querySelectorAll('.transaction.balance').forEach(element => element.innerHTML = `${transaction.balance} Astras`)
+			document.querySelectorAll('.transaction.balance').forEach(element => element.innerHTML = `${transaction.balance} Astra${transaction.balance === 1 ? '' : 's'}`)
 			document.querySelectorAll('.transaction.msg-label').forEach(element => element.style.display = transaction.message.trim() === '' ? 'none' : 'block')
 			document.querySelectorAll('.transaction.msg').forEach(element => element.innerHTML = transaction.message)
 			document.querySelectorAll('.modal.transaction').forEach(element => element.classList.add('is-active'))
@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			document.querySelectorAll('.invoice.status').forEach(element => element.innerHTML = invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1))
 			document.querySelectorAll('.invoice.from').forEach(element => element.innerHTML = outgoing ? `${user.name} (you)` : val)
 			document.querySelectorAll('.invoice.to').forEach(element => element.innerHTML = outgoing ? val : `${user.name} (you)`)
-			document.querySelectorAll('.invoice.amount').forEach(element => element.innerHTML = `${invoice.amount} Astras`)
+			document.querySelectorAll('.invoice.amount').forEach(element => element.innerHTML = `${invoice.amount} Astra${invoice.amount === 1 ? '' : 's'}`)
 			document.querySelectorAll('.invoice.msg-label').forEach(element => element.style.display = invoice.message.trim() === '' ? 'none' : 'block')
 			document.querySelectorAll('.invoice.msg').forEach(element => element.innerHTML = invoice.message)
 			if (!outgoing && invoice.status === 'pending') {
@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				<td width="3%"><i class="fa fa-dollar-sign"></i></td>
 				<td style="text-transform: uppercase;"><strong>${outgoing ? 'outgoing' : 'incoming'}</strong></td>
 				<td>${snapshot.val()}</td>
-				<td>${transaction.amount} Astras</td>
+				<td>${transaction.amount} Astra${transaction.amount === 1 ? '' : 's'}</td>
 			`
 			const viewButton = document.createElement('a')
 			const strong = document.createElement('strong')
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				<td width="3%"><i class="fa fa-hand-holding-usd"></i></td>
 				<td style="text-transform: uppercase;"><strong>${outgoing ? 'outgoing' : 'incoming'}</strong></td>
 				<td>${snapshot.val()}</td>
-				<td>${invoice.amount} Astras</td>
+				<td>${invoice.amount} Astra${invoice.amount === 1 ? '' : 's'}</td>
 			`
 			const viewButton = document.createElement('a')
 			const strong = document.createElement('strong')
