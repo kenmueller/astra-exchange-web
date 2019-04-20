@@ -98,21 +98,21 @@ const docs = [
             <h1 class="subtitle">Use the Astra Exchange <code>&lt;script&gt;</code> tag</h1>
             <p><b>Copy and paste into the <code>head</code> of your HTML file:</b></p>
             <br>
-            <code>&lt;script defer src="https://astra.exchange/use/js/all.min.js"&gt;&lt;/script&gt;</code>
+            <code>&lt;script src="https://astra.exchange/api"&gt;&lt;/script&gt;</code>
             <br>
             <hr>
             <h1 class="subtitle">Making Transactions</h1>
 			<p>Using the <code>transact</code> function:</p>
             <br>
 <pre>
-transact('1234', 'e95Y6tKOvIS7CBlEdBn2UknzxMQ2', 'GwZX5OnFzGUl0UlXH97EGIeW70p1', 20, 'Take my money', () => {
+exchange().transact('1234', 'e95Y6tKOvIS7CBlEdBn2UknzxMQ2', 'GwZX5OnFzGUl0UlXH97EGIeW70p1', 20, 'Take my money', () => {
     alert('Successful transaction')
 }, (status, response) => {
     alert(\`\${status} error: \${response}\`)
 })
 </pre>
             <br>
-            <p><b>Type signature:</b></p>
+            <p><b>Type signature (remember to put <code>exchange()</code> in front):</b></p>
             <br>
 <pre>
 transact(pin: string,
@@ -130,14 +130,14 @@ transact(pin: string,
 			<p>Using the <code>userWithId</code> function (<b>IMPORTANT - </b>Set the pin as <code>null</code> to only get public user data):</p>
             <br>
 <pre>
-userWithId('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234', user => {
-    alert(user)
+exchange().userWithId('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234', user => {
+    console.log(user)
 }, (status, response) => {
     alert(\`\${status} error: \${response}\`)
 })
 </pre>
             <br>
-            <p><b>Type signature (user is in the form of a list of user attributes):</b></p>
+            <p><b>Type signature (user is a <a onclick="selectDoc(2)">user object</a>):</b></p>
             <br>
 <pre>
 userWithId(id: string,
@@ -149,14 +149,14 @@ userWithId(id: string,
             <p>Using the <code>userWithEmail</code> function (<b>IMPORTANT - </b>Set the pin as <code>null</code> to only get public user data):</p>
             <br>
 <pre>
-userWithEmail('ken@adastraschool.org', '1234', user => {
-    alert(user)
+exchange().userWithEmail('ken@adastraschool.org', '1234', user => {
+    console.log(user)
 }, (status, response) => {
     alert(\`\${status} error: \${response}\`)
 })
 </pre>
             <br>
-            <p><b>Type signature (user is in the form of a list of user attributes):</b></p>
+            <p><b>Type signature (user is a <a onclick="selectDoc(2)">user object</a>):</b></p>
             <br>
 <pre>
 userWithEmail(id: string,
@@ -168,16 +168,14 @@ userWithEmail(id: string,
             <p>Using the <code>transactions</code> function to access all of a user's transactions:</p>
             <br>
 <pre>
-transactions('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234', transactionList => {
-    transactionList.forEach(transaction => {
-        alert(transaction)
-    })
+exchange().transactions('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234', transactions => {
+    console.log(transactions)
 }, (status, response) => {
     alert(\`\${status} error: \${response}\`)
 })
 </pre>
             <br>
-            <p><b>Type signature (transactionList is a list of transaction objects):</b></p>
+            <p><b>Type signature (transactions is a list of <a onclick="selectDoc(2)">transaction objects</a>):</b></p>
             <br>
 <pre>
 transactions(id: string,
@@ -192,14 +190,12 @@ transactions(id: string,
 			<p>Using the <code>users</code> function (<b>NOTE - </b>Returns only public user data):</p>
             <br>
 <pre>
-users(userList => {
-    userList.forEach(user => {
-        alert(user)
-    })
+exchange().users(users => {
+    console.log(users)
 })
 </pre>
             <br>
-            <p><b>Type signature (userList is a list of user objects):</b></p>
+            <p><b>Type signature (users is a list of <a onclick="selectDoc(3)">user objects</a>):</b></p>
             <br>
 <pre>
 users(completion: (userList: any[]) => void)
@@ -211,9 +207,9 @@ users(completion: (userList: any[]) => void)
 	{
 		title: 'Making Transactions',
 		body: `
-			<h1 class="subtitle">Using the <code>transact</code> function</h1>
+			<h1 class="subtitle">Using the <code>exchange().transact</code> function</h1>
 <pre>
-transact('1234', 'e95Y6tKOvIS7CBlEdBn2UknzxMQ2', 'GwZX5OnFzGUl0UlXH97EGIeW70p1', 20, 'Take my money', () => {
+exchange().transact('1234', 'e95Y6tKOvIS7CBlEdBn2UknzxMQ2', 'GwZX5OnFzGUl0UlXH97EGIeW70p1', 20, 'Take my money', () => {
     alert('Successful transaction')
 }, (status, response) => {
     alert(\`\${status} error: \${response}\`)
@@ -242,33 +238,14 @@ transact(pin: string,
             <br>
             <p>Sixth (the first function): The success function. This function is called if the transaction was created successfully.</p>
             <br>
-            <p>Seventh (last parameter): The error function. This function is called if there was an error when the transaction was created. It takes in 2 inputs, the first one being the error code (status), and the second being the error message created above.</p>
+            <p>Seventh (last parameter): The error function. This function is called if there was an error when the transaction was created. It takes in 2 inputs, the first one being the error code (status), and the second being the error message (SEE BELOW).</p>
             <br>
-            <h1 class="subtitle">Test in your browser</h1>
-			<p><b>The 4 digit pin is of the user that sends the transaction (the {FROM_ID})</b>:</p>
-			<br>
-			<code>https://us-central1-astra-exchange.cloudfunctions.net/transact?pin=<b><i>{4_DIGIT_PIN}</i></b>&from=<b><i>{FROM_ID}</i></b>&to=<b><i>{TO_ID}</i></b>&amount=<b><i>{AMOUNT}</i></b>&message=<b><i>{MESSAGE}</i></b></code>
-			<br><br>
-			<p>The message field is optional:</p>
-			<br>
-			<code>https://us-central1-astra-exchange.cloudfunctions.net/transact?pin=<b><i>{4_DIGIT_PIN}</i></b>&from=<b><i>{FROM_ID}</i></b>&to=<b><i>{TO_ID}</i></b>&amount=<b><i>{AMOUNT}</i></b></code>
-			<br><br>
-			<p>Example transaction:</p>
-			<br>
-			<code>https://us-central1-astra-exchange.cloudfunctions.net/transact?pin=0000&from=e95Y6tKOvIS7CBlEdBn2UknzxMQ2&to=GwZX5OnFzGUl0UlXH97EGIeW70p1&amount=20&message=Take my money</code>
-			<br><br>
-			<p>(Not my real pin). That was an example transaction sent by me (Ken), received by Kai, and with an amount of 20 Astras and message "Take my money". Again, you can disregard the message field if needed.</p>
-			<br>
-			<p>First, get your user ID:</p>
-			<br>
-			<code>https://us-central1-astra-exchange.cloudfunctions.net/user?email=<b><i>{YOUR_EMAIL}</i></b></code>
-			<br><br>
-			<p>If you haven't read <a class="doc-link" onclick="selectDoc(2)">Authentication & User Data</a> yet, now is a good time to read it. You will need to be able to get multiple User IDs.</p>
-			<br>
-			<p>Try using your pin and ID, along with someone else's ID, and send 1 Astra to them. Type the url you create into a new tab. You should get a screen like this:</p>
-			<img src="/images/documentation/success-transaction.png">
-			<p>Or, if you entered your pin incorrectly:</p>
-            <img src="/images/documentation/invalid-pin.png">
+            <h1 class="subtitle">Possible errors</h1>
+            <p><b>400:</b> Invalid parameters</p>
+            <p><b>404:</b> Invalid user ID</p>
+            <p><b>403:</b> Insufficient balance</p>
+            <p><b>401:</b> Invalid pin</p>
+            <p><b>500:</b> Unknown error. Please try again</p>
 		`
 	},
 	{
