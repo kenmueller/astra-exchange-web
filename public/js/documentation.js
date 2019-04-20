@@ -102,7 +102,7 @@ const docs = [
             <br>
             <hr>
             <h1 class="subtitle">Making Transactions</h1>
-			<p>Using the <code>transact</code> function:</p>
+			<p>Using the <code>exchange().transact</code> function:</p>
             <br>
 <pre>
 exchange().transact('1234', 'e95Y6tKOvIS7CBlEdBn2UknzxMQ2', 'GwZX5OnFzGUl0UlXH97EGIeW70p1', 20, 'Take my money', () => {
@@ -127,7 +127,7 @@ transact(pin: string,
 			<a class="doc-link" onclick="selectDoc(1)">Read more</a>
 			<br><br><br>
 			<h1 class="subtitle">Accessing User Data</h1>
-			<p>Using the <code>userWithId</code> function (<b>IMPORTANT - </b>Set the pin as <code>null</code> to only get public user data):</p>
+			<p>Using the <code>exchange().userWithId</code> function (<b>IMPORTANT - </b>Set the pin as <code>null</code> to only get public user data):</p>
             <br>
 <pre>
 exchange().userWithId('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234', user => {
@@ -141,12 +141,12 @@ exchange().userWithId('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234', user => {
             <br>
 <pre>
 userWithId(id: string,
-           pin: string,
+           pin: string|null,
            success: (user: any[]) => void,
            failure: (status: int, response: string) => void)
 </pre>
             <br>
-            <p>Using the <code>userWithEmail</code> function (<b>IMPORTANT - </b>Set the pin as <code>null</code> to only get public user data):</p>
+            <p>Using the <code>exchange().userWithEmail</code> function (<b>IMPORTANT - </b>Set the pin as <code>null</code> to only get public user data):</p>
             <br>
 <pre>
 exchange().userWithEmail('ken@adastraschool.org', '1234', user => {
@@ -160,12 +160,12 @@ exchange().userWithEmail('ken@adastraschool.org', '1234', user => {
             <br>
 <pre>
 userWithEmail(id: string,
-              pin: string,
+              pin: string|null,
               success: (user: any[]) => void,
               failure: (status: int, response: string) => void)
 </pre>
             <br>
-            <p>Using the <code>transactions</code> function to access all of a user's transactions:</p>
+            <p>Using the <code>exchange().transactions</code> function to access all of a user's transactions:</p>
             <br>
 <pre>
 exchange().transactions('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234', transactions => {
@@ -187,7 +187,7 @@ transactions(id: string,
             <a class="doc-link" onclick="selectDoc(2)">Read more</a>
             <br><br><br>
             <h1 class="subtitle">Retrieving all Users</h1>
-			<p>Using the <code>users</code> function (<b>NOTE - </b>Returns only public user data):</p>
+			<p>Using the <code>exchange().users</code> function (<b>NOTE - </b>Returns only public user data):</p>
             <br>
 <pre>
 exchange().users(users => {
@@ -230,7 +230,9 @@ transact(pin: string,
 			<br>
             <p>First parameter: the user's pin (must be a string).</p>
             <br>
-            <p>Second: the user's ID. Third: the recipient's ID.</p>
+            <p>Second: the user's ID.</p>
+            <br>
+            <p>Third: the recipient's ID.</p>
             <br>
             <p>Fourth: the amount (must be an number).</p>
             <br>
@@ -251,27 +253,145 @@ transact(pin: string,
 	{
 		title: 'Authentication & User Data',
 		body: `
-			<h1 class="subtitle">Getting your User ID</h1>
-			<p>To access your public info (ID, name, email, balance):</p>
+            <h1 class="subtitle">Using the <code>exchange().userWithId</code> function</h1>
+<pre>
+exchange().userWithId('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234', user => {
+    console.log(user)
+}, (status, response) => {
+    alert(\`\${status} error: \${response}\`)
+})
+</pre>
+            <br>
+            <p><b>Type signature (user is a <b>user object</b>):</b></p>
+            <br>
+<pre>
+userWithId(id: string,
+           pin: string|null,
+           success: (user: any[]) => void,
+           failure: (status: int, response: string) => void)
+</pre>
 			<br>
-			<code>https://us-central1-astra-exchange.cloudfunctions.net/user?email=<b><i>{YOUR_EMAIL}</i></b></code>
-			<br><br>
-			<p>To access your private info (independence, pin, cards), you also need to specify your pin. <code>email</code> can be swapped with <code>id</code> if you already know your ID:<p>
+            <p>First parameter: the user's ID.</p>
+            <br>
+            <p>Second: the user's pin. (make it <code>null</code> to only receive public data)</p>
+            <br>
+            <p>Third: (the first function): The success function. This function is called if the user was gotten successfully. It takes in a <b>user object</b> (will see shortly)</p>
+            <br>
+            <p>Seventh (last parameter): The error function. This function is called if there was an error when the user was gotten. It takes in 2 inputs, the first one being the error code (status), and the second being the error message (SEE BELOW).</p>
+            <br>
+            <h1 class="subtitle">Possible errors</h1>
+            <p><b>400:</b> Invalid parameters</p>
+            <p><b>404:</b> Invalid user ID</p>
+            <p><b>401:</b> Invalid pin</p>
+            <p><b>500:</b> Unknown error. Please try again</p>
+            <br>
+            <h1 class="subtitle">User Object</h1>
+            <p><b>Public fields:</b></p>
+            <br>
+            <p><b>id</b> string</p>
+            <p><b>name</b> string</p>
+            <p><b>email</b> string</p>
+            <p><b>balance</b> number</p>
+            <br>
+            <p><b>Private fields (must specify pin):</b></p>
+            <br>
+            <p><b>id</b> string</p>
+            <p><b>name</b> string</p>
+            <p><b>email</b> string</p>
+            <p><b>balance</b> number</p>
+            <p><b>independence</b> number (between 0-3, 0 means pending)</p>
+            <p><b>pin</b> string (length is 4)</p>
+            <br>
+            <h1 class="subtitle">Using the <code>exchange().userWithEmail</code> function</h1>
+<pre>
+exchange().userWithEmail('ken@adastraschool.org', '1234', user => {
+    console.log(user)
+}, (status, response) => {
+    alert(\`\${status} error: \${response}\`)
+})
+</pre>
+            <br>
+            <p><b>Type signature (user is a <b>user object</b>):</b></p>
+            <br>
+<pre>
+userWithEmail(email: string,
+              pin: string|null,
+              success: (user: any[]) => void,
+              failure: (status: int, response: string) => void)
+</pre>
 			<br>
-			<code>https://us-central1-astra-exchange.cloudfunctions.net/user?pin=<b><i>{4_DIGIT_PIN}</i></b>&email=<b><i>{YOUR_EMAIL}</i></b></code>
-			<br><br>
-			<p>Or, if you know your ID:</p>
+            <p>First parameter: the user's email.</p>
+            <br>
+            <p>Second: the user's pin. (make it <code>null</code> to only receive public data)</p>
+            <br>
+            <p>Third: (the first function): The success function. This function is called if the user was gotten successfully. It takes in a <b>user object</b> (see above)</p>
+            <br>
+            <p>Seventh (last parameter): The error function. This function is called if there was an error when the user was gotten. It takes in 2 inputs, the first one being the error code (status), and the second being the error message (SEE BELOW).</p>
+            <br>
+            <h1 class="subtitle">Possible errors</h1>
+            <p><b>400:</b> Invalid parameters</p>
+            <p><b>404:</b> Invalid email</p>
+            <p><b>401:</b> Invalid pin</p>
+            <p><b>500:</b> Unknown error. Please try again</p>
+            <br>
+            <h1 class="title">User Authentication</h1>
+            <p>When a user tries to sign in, run this code (edit accordingly)</p>
+            <br>
+<pre>
+function authenticate(email, pin) {
+    exchange().userWithEmail(email, pin, user => {
+        // Sign in successful
+        window.location.href = '/dashboard'
+    }, (status, response) => {
+        alert(response)
+    })
+}
+</pre>
+            <br>
+            <h1 class="subtitle">Using the <code>exchange().transactions</code> function</h1>
+            <p>Returns the entire transaction history of the specified user</p>
+            <br>
+<pre>
+exchange().transactions('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234', transactions => {
+    console.log(transactions)
+}, (status, response) => {
+    alert(\`\${status} error: \${response}\`)
+})
+</pre>
+            <br>
+            <p><b>Type signature (transactions is a list of <b>transaction objects</b>):</b></p>
+            <br>
+<pre>
+transactions(id: string,
+             pin: string,
+             success: (transactionList: any[]) => void,
+             failure: (status: int, response: string) => void)
+</pre>
 			<br>
-			<code>https://us-central1-astra-exchange.cloudfunctions.net/user?pin=<b><i>{4_DIGIT_PIN}</i></b>&id=<b><i>{YOUR_ID}</i></b></code>
-			<br><br>
-			<h1 class="subtitle">Authentication</h1>
-			<p>People logging in to your website using their Astra Exchange account should be asked to give their email & pin. But how do you know if they entered their pin correctly? Call the <code>user</code> function with their pin and email:</p>
-			<br>
-			<code>https://us-central1-astra-exchange.cloudfunctions.net/user?pin=<b><i>{4_DIGIT_PIN}</i></b>&email=<b><i>{EMAIL}</i></b></code>
-			<br><br>
-			<p>If you get back a response with status 401 along the lines of "Invalid pin for user <b><i>{USER_ID}</i></b>", alert the user that their pin was incorrect.</p>
-			<br>
-			<p>If instead you get a 404 along the lines of "No user with email <b><i>{EMAIL}</i></b>", alert the user that their email was incorrect.</p>
+            <p>First parameter: the user's ID.</p>
+            <br>
+            <p>Second: the user's pin. (<b>cannot</b> be <code>null</code>)</p>
+            <br>
+            <p>Third: (the first function): The success function. This function is called if the user was gotten successfully. It takes in a list of <b>transaction objects</b> (see below)</p>
+            <br>
+            <p>Seventh (last parameter): The error function. This function is called if there was an error when the transactions was gotten. It takes in 2 inputs, the first one being the error code (status), and the second being the error message (SEE BELOW).</p>
+            <br>
+            <h1 class="subtitle">Possible errors</h1>
+            <p><b>400:</b> Invalid parameters</p>
+            <p><b>404:</b> Invalid user ID</p>
+            <p><b>401:</b> Invalid pin</p>
+            <p><b>500:</b> Unknown error. Please try again</p>
+            <br>
+            <h1 class="subtitle">Transaction Object</h1>
+            <p><b>Fields:</b></p>
+            <br>
+            <p><b>id</b> string</p>
+            <p><b>time</b> string (date created as a string)</p>
+            <p><b>from</b> string (user ID)</p>
+            <p><b>to</b> string (user ID)</p>
+            <p><b>amount</b> number (how much money is being sent)</p>
+            <p><b>balance</b> number (the new balance of the user after applying this transaction)</p>
+            <p><b>message</b> string (can be blank)</p>
 		`
 	},
 	{
