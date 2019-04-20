@@ -1,6 +1,6 @@
 function exchange() {
 	this.users = completion =>
-		fetch('https://us-central1-astra-exchange.cloudfunctions.net/users').then(response =>
+		fetch('https://cors-anywhere.herokuapp.com/https://us-central1-astra-exchange.cloudfunctions.net/users').then(response =>
 			response.json().then(json =>
 				completion(json)
 			)
