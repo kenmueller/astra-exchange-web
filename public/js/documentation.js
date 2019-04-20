@@ -91,6 +91,28 @@ function selectDoc(index) {
 	document.querySelectorAll('.doc-body').forEach(element => element.innerHTML = doc.body)
 }
 
+function tryItSignIn() {
+    fetch(`https://cors-anywhere.herokuapp.com/https://us-central1-astra-exchange.cloudfunctions.net/user?email=${document.getElementById('try-it-email').value}&pin=${document.getElementById('try-it-pin').value}`).then(response => {
+        switch (response.status) {
+            case 200:
+                return response.json().then(json =>
+                    alert(`Hello, ${json.name}`)
+                )
+            case 400:
+                alert('Invalid parameters')
+                break
+            case 404:
+                alert('Invalid email')
+                break
+            case 401:
+                alert('Invalid pin')
+                break
+            default:
+                alert('Unknown error. Please try again')
+        }
+    })
+}
+
 const docs = [
 	{
 		title: 'Getting Started',
@@ -348,6 +370,19 @@ function authenticate(email, pin) {
 }
 </pre>
             <br>
+            <h1 class="subtitle">Try it out</h1>
+            <div class="field">
+                <div class="control">
+                    <input class="input" id="try-it-email" type="email" placeholder="Enter your email">
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <input class="input" id="try-it-pin" type="password" placeholder="Enter your pin">
+                </div>
+            </div>
+            <a class="button is-info" onclick="tryItSignIn()"><strong>Sign in</strong></a>
+            <br><br>
             <h1 class="subtitle">Using the <code>exchange().transactions</code> function</h1>
             <p>Returns the entire transaction history of the specified user</p>
             <br>
