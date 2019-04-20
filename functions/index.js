@@ -160,7 +160,7 @@ exports.user = functions.https.onRequest((req, res) => {
 				if (pin) {
 					return db.ref(`users/${id}/cards`).once('child_added', cardSnapshot => {
 						if (pin === cardSnapshot.val().pin) {
-							return res.status(200).send(val)
+							return res.status(200).send({ id: id, name: val.name, email: val.email, balance: val.balance, independence: val.independence, pin: pin })
 						} else {
 							return res.status(401).send(`Invalid pin for user ${id}`)
 						}
@@ -184,7 +184,7 @@ exports.user = functions.https.onRequest((req, res) => {
 						if (pin) {
 							return db.ref(`users/${userId}/cards`).once('child_added', cardSnapshot => {
 								if (pin === cardSnapshot.val().pin) {
-									return res.status(200).send(val)
+									return res.status(200).send({ id: id, name: val.name, email: val.email, balance: val.balance, independence: val.independence, pin: pin })
 								} else {
 									return res.status(401).send(`Invalid pin for user ${userId}`)
 								}
