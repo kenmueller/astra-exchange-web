@@ -1,28 +1,5 @@
 {
 	"rules": {
-		"reviews": {
-			".read": true,
-			"$companyId": {
-				"$uid": {
-					".write": "$uid === auth.uid && $uid !== $companyId",
-					"time": {
-						".validate": "newData.isString() && newData.val() !== ''"
-					},
-					"anonymous": {
-						".validate": "newData.isBoolean()"
-					},
-					"title": {
-						".validate": "newData.isString() && newData.val() !== ''"
-					},
-					"description": {
-						".validate": "newData.isString() && newData.val() !== ''"
-					},
-					"rating": {
-						".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 4"
-					}
-				}
-			}
-		},
 		"bazaarData": {
 			".read": true
 		},
