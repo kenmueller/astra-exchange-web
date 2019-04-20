@@ -202,7 +202,7 @@ exchange().transactions('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234', transactions => 
 <pre>
 transactions(id: string,
              pin: string,
-             success: (transactionList: any[]) => void,
+             success: (transactions: any[]) => void,
              failure: (status: int, response: string) => void)
 </pre>
             <br>
@@ -220,7 +220,7 @@ exchange().users(users => {
             <p><b>Type signature (users is a list of <a onclick="selectDoc(3)">user objects</a>):</b></p>
             <br>
 <pre>
-users(completion: (userList: any[]) => void)
+users(completion: (users: any[]) => void)
 </pre>
             <br>
             <a class="doc-link" onclick="selectDoc(3)">Read more</a>
@@ -399,7 +399,7 @@ exchange().transactions('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234', transactions => 
 <pre>
 transactions(id: string,
              pin: string,
-             success: (transactionList: any[]) => void,
+             success: (transactions: any[]) => void,
              failure: (status: int, response: string) => void)
 </pre>
 			<br>
@@ -432,7 +432,30 @@ transactions(id: string,
 	{
 		title: 'Retrieve all Users',
 		body: `
-
+            <h1 class="subtitle">Using the <code>exchange().users</code> function</h1>
+            <p>Returns every user's public data</p>
+            <br>
+<pre>
+exchange().users(users => {
+    console.log(users)
+})
+</pre>
+            <br>
+            <p><b>Type signature (users is a list of <b>user objects</b>):</b></p>
+            <br>
+<pre>
+users(completion: (users: any[]) => void)
+</pre>
+            <br>
+            <p>Only parameter: The completion function. It takes in a list of <b>user objects</b> (see below).</p>
+            <br>
+            <h1 class="subtitle">User Object</h1>
+            <p><b>Public fields (if you want private fields, you must <a onclick="selectDoc(2)">get each user individually</a>):</b></p>
+            <br>
+            <p><b>id</b> string</p>
+            <p><b>name</b> string</p>
+            <p><b>email</b> string</p>
+            <p><b>balance</b> number</p>
 		`
 	}
 ]
