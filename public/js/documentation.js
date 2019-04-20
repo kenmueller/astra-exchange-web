@@ -370,7 +370,7 @@ function authenticate(email, pin) {
 }
 </pre>
             <br>
-            <h1 class="subtitle">Try it out</h1>
+            <h1 class="subtitle">Try it</h1>
             <div class="field">
                 <div class="control">
                     <input class="input" id="try-it-email" type="email" placeholder="Enter your email">
@@ -383,6 +383,34 @@ function authenticate(email, pin) {
             </div>
             <a class="button is-info" onclick="tryItSignIn()"><strong>Sign in</strong></a>
             <br><br>
+            <h1 class="title">Sample code</h1>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;script src="https://astra.exchange/api"&gt;&lt;/script&gt;
+        &lt;title&gt;Document&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Sign in&lt;/h1&gt;
+        &lt;input class="input" id="email-input" type="email" placeholder="Enter your email"&gt;
+        &lt;br&gt;
+        &lt;input class="input" id="pin-input" type="password" placeholder="Enter your pin"&gt;
+        &lt;br&gt;&lt;br&gt;
+        &lt;button onclick="authenticate(document.getElementById('email-input').value, document.getElementById('pin-input').value)"&gt;Sign in&lt;/button&gt;
+        &lt;script&gt;
+            function authenticate(email, pin) {
+                exchange().userWithEmail(email, pin, user =&gt; {
+                    alert(\`Hello, \${user.name}\`)
+                }, (status, response) =&gt; {
+                    alert(response)
+                })
+            }
+        &lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+            <br>
             <h1 class="subtitle">Using the <code>exchange().transactions</code> function</h1>
             <p>Returns the entire transaction history of the specified user</p>
             <br>
