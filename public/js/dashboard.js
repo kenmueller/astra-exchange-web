@@ -304,8 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		document.getElementById('complete-fine').classList.add('is-loading')
 		const amount = parseInt(document.getElementById('fine-amount').value)
 		const to = document.getElementById('fine-recipient').value
-		const formattedDate = formatDate()
-		db.ref(`transactions/${user.id}`).push({ time: formattedDate, from: user.id, to: document.getElementById('fine-recipient').value, amount: -amount, balance: user.balance + amount, message: `Fine for ${amount} Astra${amount === 1 ? '' : 's'} on ${formattedDate}\nReason: ${document.getElementById('fine-reason').value.trim()}` }).then(() => {
+		db.ref(`transactions/${user.id}`).push({ time: formatDate(), from: user.id, to: document.getElementById('fine-recipient').value, amount: -amount, balance: user.balance + amount, message: `Fine for ${amount} Astra${amount === 1 ? '' : 's'}<br>Reason: ${document.getElementById('fine-reason').value.trim()}` }).then(() => {
 			document.getElementById('complete-fine').classList.remove('is-loading')
 			hideFineModal()
 			resetAllInputs()
