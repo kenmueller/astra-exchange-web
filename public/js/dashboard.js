@@ -13,6 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
 	auth.onAuthStateChanged(user_ => {
 		if (user_) {
 			const id = user_.uid
+			if (id === 'h621pgey1vPfxrmoW5LUkZaHkhT2') {
+				document.querySelectorAll('.action.fine').forEach(element => element.classList.remove('is-hidden'))
+			} else {
+				document.querySelectorAll('.action.fine').forEach(element => element.classList.add('is-hidden'))
+			}
 			db.ref(`users/${id}`).on('value', snapshot => {
 				const val = snapshot.val()
 				user = { id: id, name: val.name, email: val.email, balance: val.balance, independence: val.independence, card: null }
@@ -358,6 +363,15 @@ document.addEventListener('DOMContentLoaded', () => {
 		resetAllInputs()
 	}
 
+	function showFineModal() {
+		showModal('fine')
+	}
+
+	function hideFineModal() {
+		hideModal('fine')
+		resetAllInputs()
+	}
+
 	function showTransactionsModal() {
 		showModal('transactions')
 	}
@@ -415,6 +429,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.querySelectorAll('.close-send').forEach(element => element.addEventListener('click', hideSendModal))
 	document.querySelectorAll('.action.create-invoice').forEach(element => element.addEventListener('click', showCreateInvoiceModal))
 	document.querySelectorAll('.close-create-invoice').forEach(element => element.addEventListener('click', hideCreateInvoiceModal))
+	document.querySelectorAll('.action.fine').forEach(element => element.addEventListener('click', showFineModal))
+	document.querySelectorAll('.close-fine').forEach(element => element.addEventListener('click', hideFineModal))
 	document.querySelectorAll('.action.transactions').forEach(element => element.addEventListener('click', showTransactionsModal))
 	document.querySelectorAll('.close-transactions').forEach(element => element.addEventListener('click', hideTransactionsModal))
 	document.querySelectorAll('.action.invoices').forEach(element => element.addEventListener('click', showInvoicesModal))
