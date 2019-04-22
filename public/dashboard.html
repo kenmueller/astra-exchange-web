@@ -293,6 +293,43 @@
 				</footer>
 			</div>
 		</div>
+		<div class="modal fine">
+			<div class="modal-background close-fine"></div>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title">Fine</p>
+					<button class="delete close-fine" aria-label="close"></button>
+				</header>
+				<section class="modal-card-body">
+					<div class="field">
+						<label class="label">Student</label>
+						<div class="select-user">
+							<div class="select">
+								<select class="user-list" id="fine-recipient"></select>
+							</div>
+						</div>
+					</div>
+					<div class="field">
+						<label class="label">Fine Amount</label>
+						<div class="control has-icons-left">
+							<input class="input" id="fine-amount" type="number" placeholder="Enter fine amount">
+							<span class="icon is-small is-left"><i class="fas fa-comment-dollar"></i></span>
+						</div>
+					</div>
+					<div class="field">
+						<label class="label">Reason</label>
+						<div class="control has-icons-left">
+							<input class="input" id="fine-reason" placeholder="Notebook left out">
+							<span class="icon is-small is-left"><i class="fas fa-envelope"></i></span>
+						</div>
+					</div>
+				</section>
+				<footer class="modal-card-foot">
+					<button class="button is-success complete complete-fine" id="complete-fine" disabled>Fine</button>
+					<button class="button close-fine">Cancel</button>
+				</footer>
+			</div>
+		</div>
 		<div class="modal transactions">
 			<div class="modal-background close-transactions"></div>
 			<div class="modal-card">

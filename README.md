@@ -7,3 +7,8 @@
 ```bash
 npm install
 ```
+
+```bash
+cd functions
+npm install
+```

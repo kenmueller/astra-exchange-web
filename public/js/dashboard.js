@@ -247,6 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			option.innerHTML = user_.name
 			document.getElementById('send-recipient').appendChild(option)
 			document.getElementById('create-invoice-recipient').appendChild(option.cloneNode(true))
+			document.getElementById('fine-recipient').appendChild(option.cloneNode(true))
 		}
 	}
 
@@ -297,6 +298,26 @@ document.addEventListener('DOMContentLoaded', () => {
 	function createInvoiceChanged() {
 		const amount = parseInt(document.getElementById('create-invoice-amount').value)
 		document.getElementById('complete-create-invoice').disabled = !(document.getElementById('create-invoice-recipient').selectedIndex !== 0 && amount && amount > 0)
+	}
+
+	function completeFine() {
+		document.getElementById('complete-fine').classList.add('is-loading')
+		const amount = parseInt(document.getElementById('fine-amount').value)
+		const to = document.getElementById('fine-recipient').value
+		const formattedDate = formatDate()
+		db.ref(`transactions/${user.id}`).push({ time: formattedDate, from: user.id, to: document.getElementById('fine-recipient').value, amount: -amount, balance: user.balance + amount, message: `Fine for ${amount} Astra${amount === 1 ? '' : 's'} on ${formattedDate}\nReason: ${document.getElementById('fine-reason').value.trim()}` }).then(() => {
+			document.getElementById('complete-fine').classList.remove('is-loading')
+			hideFineModal()
+			resetAllInputs()
+		}, error => {
+			document.getElementById('complete-fine').classList.remove('is-loading')
+			alert(error)
+		})
+	}
+
+	function fineChanged() {
+		const amount = parseInt(document.getElementById('fine-amount').value)
+		document.getElementById('complete-fine').disabled = !(document.getElementById('fine-recipient').selectedIndex !== 0 && amount && amount > 0 && document.getElementById('fine-reason').value)
 	}
 
 	function resetAllInputs() {
@@ -446,8 +467,12 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.querySelectorAll('.button.password-reset').forEach(element => element.addEventListener('click', resetPassword))
 	document.querySelectorAll('.button.complete-send').forEach(element => element.addEventListener('click', completeSend))
 	document.querySelectorAll('.button.complete-create-invoice').forEach(element => element.addEventListener('click', completeCreateInvoice))
+	document.querySelectorAll('.button.complete-fine').forEach(element => element.addEventListener('click', completeFine))
 	document.getElementById('send-recipient').addEventListener('change', sendChanged)
 	document.getElementById('send-amount').addEventListener('input', sendChanged)
 	document.getElementById('create-invoice-recipient').addEventListener('change', createInvoiceChanged)
 	document.getElementById('create-invoice-amount').addEventListener('input', createInvoiceChanged)
+	document.getElementById('fine-recipient').addEventListener('change', fineChanged)
+	document.getElementById('fine-amount').addEventListener('input', fineChanged)
+	document.getElementById('fine-reason').addEventListener('input', fineChanged)
 })
