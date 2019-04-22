@@ -322,6 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	function resetAllInputs() {
 		document.querySelectorAll('#send-recipient').forEach(element => element.selectedIndex = 0)
 		document.querySelectorAll('#create-invoice-recipient').forEach(element => element.selectedIndex = 0)
+		document.querySelectorAll('#fine-recipient').forEach(element => element.selectedIndex = 0)
 		document.querySelectorAll('.input').forEach(element => element.value = '')
 		document.querySelectorAll('.button.complete').forEach(element => element.disabled = true)
 	}
