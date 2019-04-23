@@ -74,13 +74,14 @@ document.addEventListener('DOMContentLoaded', () => {
 	function updateTransactionsPreview(transaction) {
 		const outgoing = transaction.from === user.id
 		db.ref(`users/${outgoing ? transaction.to : transaction.from}/name`).on('value', snapshot => {
+			const absoluteAmount = Math.abs(transaction.amount)
 			const tr = document.createElement('tr')
 			tr.className = 'transaction'
 			tr.innerHTML = `
 				<td width="3%"><i class="fa fa-dollar-sign"></i></td>
-				<td style="text-transform: uppercase;"><strong>${outgoing ? 'outgoing' : 'incoming'}</strong></td>
+				<td style="text-transform: uppercase;"><strong>${transaction.amount < 0 ? 'fine' : outgoing ? 'outgoing' : 'incoming'}</strong></td>
 				<td>${snapshot.val()}</td>
-				<td>${transaction.amount} Astra${transaction.amount === 1 ? '' : 's'}</td>
+				<td>${absoluteAmount} Astra${absoluteAmount === 1 ? '' : 's'}</td>
 			`
 			const viewButton = document.createElement('a')
 			const strong = document.createElement('strong')
@@ -114,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			tr.className = 'invoice'
 			tr.innerHTML = `
 				<td width="3%"><i class="fa fa-hand-holding-usd"></i></td>
-				<td style="text-transform: uppercase;"><strong>${outgoing ? 'outgoing' : 'incoming'}</strong></td>
+				<td style="text-transform: uppercase;"><strong>${invoice.status !== 'pending' ? invoice.status : outgoing ? 'outgoing' : 'incoming'}</strong></td>
 				<td>${snapshot.val()}</td>
 				<td>${invoice.amount} Astra${invoice.amount === 1 ? '' : 's'}</td>
 			`
@@ -140,16 +141,19 @@ document.addEventListener('DOMContentLoaded', () => {
 	function showTransactionModal(transaction) {
 		const outgoing = transaction.from === user.id
 		db.ref(`users/${outgoing ? transaction.to : transaction.from}/name`).on('value', snapshot => {
+			const fine = transaction.amount < 0
+			const absoluteAmount = Math.abs(transaction.amount)
 			const val = snapshot.val()
-			document.querySelectorAll('.transaction.type').forEach(element => element.innerHTML = `${outgoing ? 'Outgoing' : 'Incoming'} Transaction`)
+			document.querySelectorAll('.transaction.type').forEach(element => element.innerHTML = `${outgoing ? 'Outgoing' : 'Incoming'} ${fine ? 'Fine' : 'Transaction'}`)
 			document.querySelectorAll('.transaction.time').forEach(element => element.innerHTML = transaction.time)
 			document.querySelectorAll('.transaction.from').forEach(element => element.innerHTML = outgoing ? `${user.name} (you)` : val)
 			document.querySelectorAll('.transaction.to').forEach(element => element.innerHTML = outgoing ? val : `${user.name} (you)`)
-			document.querySelectorAll('.transaction.amount').forEach(element => element.innerHTML = `${transaction.amount} Astra${transaction.amount === 1 ? '' : 's'}`)
-			document.querySelectorAll('.transaction.balance-label').forEach(element => element.innerHTML = `${outgoing ? 'Remaining' : 'New'} Balance`)
+			document.querySelectorAll('.transaction.amount-label').forEach(element => element.innerHTML = `Amount ${fine ? '(FINE)' : ''}`)
+			document.querySelectorAll('.transaction.amount').forEach(element => element.innerHTML = `${absoluteAmount} Astra${absoluteAmount === 1 ? '' : 's'}`)
+			document.querySelectorAll('.transaction.balance-label').forEach(element => element.innerHTML = `${fine ? (outgoing ? 'New' : 'Remaining') : outgoing ? 'Remaining' : 'New'} Balance`)
 			document.querySelectorAll('.transaction.balance').forEach(element => element.innerHTML = `${transaction.balance} Astra${transaction.balance === 1 ? '' : 's'}`)
 			document.querySelectorAll('.transaction.msg-label').forEach(element => element.style.display = transaction.message.trim() === '' ? 'none' : 'block')
-			document.querySelectorAll('.transaction.msg').forEach(element => element.innerHTML = transaction.message)
+			document.querySelectorAll('.transaction.msg').forEach(element => element.innerHTML = transaction.message.trim())
 			document.querySelectorAll('.modal.transaction').forEach(element => element.classList.add('is-active'))
 		})
 	}
@@ -165,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			document.querySelectorAll('.invoice.to').forEach(element => element.innerHTML = outgoing ? val : `${user.name} (you)`)
 			document.querySelectorAll('.invoice.amount').forEach(element => element.innerHTML = `${invoice.amount} Astra${invoice.amount === 1 ? '' : 's'}`)
 			document.querySelectorAll('.invoice.msg-label').forEach(element => element.style.display = invoice.message.trim() === '' ? 'none' : 'block')
-			document.querySelectorAll('.invoice.msg').forEach(element => element.innerHTML = invoice.message)
+			document.querySelectorAll('.invoice.msg').forEach(element => element.innerHTML = invoice.message.trim())
 			if (!outgoing && invoice.status === 'pending') {
 				document.querySelectorAll('.download-app').forEach(element => element.classList.remove('is-hidden'))
 			} else {
