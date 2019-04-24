@@ -340,7 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			tr.innerHTML = `
 				<td width="3%"><strong>#${parseInt(i) + 1}</strong></i></td>
 				<td>${user_.name}</td>
-				<td><strong>${user_.balance.toFixed(2)}</strong></td>
+				<td><strong>${user_.balance}</strong></td>
 			`
 			document.getElementById('leaderboard').appendChild(tr)
 		}
