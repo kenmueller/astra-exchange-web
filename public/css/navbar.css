@@ -13,6 +13,6 @@ nav.navbar {
 	font-size: 14px;
 	font-weight: 700;
 }
-.auth.sign-in {
+.auth.sign-in, .auth.sign-up {
 	margin-left: 12px;
 }
