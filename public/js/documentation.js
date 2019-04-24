@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	function updateSettings() {
 		document.querySelectorAll('.settings.name').forEach(element => element.innerHTML = user.name)
 		document.querySelectorAll('.settings.email').forEach(element => element.innerHTML = user.email)
-		document.querySelectorAll('.settings.balance').forEach(element => element.innerHTML = user.balance)
+		document.querySelectorAll('.settings.balance').forEach(element => element.innerHTML = user.balance.toFixed(2))
 		document.querySelectorAll('.settings.independence').forEach(element => element.innerHTML = user.independence === 0 ? 'Pending' : user.independence)
 		if (user.card) {
 			document.querySelectorAll('.settings.pin').forEach(element => element.innerHTML = user.card.pin)
