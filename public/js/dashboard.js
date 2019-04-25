@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				const val = snapshot.val()
 				user = { id: id, name: val.name, email: val.email, balance: val.balance, independence: val.independence, card: null }
 				document.querySelectorAll('.user.name').forEach(element => element.innerHTML = `Hello, ${user.name}`)
-				document.querySelectorAll('.user.balance').forEach(element => element.innerHTML = user.balance.toFixed(2))
+				document.querySelectorAll('.user.balance').forEach(element => element.innerHTML = Math.trunc(user.balance * 100) / 100)
 				document.querySelectorAll('.user.independence').forEach(element => element.innerHTML = user.independence === 0 ? '---' : user.independence)
 				updateTransactionCount()
 				updateOpenInvoiceCount()
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				users.push(newUser)
 				updateUserDropdowns()
 				db.ref(`users/${userId}/balance`).on('value', balanceSnapshot => {
-					newUser.balance = balanceSnapshot.val().toFixed(2)
+					newUser.balance = Math.trunc(balanceSnapshot.val() * 100) / 100
 					updateLeaderboard()
 				})
 			})
@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			document.querySelectorAll('.transaction.amount-label').forEach(element => element.innerHTML = `Amount ${fine ? '(FINE)' : ''}`)
 			document.querySelectorAll('.transaction.amount').forEach(element => element.innerHTML = `${absoluteAmount} Astra${absoluteAmount === 1 ? '' : 's'}`)
 			document.querySelectorAll('.transaction.balance-label').forEach(element => element.innerHTML = `${fine ? (outgoing ? 'New' : 'Remaining') : outgoing ? 'Remaining' : 'New'} Balance`)
-			document.querySelectorAll('.transaction.balance').forEach(element => element.innerHTML = `${transaction.balance.toFixed(2)} Astra${transaction.balance === 1 ? '' : 's'}`)
+			document.querySelectorAll('.transaction.balance').forEach(element => element.innerHTML = `${Math.trunc(transaction.balance * 100) / 100} Astra${transaction.balance === 1 ? '' : 's'}`)
 			document.querySelectorAll('.transaction.msg-label').forEach(element => element.style.display = transaction.message.trim() === '' ? 'none' : 'block')
 			document.querySelectorAll('.transaction.msg').forEach(element => element.innerHTML = transaction.message.trim())
 			document.querySelectorAll('.modal.transaction').forEach(element => element.classList.add('is-active'))
@@ -349,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	function updateSettings() {
 		document.querySelectorAll('.settings.name').forEach(element => element.innerHTML = user.name)
 		document.querySelectorAll('.settings.email').forEach(element => element.innerHTML = user.email)
-		document.querySelectorAll('.settings.balance').forEach(element => element.innerHTML = user.balance.toFixed(2))
+		document.querySelectorAll('.settings.balance').forEach(element => element.innerHTML = Math.trunc(user.balance * 100) / 100)
 		document.querySelectorAll('.settings.independence').forEach(element => element.innerHTML = user.independence === 0 ? 'Pending' : user.independence)
 		if (user.card) {
 			document.querySelectorAll('.settings.pin').forEach(element => element.innerHTML = user.card.pin)
