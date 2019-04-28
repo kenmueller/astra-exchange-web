@@ -496,6 +496,7 @@ document.write(
 			</div>
 		</div>
 		<script src="/js/dashboard.js"></script>
+		<script src="/js/base.js"></script>
 	</body>
 </html>
 			` : `
@@ -626,6 +627,7 @@ document.write(
 			</div>
 		</section>
 		<script src="/js/index.js"></script>
+		<script src="/js/base.js"></script>
 	</body>
 </html>
 		`

@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	let user
 
 	if (/iPhone|iPad|iPod/i.test(navigator.userAgent))
-        window.location.href = 'itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist'
+        location.href = 'itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist'
     const authCookie = document.cookie.match('(^|[^;]+)\\s*auth\\s*=\\s*([^;]+)')
     if (authCookie) {
         const name = authCookie.pop()
@@ -18,7 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			const id = user_.uid
 			db.ref(`users/${id}`).on('value', snapshot => {
 				const val = snapshot.val()
-				user = { id: id, name: val.name, email: val.email, balance: val.balance, independence: val.independence, card: null }
+                user = { id: id, name: val.name, email: val.email, balance: val.balance, independence: val.independence, card: null }
+                document.cookie = `auth=${user.name}`
 				updateSettings()
 				db.ref(`users/${id}/cards`).on('child_added', cardSnapshot => {
 					const cardVal = cardSnapshot.val()
@@ -46,9 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function removeAllNodes(element) {
-		while (element.firstChild) {
+		while (element.firstChild)
 			element.removeChild(element.firstChild)
-		}
 	}
 
 	function updateSettings() {
@@ -359,7 +359,7 @@ userWithEmail(email: string,
 function authenticate(email, pin) {
     exchange().userWithEmail(email, pin, user => {
         // Sign in successful
-        window.location.href = '/dashboard'
+        location.href = '/dashboard'
     }, (status, response) => {
         alert(response)
     })

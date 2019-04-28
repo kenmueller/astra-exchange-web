@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	let invoices = []
 
 	if (/iPhone|iPad|iPod/i.test(navigator.userAgent))
-		window.location.href = 'itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist'
+		location.href = 'itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist'
 	const name = document.cookie.match('(^|[^;]+)\\s*auth\\s*=\\s*([^;]+)').pop()
 	document.querySelectorAll('.auth.user-link').forEach(element => element.innerHTML = name)
 	document.querySelectorAll('.auth.user-dropdown').forEach(element => element.classList.remove('is-hidden'))
@@ -450,15 +450,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		alert(`Password reset email sent to ${user.email}`)
 	}
 
-	function signOut() {
-		auth.signOut().then(() => {
-			document.cookie = 'auth=; expires=Thu, 01 Jan 1970 00:00:00 GMT'
-			location.reload()
-		}, error => {
-			alert(error)
-		})
-	}
-
 	document.querySelectorAll('.action.send').forEach(element => element.addEventListener('click', showSendModal))
 	document.querySelectorAll('.close-send').forEach(element => element.addEventListener('click', hideSendModal))
 	document.querySelectorAll('.action.create-invoice').forEach(element => element.addEventListener('click', showCreateInvoiceModal))
@@ -481,7 +472,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.querySelectorAll('.button.complete-send').forEach(element => element.addEventListener('click', completeSend))
 	document.querySelectorAll('.button.complete-create-invoice').forEach(element => element.addEventListener('click', completeCreateInvoice))
 	document.querySelectorAll('.button.complete-fine').forEach(element => element.addEventListener('click', completeFine))
-	document.querySelectorAll('.auth.sign-out').forEach(element => element.addEventListener('click', signOut))
 	document.getElementById('send-recipient').addEventListener('change', sendChanged)
 	document.getElementById('send-amount').addEventListener('input', sendChanged)
 	document.getElementById('create-invoice-recipient').addEventListener('change', createInvoiceChanged)
