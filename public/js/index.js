@@ -1,9 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 	const auth = firebase.auth()
 
-	if (/iPhone|iPad|iPod/i.test(navigator.userAgent))
-		location.href = 'itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist'
-
 	auth.onAuthStateChanged(user => {
 		if (user)
 			firebase.database().ref(`users/${user.uid}/name`).on('value', snapshot => {
