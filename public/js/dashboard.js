@@ -6,9 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
 	let transactions = []
 	let invoices = []
 
-	if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+	if (/iPhone|iPad|iPod/i.test(navigator.userAgent))
 		window.location.href = 'itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist'
-	}
+	const name = document.cookie.match('(^|[^;]+)\\s*auth\\s*=\\s*([^;]+)').pop()
+	document.querySelectorAll('.auth.user-link').forEach(element => element.innerHTML = name)
+	document.querySelectorAll('.auth.user-dropdown').forEach(element => element.classList.remove('is-hidden'))
+	document.querySelectorAll('.user.name').forEach(element => element.innerHTML = `Hello, ${name}`)
 
 	auth.onAuthStateChanged(user_ => {
 		if (user_) {
@@ -20,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
 				const val = snapshot.val()
 				user = { id: id, name: val.name, email: val.email, balance: val.balance, independence: val.independence, card: null }
 				document.querySelectorAll('.auth.user-link').forEach(element => element.innerHTML = user.name)
-				document.querySelectorAll('.auth.user-dropdown').forEach(element => element.classList.remove('is-hidden'))
 				document.querySelectorAll('.user.name').forEach(element => element.innerHTML = `Hello, ${user.name}`)
 				document.querySelectorAll('.user.balance').forEach(element => element.innerHTML = Math.trunc(user.balance * 100) / 100)
 				document.querySelectorAll('.user.independence').forEach(element => element.innerHTML = user.independence === 0 ? '---' : user.independence)

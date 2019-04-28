@@ -3,9 +3,14 @@ document.addEventListener('DOMContentLoaded', () => {
 	const db = firebase.database()
 	let user
 
-	if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-		window.location.href = 'itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist'
-	}
+	if (/iPhone|iPad|iPod/i.test(navigator.userAgent))
+        window.location.href = 'itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist'
+    const authCookie = document.cookie.match('(^|[^;]+)\\s*auth\\s*=\\s*([^;]+)')
+    if (authCookie) {
+        const name = authCookie.pop()
+        document.querySelectorAll('.auth.user-link').forEach(element => element.innerHTML = name)
+        document.querySelectorAll('.auth.user-dropdown').forEach(element => element.classList.remove('is-hidden'))
+    }
 	loadDocs()
 
 	auth.onAuthStateChanged(user_ => {

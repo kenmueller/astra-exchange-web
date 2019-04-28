@@ -5,10 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
 		window.location.href = 'itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist'
 
 	auth.onAuthStateChanged(user => {
-		if (user) {
-			document.cookie = `auth=${user.uid}`
-			location.reload()
-		}
+		if (user)
+			firebase.database().ref(`users/${user.uid}/name`).on('value', snapshot => {
+				document.cookie = `auth=${snapshot.val()}`
+				location.reload()
+			})
 	})
 
 	function showSignUpModal() {
