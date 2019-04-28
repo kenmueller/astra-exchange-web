@@ -13,14 +13,14 @@ document.addEventListener('DOMContentLoaded', () => {
 	auth.onAuthStateChanged(user_ => {
 		if (user_) {
 			const id = user_.uid
-			if (id === 'h621pgey1vPfxrmoW5LUkZaHkhT2') {
-				document.querySelectorAll('.action.fine').forEach(element => element.classList.remove('is-hidden'))
-			} else {
-				document.querySelectorAll('.action.fine').forEach(element => element.classList.add('is-hidden'))
-			}
+			document.querySelectorAll('.action.fine').forEach(element =>
+				id === 'h621pgey1vPfxrmoW5LUkZaHkhT2' ? element.classList.remove('is-hidden') : element.classList.add('is-hidden')
+			)
 			db.ref(`users/${id}`).on('value', snapshot => {
 				const val = snapshot.val()
 				user = { id: id, name: val.name, email: val.email, balance: val.balance, independence: val.independence, card: null }
+				document.querySelectorAll('.auth.user-link').forEach(element => element.innerHTML = user.name)
+				document.querySelectorAll('.auth.user-dropdown').forEach(element => element.classList.remove('is-hidden'))
 				document.querySelectorAll('.user.name').forEach(element => element.innerHTML = `Hello, ${user.name}`)
 				document.querySelectorAll('.user.balance').forEach(element => element.innerHTML = Math.trunc(user.balance * 100) / 100)
 				document.querySelectorAll('.user.independence').forEach(element => element.innerHTML = user.independence === 0 ? '---' : user.independence)
@@ -60,8 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
 				updateInvoicesPreview(invoice)
 				updateInvoices(invoice)
 			})
-		} else {
-			window.location.href = '/'
 		}
 	})
 
@@ -450,6 +448,15 @@ document.addEventListener('DOMContentLoaded', () => {
 		alert(`Password reset email sent to ${user.email}`)
 	}
 
+	function signOut() {
+		auth.signOut().then(() => {
+			document.cookie = 'auth=; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+			location.reload()
+		}, error => {
+			alert(error)
+		})
+	}
+
 	document.querySelectorAll('.action.send').forEach(element => element.addEventListener('click', showSendModal))
 	document.querySelectorAll('.close-send').forEach(element => element.addEventListener('click', hideSendModal))
 	document.querySelectorAll('.action.create-invoice').forEach(element => element.addEventListener('click', showCreateInvoiceModal))
@@ -472,6 +479,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.querySelectorAll('.button.complete-send').forEach(element => element.addEventListener('click', completeSend))
 	document.querySelectorAll('.button.complete-create-invoice').forEach(element => element.addEventListener('click', completeCreateInvoice))
 	document.querySelectorAll('.button.complete-fine').forEach(element => element.addEventListener('click', completeFine))
+	document.querySelectorAll('.auth.sign-out').forEach(element => element.addEventListener('click', signOut))
 	document.getElementById('send-recipient').addEventListener('change', sendChanged)
 	document.getElementById('send-amount').addEventListener('input', sendChanged)
 	document.getElementById('create-invoice-recipient').addEventListener('change', createInvoiceChanged)

@@ -16,10 +16,6 @@
 		],
 		"rewrites": [
 			{
-				"source": "/dashboard",
-				"destination": "/dashboard.html"
-			},
-			{
 				"source": "/documentation",
 				"destination": "/documentation.html"
 			},
@@ -37,10 +33,6 @@
 			}
 		],
 		"redirects": [
-			{
-				"source": "/dashboard.html",
-				"destination": "/dashboard"
-			},
 			{
 				"source": "/documentation.html",
 				"destination": "/documentation"

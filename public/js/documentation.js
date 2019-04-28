@@ -56,14 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	}
 
-	function dashboard() {
-		if (user) {
-			window.location.href = '/dashboard'
-		} else {
-			alert('You must be signed in to visit your dashboard')
-		}
-	}
-
 	function showSettingsModal() {
 		document.querySelectorAll('.modal.settings').forEach(element => element.classList.add('is-active'))
 	}
@@ -77,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		alert(`Password reset email sent to ${user.email}`)
 	}
 
-	document.querySelectorAll('.go-to-dashboard').forEach(element => element.addEventListener('click', dashboard))
 	document.querySelectorAll('.action.settings').forEach(element => element.addEventListener('click', showSettingsModal))
 	document.querySelectorAll('.close-settings').forEach(element => element.addEventListener('click', hideSettingsModal))
 	document.querySelectorAll('.button.password-reset').forEach(element => element.addEventListener('click', resetPassword))

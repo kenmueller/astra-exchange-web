@@ -1,3 +1,5 @@
+document.write(
+	document.cookie.match(`(^|[^;]+)\\s*auth\\s*=\\s*([^;]+)`) ? `
 <!DOCTYPE html>
 <html>
 	<head>
@@ -30,7 +32,6 @@
 			</div>
 			<div id="navbar" class="navbar-menu">
 				<div class="navbar-start">
-					<a class="navbar-item" href="/dashboard">Dashboard</a>
 					<a class="navbar-item action leaderboard">Leaderboard</a>
 					<a class="navbar-item action send">Send Money</a>
 					<a class="navbar-item action fine is-hidden">Fine</a>
@@ -46,8 +47,6 @@
 				<div class="navbar-end">
 					<a class="navbar-item" href="/documentation">API Documentation</a>
 					<div class="navbar-item">
-						<a class="button is-primary auth sign-up is-hidden">Sign up</a>
-						<a class="button is-info auth sign-in is-hidden">Sign in</a>
 						<div class="navbar-item has-dropdown is-hoverable auth user-dropdown is-hidden">
 							<a class="navbar-link auth user-link"></a>
 							<div class="navbar-dropdown">
@@ -497,6 +496,137 @@
 			</div>
 		</div>
 		<script src="/js/dashboard.js"></script>
-		<script src="/js/auth.js"></script>
 	</body>
 </html>
+			` : `
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script defer src="/__/firebase/5.9.4/firebase-app.js"></script>
+		<script defer src="/__/firebase/5.9.4/firebase-auth.js"></script>
+		<script defer src="/__/firebase/5.9.4/firebase-database.js"></script>
+		<script defer src="/__/firebase/5.9.4/firebase-messaging.js"></script>
+		<script defer src="/__/firebase/5.9.4/firebase-storage.js"></script>
+		<script defer src="/__/firebase/init.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
+		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+		<link rel="stylesheet" href="/css/navbar.css">
+		<link rel="stylesheet" href="/css/index.css">
+		<link rel="icon" type="image/png" href="/images/astra.png">
+		<title>Astra Exchange</title>
+	</head>
+	<body>
+		<nav class="navbar" role="navigation" aria-label="main navigation">
+			<div class="navbar-brand">
+				<a class="navbar-item" href="/"><img src="/images/astra.png" width="28" height="28"></a>
+				<a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbar">
+					<span aria-hidden="true"></span>
+					<span aria-hidden="true"></span>
+					<span aria-hidden="true"></span>
+				</a>
+			</div>
+			<div id="navbar" class="navbar-menu">
+				<div class="navbar-start">
+					<a class="navbar-item" href="/documentation">API Documentation</a>
+					<div class="navbar-item has-dropdown is-hoverable">
+						<a class="navbar-link">iOS Apps</a>
+						<div class="navbar-dropdown">
+							<a class="navbar-item" href="itms-services://?action=download-manifest&url=https://astra.exchange/manifest.plist">Astra Exchange</a>
+							<a class="navbar-item" onclick="alert('Coming soon!')">Notes Exchange</a>
+						</div>
+					</div>
+				</div>
+				<div class="navbar-end">
+					<div class="navbar-item">
+						<a class="button is-danger auth reset-password">Reset Password</a>
+						<a class="button is-primary auth sign-up">Sign up</a>
+						<a class="button is-info auth sign-in">Sign in</a>
+					</div>
+				</div>
+			</div>
+		</nav>
+		<div class="modal sign-up">
+			<div class="modal-background close-sign-up"></div>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title">Sign up</p>
+					<button class="delete close-sign-up" aria-label="close"></button>
+				</header>
+				<section class="modal-card-body">
+					<div class="field">
+						<label class="label">Name</label>
+						<div class="control has-icons-left">
+							<input class="input" id="sign-up-name" type="text" placeholder="Enter name">
+							<span class="icon is-small is-left"><i class="fas fa-user"></i></span>
+						</div>
+					</div>
+					<div class="field">
+						<label class="label">Email</label>
+						<div class="control has-icons-left">
+							<input class="input" id="sign-up-email" type="email" placeholder="Enter email">
+							<span class="icon is-small is-left"><i class="fas fa-at"></i></span>
+						</div>
+					</div>
+					<div class="field">
+						<label class="label">Password</label>
+						<div class="control has-icons-left">
+							<input class="input" id="sign-up-password" type="password" placeholder="Enter password">
+							<span class="icon is-small is-left"><i class="fas fa-key"></i></span>
+						</div>
+					</div>
+				</section>
+				<footer class="modal-card-foot">
+					<button class="button is-success auth complete-sign-up" id="complete-sign-up" disabled>Sign up</button>
+					<button class="button close-sign-up">Cancel</button>
+				</footer>
+			</div>
+		</div>
+		<div class="modal sign-in">
+			<div class="modal-background close-sign-in"></div>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title">Sign in</p>
+					<button class="delete close-sign-in" aria-label="close"></button>
+				</header>
+				<section class="modal-card-body">
+					<div class="field">
+						<label class="label">Email</label>
+						<div class="control has-icons-left">
+							<input class="input" id="sign-in-email" type="email" placeholder="Enter email">
+							<span class="icon is-small is-left"><i class="fas fa-at"></i></span>
+						</div>
+					</div>
+					<div class="field">
+						<label class="label">Password</label>
+						<div class="control has-icons-left">
+							<input class="input" id="sign-in-password" type="password" placeholder="Enter password">
+							<span class="icon is-small is-left"><i class="fas fa-key"></i></span>
+						</div>
+					</div>
+				</section>
+				<footer class="modal-card-foot">
+					<button class="button is-success auth complete-sign-in" id="complete-sign-in" disabled>Sign in</button>
+					<button class="button close-sign-in">Cancel</button>
+				</footer>
+			</div>
+		</div>
+		<section class="hero is-info is-fullheight">
+			<div class="hero-body">
+				<div class="container has-text-centered">
+					<div class="column is-6 is-offset-3">
+						<h1 class="title">Astra Exchange</h1>
+						<h2 class="subtitle">Sign up or sign in to access your dashboard</h2>
+						<a class="button is-primary main auth sign-up"><strong>Sign up</strong></a>
+						<a class="button is-info main auth sign-in"><strong>Sign in</strong></a>
+					</div>
+				</div>
+			</div>
+		</section>
+		<script src="/js/index.js"></script>
+	</body>
+</html>
+		`
+)
