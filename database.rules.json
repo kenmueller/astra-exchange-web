@@ -1,23 +1,45 @@
 {
 	"rules": {
-		"bazaarData": {
-			".read": true
-		},
 		"companies": {
       		".read": true,
+			"$companyId": {
+				".write": true,
+				"image": {
+					".validate": "newData.isString()"
+				},
+				"name": {
+					".validate": "newData.isString() && newData.val() !== ''"
+				},
+				"owner": {
+					".validate": "newData.isString() && root.child('users/' + newData.val()).exists()"
+				}
+			}
+		},
+		"products": {
+			".read": true,
+			"$productId": {
+				".write": true,
+				"image": {
+					".validate": "newData.isString()"
+				},
+				"name": {
+					".validate": "newData.isString() && newData.val() !== ''"
+				},
+				"price": {
+					".validate": "newData.isNumber() && newData.val() > 0"
+				}
+			}
+		},
+		"carts": {
 			"$uid": {
+				".read": "$uid === auth.uid",
 				".write": "$uid === auth.uid",
-				"products": {
-					"$productId": {
-						"name": {
-							".validate": "newData.isString() && newData.val() !== ''"
-						},
-						"cost": {
-							".validate": "newData.isNumber() && newData.val() > 0"
-						},
-						"inStock": {
-							".validate": "newData.isBoolean()"
-						}
+				"$productId": {
+					"company": {
+						".validate": "newData.isString() && root.child('companies/' + newData.val()).exists()"
+					},
+					"quantity": {
+						".validate": "newData.isNumber() && newData.val() > 0"
 					}
 				}
 			}
