@@ -17,16 +17,18 @@
 		},
 		"products": {
 			".read": true,
-			"$productId": {
+			"$companyId": {
 				".write": true,
-				"image": {
-					".validate": "newData.isString()"
-				},
-				"name": {
-					".validate": "newData.isString() && newData.val() !== ''"
-				},
-				"price": {
-					".validate": "newData.isNumber() && newData.val() > 0"
+				"$productId": {
+					"image": {
+						".validate": "newData.isString()"
+					},
+					"name": {
+						".validate": "newData.isString() && newData.val() !== ''"
+					},
+					"price": {
+						".validate": "newData.isNumber() && newData.val() > 0"
+					}
 				}
 			}
 		},
