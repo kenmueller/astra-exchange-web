@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	auth.onAuthStateChanged(user => {
 		if (user)
 			firebase.database().ref(`users/${user.uid}/name`).on('value', snapshot => {
-				document.cookie = `auth=${snapshot.val()}`
+				document.cookie = `auth=${snapshot.val()}; expires=Thu, 01 Jan 3000 00:00:00 GMT`
 				location.reload()
 			})
 	})

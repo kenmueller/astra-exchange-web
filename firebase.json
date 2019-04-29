@@ -20,18 +20,26 @@
 				"destination": "/documentation.html"
 			},
 			{
+				"source": "/companies",
+				"destination": "/companies.html"
+			},
+			{
 				"source": "/api",
 				"destination": "/api/all.min.js"
 			},
 			{
 				"source": "**",
-				"destination": "/index.html"
+				"destination": "/"
 			}
 		],
 		"redirects": [
 			{
 				"source": "/documentation.html",
 				"destination": "/documentation"
+			},
+			{
+				"source": "/companies.html",
+				"destination": "/companies"
 			},
 			{
 				"source": "/notes",

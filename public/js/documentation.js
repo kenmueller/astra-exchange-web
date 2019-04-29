@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			db.ref(`users/${id}`).on('value', snapshot => {
 				const val = snapshot.val()
                 user = { id: id, name: val.name, email: val.email, balance: val.balance, independence: val.independence, card: null }
-                document.cookie = `auth=${user.name}`
+                document.cookie = `auth=${user.name}; expires=Thu, 01 Jan 3000 00:00:00 GMT`
 				updateSettings()
 				db.ref(`users/${id}/cards`).on('child_added', cardSnapshot => {
 					const cardVal = cardSnapshot.val()
