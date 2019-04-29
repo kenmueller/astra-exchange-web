@@ -32,6 +32,7 @@ document.write(
 			</div>
 			<div id="navbar" class="navbar-menu">
 				<div class="navbar-start">
+					<a class="navbar-item" href="/companies">Companies</a>
 					<a class="navbar-item action leaderboard">Leaderboard</a>
 					<a class="navbar-item action send">Send Money</a>
 					<a class="navbar-item action fine is-hidden">Fine</a>
