@@ -29,9 +29,16 @@ document.addEventListener('DOMContentLoaded', () => {
 				})
 			})
 			db.ref('companies').on('child_added', snapshot => {
+				const companyId = snapshot.key
 				const val = snapshot.val()
-				companies.append({ id: snapshot.key, image: val.image, name: val.name, owner: val.owner, })
+				const company = { id: companyId, image: val.image, name: val.name, owner: val.owner, description: val.description, products: [] }
+				companies.append(company)
 				updateCompanies()
+				db.ref(`products/${companyId}`).on('child_added', productSnapshot => {
+					const productVal = productSnapshot.val()
+					company.products.push({ id: productSnapshot.key, image: productVal.image, name: productVal.name, price: productVal.price })
+					updateProducts()
+				})
 			})
 			db.ref(`carts/${id}`).on('child_added', snapshot => {
 				const val = snapshot.val()
@@ -47,6 +54,41 @@ document.addEventListener('DOMContentLoaded', () => {
 		document.querySelectorAll('.settings.balance').forEach(element => element.innerHTML = Math.trunc(user.balance * 100) / 100)
 		document.querySelectorAll('.settings.independence').forEach(element => element.innerHTML = user.independence === 0 ? 'Pending' : user.independence)
 		if (user.card) document.querySelectorAll('.settings.pin').forEach(element => element.innerHTML = user.card.pin)
+	}
+
+	function updateCompanies() {
+		document.querySelectorAll('.column.companies').forEach(element => removeAllNodes(element))
+		companies.forEach(company_ => {
+			const companyIndex = parseInt(company_)
+			const company = companies[companyIndex]
+			const div = document.createElement('div')
+			div.className = 'card company'
+			div.innerHTML = `
+				<div class="card-image">
+					<figure class="image is-4by3">
+						<img src="${company.image}" alt="Company image">
+					</figure>
+				</div>
+				<div class="card-content">
+					<div class="media">
+						<div class="media-content">
+							<p class="title is-4">${company.name}</p>
+							<p class="subtitle is-6">${company.owner.name}</p>
+						</div>
+					</div>
+					<div class="content">${company.description}</div>
+				</div>
+			`
+			document.querySelector(`.column.companies-${companyIndex % 4 + 1}`).appendChild(div)
+		})
+	}
+
+	function updateProducts() {
+
+	}
+
+	function updateCart() {
+		
 	}
 
 	function removeAllNodes(element) {

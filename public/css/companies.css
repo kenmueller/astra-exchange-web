@@ -18,11 +18,7 @@ nav.navbar {
 	margin-top: 35px;
 	font-size: 20px;
 }
-.messages {
-	display: block;
-	background-color: #fff;
-}
-.message {
+.companies {
 	display: block;
 	background-color: #fff;
 }
