@@ -1,24 +1,26 @@
+nav.navbar {
+	margin-bottom: 0px;
+	border-bottom: 0.75px solid #ECF0F3;
+}
 .aside {
 	display: block;
 	background-color: #F9F9F9;
 	border-right: 1px solid #DEDEDE;
 }
 .title.user.name {
-	margin-top: 10px;
+	margin-top: 30px;
+	margin-bottom: 0px;
 	color: black;
 	font-size: 25px;
 }
 .main .title.cart {
-	float: left;
 	font-weight: 900;
-	margin-top: 22px;
+	margin-top: 35px;
 	font-size: 20px;
-	text-transform: uppercase;
 }
 .messages {
 	display: block;
 	background-color: #fff;
-	border-right: 1px solid #DEDEDE;
 }
 .message {
 	display: block;
@@ -61,117 +63,4 @@
 	font-size: 15px;
 	color: #5D5D5D;
 	font-weight: 500;
-}
-.messages {
-	padding: 40px 20px;
-}
-.message {
-	padding: 40px 20px;
-}
-.messages .action-buttons {
-	padding: 0;
-	margin-top: -20px;
-}
-.message .action-buttons {
-	padding: 0;
-	margin-top: -5px;
-}
-.action-buttons .control.is-grouped {
-	display: inline-block;
-	margin-right: 30px;
-}
-.action-buttons .control.is-grouped:last-child {
-	margin-right: 0;
-}
-.action-buttons .control.is-grouped .button:first-child {
-	border-radius: 5px 0 0 5px;
-}
-.action-buttons .control.is-grouped .button:last-child {
-	border-radius: 0 5px 5px 0;
-}
-.action-buttons .control.is-grouped .button {
-	margin-right: -5px;
-	border-radius: 0;
-}
-.pg {
-	display: inline-block;
-	top: 10px;
-}
-.action-buttons .pg .title {
-	display: block;
-	margin-top: 0;
-	padding-top: 0;
-	margin-bottom: 3px;
-	font-size: 12px;
-	color: #aaa;
-}
-.action-buttons .pg a{
-	font-size: 12px;
-	color: #aaa;
-	text-decoration: none;
-}
-.is-grouped .button {
-	background-image: linear-gradient(#F8F8F8, #F1F1F1);
-}
-.is-grouped .button .fa {
-	font-size: 15px;
-	color: #aaa;
-}
-.inbox-messages {
-	margin-top: 60px;
-}
-.message-preview {
-	margin-top: 60px;
-}
-.inbox-messages .card {
-	width: 100%;
-}
-.inbox-messages strong {
-	color: #5D5D5D;
-}
-.inbox-messages .msg-check {
-	padding: 0 20px;
-}
-.inbox-messages .msg-subject {
-	padding: 10px 0;
-	color: #5D5D5D;
-}
-.inbox-messages .msg-attachment {
-	float: right;
-}
-.inbox-messages .msg-snippet {
-	padding: 5px 20px 0px 5px;
-}
-.inbox-messages .msg-subject .fa {
-	font-size: 14px;
-	padding: 3px 0;
-}
-.inbox-messages .msg-timestamp {
-	float: right;
-	padding: 0 20px;
-	color: #5D5D5D;
-}
-.message-preview .avatar {
-	display: inline-block;
-}
-.message-preview .top .address {
-	display: inline-block;
-	padding: 0 20px;
-}
-.avatar img {
-	width: 40px;
-	border-radius: 50px;
-	border: 2px solid #999;
-	padding: 2px;
-}
-.address .name {
-	font-size: 16px;
-	font-weight: bold;
-}
-.address .email {
-	font-weight: bold;
-	color: #B6C7D1;
-}
-.card.active {
-	background-color: #F5F5F5;
 }
