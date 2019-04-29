@@ -12,6 +12,9 @@
 				},
 				"owner": {
 					".validate": "newData.isString() && root.child('users/' + newData.val()).exists()"
+				},
+				"description": {
+					".validate": "newData.isString()"
 				}
 			}
 		},
