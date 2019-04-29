@@ -5,10 +5,6 @@
 **Remember to install all dependencies initially**
 
 ```bash
-npm install
-```
-
-```bash
 cd functions
 npm install
 ```
