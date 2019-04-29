@@ -1,8 +1,141 @@
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
 admin.initializeApp()
+const app = require('express')()
 const moment = require('moment')
 const db = admin.database()
+
+app.get('/companies/:slug', (req, res) =>
+	db.ref(`slugs/companies/${req.params.slug}`).on('value', snapshot =>
+		db.ref(`companies/${snapshot.val()}`).on('value', companySnapshot => {
+			if (companySnapshot.exists()) {
+				const val = companySnapshot.val()
+				const image = val.image ? val.image : '/images/astra.png'
+				return db.ref(`users/${val.owner}`).on('value', userSnapshot => {
+					const userVal = userSnapshot.val()
+					return res.status(200).send(`
+						<!DOCTYPE html>
+						<html>
+							<head>
+								<meta charset="utf-8">
+								<meta name="viewport" content="width=device-width, initial-scale=1">
+								<script defer src="/__/firebase/5.9.4/firebase-app.js"></script>
+								<script defer src="/__/firebase/5.9.4/firebase-auth.js"></script>
+								<script defer src="/__/firebase/5.9.4/firebase-database.js"></script>
+								<script defer src="/__/firebase/5.9.4/firebase-messaging.js"></script>
+								<script defer src="/__/firebase/5.9.4/firebase-storage.js"></script>
+								<script defer src="/__/firebase/init.js"></script>
+								<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
+								<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+								<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+								<link rel="stylesheet" href="/css/navbar.css">
+								<link rel="stylesheet" href="/css/company.css">
+								<link rel="icon" type="image/png" href="${image}">
+								<title>${val.name} - Astra Exchange</title>
+							</head>
+							<body>
+								<img src="${image}" alt="Company image">
+								<br>
+								<h1>${val.name}</h1>
+								<br>
+								<h2>${userVal.name}</h2>
+								<br>
+								<p>${val.description}</p>
+								<script src="/js/company.js"></script>
+							</body>
+						</html>
+					`)
+				})
+			} else return res.status(404).send(`
+				<!DOCTYPE html>
+				<html>
+					<head>
+						<meta charset="utf-8">
+						<meta name="viewport" content="width=device-width, initial-scale=1">
+						<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+						<title>404 - Astra Exchange</title>
+						<style>
+							body {
+								background: #ECEFF1;
+								color: rgba(0,0,0,0.87);
+								font-family: Roboto, Helvetica, Arial, sans-serif;
+								margin: 0;
+								padding: 0;
+							}
+							#message {
+								background: white;
+								max-width: 360px;
+								margin: 100px auto 16px;
+								padding: 32px 24px 16px;
+								border-radius: 3px;
+							}
+							#message h3 {
+								color: #888;
+								font-weight: normal;
+								font-size: 16px;
+								margin: 16px 0 12px;
+							}
+							#message h2 {
+								color: #ffa100;
+								font-weight: bold;
+								font-size: 16px;
+								margin: 0 0 8px;
+							}
+							#message h1 {
+								font-size: 22px;
+								font-weight: 300;
+								color: rgba(0,0,0,0.6);
+								margin: 0 0 16px;
+							}
+							#message p {
+								line-height: 140%;
+								margin: 16px 0 24px;
+								font-size: 14px;
+							}
+							#message a {
+								display: block;
+								text-align: center;
+								background: #039be5;
+								text-transform: uppercase;
+								text-decoration: none;
+								color: white;
+								padding: 16px;
+								border-radius: 4px;
+							}
+							#message, #message a {
+								box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+							}
+							#load {
+								color: rgba(0,0,0,0.4);
+								text-align: center;
+								font-size: 13px;
+							}
+							@media (max-width: 600px) {
+								body, #message {
+									margin-top: 0;
+									background: white;
+									box-shadow: none;
+								}
+								body {
+									border-top: 16px solid #ffa100;
+								}
+							}
+						</style>
+					</head>
+					<body>
+						<div id="message">
+							<h2>404</h2>
+							<h1>No company with URL ${req.url}</h1>
+							<a href="/companies">Back to companies</a>
+						</div>
+					</body>
+				</html>
+			`)
+		})
+	)
+)
+
+exports.app = functions.https.onRequest(app)
 
 exports.tableOrderCreated = functions.database.ref('users/{uid}/bazaarTableOrders/{tableOrder}').onCreate((snapshot, context) => {
 	const from = context.params.uid
@@ -36,9 +169,7 @@ exports.transactionCreated = functions.database.ref('transactions/{uid}/{transac
 						db.ref(`users/${newFrom}/balance`).set(snapshot.val().balance),
 					])
 				} else {
-					return Promise.all([
-						db.ref(`users/${to}/balance`).set(toBalance)
-					])
+					return db.ref(`users/${to}/balance`).set(toBalance)
 				}
 			})
 		})
