@@ -20,7 +20,9 @@ nav.navbar {
 }
 .companies {
 	display: block;
-	background-color: #fff;
+}
+.card.company {
+	padding: 10px;
 }
 .aside .main {
 	padding: 40px;
@@ -42,11 +44,6 @@ nav.navbar {
 }
 .aside .main .item.active {
 	background-color: #F1F1F1;
-	margin: 0 -50px;
-	padding-left: 50px;
-}
-.aside .main .item:active, .aside .main .item:hover {
-	background-color: #F2F2F2;
 	margin: 0 -50px;
 	padding-left: 50px;
 }
