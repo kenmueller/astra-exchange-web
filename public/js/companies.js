@@ -31,18 +31,21 @@ document.addEventListener('DOMContentLoaded', () => {
 			db.ref('companies').on('child_added', snapshot => {
 				const companyId = snapshot.key
 				const val = snapshot.val()
-				const company = { id: companyId, image: val.image, name: val.name, owner: val.owner, description: val.description, products: [] }
-				companies.append(company)
-				updateCompanies()
-				db.ref(`products/${companyId}`).on('child_added', productSnapshot => {
-					const productVal = productSnapshot.val()
-					company.products.push({ id: productSnapshot.key, image: productVal.image, name: productVal.name, price: productVal.price })
-					updateProducts()
+				db.ref(`users/${val.owner}`).on('value', userSnapshot => {
+					const userVal = userSnapshot.val()
+					const company = { id: companyId, image: val.image ? val.image : '/images/astra.png', name: val.name, owner: { id: userSnapshot.key, name: userVal.name, email: userVal.email, balance: userVal.balance }, description: val.description, products: [] }
+					companies.push(company)
+					updateCompanies()
+					db.ref(`products/${companyId}`).on('child_added', productSnapshot => {
+						const productVal = productSnapshot.val()
+						company.products.push({ id: productSnapshot.key, image: productVal.image, name: productVal.name, price: productVal.price })
+						updateCompanies()
+					})
 				})
 			})
 			db.ref(`carts/${id}`).on('child_added', snapshot => {
 				const val = snapshot.val()
-				cart.append({ product: snapshot.key, company: val.company, quantity: val.quantity })
+				cart.push({ product: snapshot.key, company: val.company, quantity: val.quantity })
 				updateCart()
 			})
 		}
@@ -58,14 +61,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	function updateCompanies() {
 		document.querySelectorAll('.column.companies').forEach(element => removeAllNodes(element))
-		companies.forEach(company_ => {
+		for (company_ in companies) {
 			const companyIndex = parseInt(company_)
 			const company = companies[companyIndex]
 			const div = document.createElement('div')
 			div.className = 'card company'
 			div.innerHTML = `
 				<div class="card-image">
-					<figure class="image is-4by3">
+					<figure class="image">
 						<img src="${company.image}" alt="Company image">
 					</figure>
 				</div>
@@ -76,15 +79,15 @@ document.addEventListener('DOMContentLoaded', () => {
 							<p class="subtitle is-6">${company.owner.name}</p>
 						</div>
 					</div>
-					<div class="content">${company.description}</div>
+					<div class="content">
+						${company.description}
+						<br><br>
+						<b>${company.products.length} Product${company.products.length === 1 ? '' : 's'}</b>
+					</div>
 				</div>
 			`
 			document.querySelector(`.column.companies-${companyIndex % 4 + 1}`).appendChild(div)
-		})
-	}
-
-	function updateProducts() {
-
+		}
 	}
 
 	function updateCart() {
