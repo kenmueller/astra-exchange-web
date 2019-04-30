@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				cart.push({ product: snapshot.key, company: val.company, quantity: val.quantity })
 				updateCart()
 			})
-		}
+		} else history.back()
 	})
 
 	function updateSettings() {
