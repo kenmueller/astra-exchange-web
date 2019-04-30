@@ -7,6 +7,10 @@ nav.navbar {
 	background-color: #F9F9F9;
 	border-right: 1px solid #DEDEDE;
 }
+.navbar-start .button.action.new-company {
+	margin-top: 10px;
+	margin-left: 12px;
+}
 .title.user.name {
 	margin-top: 30px;
 	margin-bottom: 0px;
@@ -51,8 +55,8 @@ nav.navbar {
 	margin-right: 7px;
 }
 aside.sidebar {
-	position: relative;
-	height: calc(0px);
+	/* position: relative; */
+	height: calc(0px) !important;
 }
 .button.check-out {
 	position: absolute;

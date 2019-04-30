@@ -1,5 +1,5 @@
 document.write(
-	document.cookie.match(`(^|[^;]+)\\s*auth\\s*=\\s*([^;]+)`) ? `
+	document.cookie.match('(^|[^;]+)\\s*auth\\s*=\\s*([^;]+)') ? `
 <!DOCTYPE html>
 <html>
 	<head>
