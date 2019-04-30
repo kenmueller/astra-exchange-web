@@ -275,9 +275,11 @@ exports.pendingCreated = functions.database.ref('pending/{pendingId}').onCreate(
 
 exports.userCreated = functions.database.ref('users/{uid}').onCreate((snapshot, context) => {
 	const uid = context.params.uid
+	const val = snapshot.val()
 	return Promise.all([
 		db.ref(`users/${uid}/independence`).set(0),
-		db.ref(`emails/${snapshot.val().email.replace('.', '%2e')}`).set(uid),
+		db.ref(`emails/${val.email.replace('.', '%2e')}`).set(uid),
+		db.ref(`slugs/users/${val.name.trim().replace(/\s+/g, '-').toLowerCase()}`).set(uid),
 		db.ref('cards').push(uid)
 	])
 })
@@ -286,9 +288,14 @@ exports.cardCreated = functions.database.ref('cards/{cardId}').onCreate((snapsho
 	db.ref(`users/${snapshot.val()}/cards/${context.params.cardId}`).set({ name: 'Debit Card', pin: (Math.floor(Math.random() * 10000) + 10000).toString().substring(1) })
 )
 
-exports.companyCreated = functions.database.ref('companies/{companyId}').onCreate((snapshot, context) =>
-	db.ref(`slugs/companies/${snapshot.val().name.trim().replace(/\s+/g, '-').toLowerCase()}`).set(context.params.companyId)
-)
+exports.companyCreated = functions.database.ref('companies/{companyId}').onCreate((snapshot, context) => {
+	const companyId = context.params.companyId
+	const val = snapshot.val()
+	return Promise.all([
+		db.ref(`slugs/companies/${val.name.trim().replace(/\s+/g, '-').toLowerCase()}`).set(companyId),
+		db.ref(`owners/companies/${val.owner}/${companyId}`).set(true)
+	])
+})
 
 exports.users = functions.https.onRequest((_req, res) =>
 	db.ref('users').once('value', snapshot => {
