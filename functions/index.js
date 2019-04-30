@@ -200,19 +200,19 @@ exports.pendingCreated = functions.database.ref('pending/{pendingId}').onCreate(
 
 exports.userCreated = functions.database.ref('users/{uid}').onCreate((snapshot, context) => {
 	const uid = context.params.uid
-	const val = snapshot.val()
-	const name = val.name
 	return Promise.all([
-		db.ref(`companies/${uid}`).set({ industry: 'Unspecified', name: `${name}'s Company`, pv: 0, logo: '' }),
-		db.ref(`companies/${uid}/products`).push({ name: `${name}'s First Product`, inStock: false, cost: 1 }),
 		db.ref(`users/${uid}/independence`).set(0),
-		db.ref(`emails/${val.email.replace('.', '%2e')}`).set(uid),
+		db.ref(`emails/${snapshot.val().email.replace('.', '%2e')}`).set(uid),
 		db.ref('cards').push(uid)
 	])
 })
 
 exports.cardCreated = functions.database.ref('cards/{cardId}').onCreate((snapshot, context) =>
 	db.ref(`users/${snapshot.val()}/cards/${context.params.cardId}`).set({ name: 'Debit Card', pin: (Math.floor(Math.random() * 10000) + 10000).toString().substring(1) })
+)
+
+exports.companyCreated = functions.database.ref('companies/{companyId}').onCreate((snapshot, context) =>
+	db.ref(`slugs/companies/${snapshot.val().name.trim().replace(/\s+/g, '-').toLowerCase()}`).set(context.params.companyId)
 )
 
 exports.users = functions.https.onRequest((_req, res) =>
