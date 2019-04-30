@@ -73,20 +73,21 @@ document.addEventListener('DOMContentLoaded', () => {
 				<a href="/companies/${company.name.trim().replace(/\s+/g, '-').toLowerCase()}">
 					<div class="card-image">
 						<figure class="image">
-							<img src="${company.image}" alt="Company image">
+							<img src="${company.image}" alt="Company image" class="company-card image">
 						</figure>
 					</div>
 					<div class="card-content">
 						<div class="media">
 							<div class="media-content">
-								<p class="title is-4">${company.name}</p>
-								<p class="subtitle is-6">${company.owner.name}</p>
+								<p class="title is-4 company-card name">${company.name}</p>
+								<p class="subtitle is-6 company-card owner">${company.owner.name}</p>
 							</div>
 						</div>
 						<div class="content">
-							${company.description}
+							<hr>
+							<p class="company-card description">${company.description}</p>
 							<br><br>
-							<b>${company.products.length} Product${company.products.length === 1 ? '' : 's'}</b>
+							<p class="company-card products">${company.products.length} Product${company.products.length === 1 ? '' : 's'}</p>
 						</div>
 					</div>
 				</a>

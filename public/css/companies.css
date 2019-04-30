@@ -20,9 +20,31 @@ nav.navbar {
 }
 .companies {
 	display: block;
+	margin-top: 18px;
 }
 .card.company {
-	padding: 10px;
+	padding: 0px 20px;
+	border-radius: 10px;
+	margin-bottom: 23.5px;
+}
+.company-card {
+	color: black;
+}
+.company-card.name {
+	margin-bottom: 35px;
+}
+.company-card.owner {
+	font-weight: 600;
+	color: #5D5D5D;
+}
+.company-card.products {
+	font-weight: 900;
+}
+.companies-1 {
+	margin-left: 20px;
+}
+.companies-4 {
+	margin-right: 7px;
 }
 .aside .main {
 	padding: 40px;
