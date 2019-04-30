@@ -435,14 +435,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		hideModal('leaderboard')
 	}
 
-	function showSettingsModal() {
-		showModal('settings')
-	}
-
-	function hideSettingsModal() {
-		hideModal('settings')
-	}
-
 	function resetPassword() {
 		auth.sendPasswordResetEmail(user.email)
 		alert(`Password reset email sent to ${user.email}`)
@@ -462,8 +454,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.querySelectorAll('.close-your-id').forEach(element => element.addEventListener('click', hideYourIdModal))
 	document.querySelectorAll('.action.leaderboard').forEach(element => element.addEventListener('click', showLeaderboardModal))
 	document.querySelectorAll('.close-leaderboard').forEach(element => element.addEventListener('click', hideLeaderboardModal))
-	document.querySelectorAll('.action.settings').forEach(element => element.addEventListener('click', showSettingsModal))
-	document.querySelectorAll('.close-settings').forEach(element => element.addEventListener('click', hideSettingsModal))
 	document.querySelectorAll('.close-transaction').forEach(element => element.addEventListener('click', hideTransactionModal))
 	document.querySelectorAll('.close-invoice').forEach(element => element.addEventListener('click', hideInvoiceModal))
 	document.querySelectorAll('.button.password-reset').forEach(element => element.addEventListener('click', resetPassword))

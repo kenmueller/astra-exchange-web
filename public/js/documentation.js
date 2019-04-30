@@ -59,21 +59,11 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	}
 
-	function showSettingsModal() {
-		document.querySelectorAll('.modal.settings').forEach(element => element.classList.add('is-active'))
-	}
-
-	function hideSettingsModal() {
-		document.querySelectorAll('.modal.settings').forEach(element => element.classList.remove('is-active'))
-	}
-
 	function resetPassword() {
 		auth.sendPasswordResetEmail(user.email)
 		alert(`Password reset email sent to ${user.email}`)
 	}
 
-	document.querySelectorAll('.action.settings').forEach(element => element.addEventListener('click', showSettingsModal))
-	document.querySelectorAll('.close-settings').forEach(element => element.addEventListener('click', hideSettingsModal))
 	document.querySelectorAll('.button.password-reset').forEach(element => element.addEventListener('click', resetPassword))
 })
 

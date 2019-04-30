@@ -48,7 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
 				cart.push({ product: snapshot.key, company: val.company, quantity: val.quantity })
 				updateCart()
 			})
-		} else history.back()
+		} else {
+			document.cookie = 'auth=; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+			history.back()
+		}
 	})
 
 	function updateSettings() {
@@ -99,28 +102,10 @@ document.addEventListener('DOMContentLoaded', () => {
 			element.removeChild(element.firstChild)
 	}
 
-	function showModal(modal) {
-		document.querySelectorAll(`.modal.${modal}`).forEach(element => element.classList.add('is-active'))
-	}
-
-	function hideModal(modal) {
-		document.querySelectorAll(`.modal.${modal}`).forEach(element => element.classList.remove('is-active'))
-	}
-
-	function showSettingsModal() {
-		showModal('settings')
-	}
-
-	function hideSettingsModal() {
-		hideModal('settings')
-	}
-
 	function resetPassword() {
 		auth.sendPasswordResetEmail(user.email)
 		alert(`Password reset email sent to ${user.email}`)
 	}
 
-	document.querySelectorAll('.action.settings').forEach(element => element.addEventListener('click', showSettingsModal))
-	document.querySelectorAll('.close-settings').forEach(element => element.addEventListener('click', hideSettingsModal))
 	document.querySelectorAll('.button.password-reset').forEach(element => element.addEventListener('click', resetPassword))
 })

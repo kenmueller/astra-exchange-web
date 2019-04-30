@@ -26,7 +26,17 @@ document.addEventListener('DOMContentLoaded', () => {
 		document.querySelector('.navbar-menu').classList.toggle('is-active')
 	}
 
+	function showSettingsModal() {
+		document.querySelectorAll('.modal.settings').forEach(element => element.classList.add('is-active'))
+	}
+
+	function hideSettingsModal() {
+		document.querySelectorAll('.modal.settings').forEach(element => element.classList.remove('is-active'))
+	}
+
 	document.querySelectorAll('.auth.sign-out').forEach(element => element.addEventListener('click', signOut))
 	document.querySelectorAll('.navbar-burger.burger').forEach(element => element.addEventListener('click', toggleNavbarMenu))
+	document.querySelectorAll('.action.settings').forEach(element => element.addEventListener('click', showSettingsModal))
+	document.querySelectorAll('.close-settings').forEach(element => element.addEventListener('click', hideSettingsModal))
 	document.querySelectorAll('.auth.reset-password').forEach(element => element.addEventListener('click', resetPassword))
 })
