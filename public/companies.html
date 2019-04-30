@@ -91,6 +91,48 @@
 				</footer>
 			</div> 
 		</div>
+		<div class="modal new-company">
+			<div class="modal-background close-new-company"></div>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title">New Company</p>
+					<button class="delete close-new-company" aria-label="close"></button>
+				</header>
+				<section class="modal-card-body">
+					<div class="field">
+						<label class="label">Image (optional)</label>
+						<div class="file has-name is-fullwidth is-info new-company image-chooser">
+							<label class="file-label">
+								<input class="file-input new-company image" type="file">
+								<span class="file-cta">
+									<span class="file-icon"><i class="fas fa-upload"></i></span>
+									<span class="file-label">Upload an image</span>
+								</span>
+								<span class="file-name new-company image-name"></span>
+							</label>
+						</div>
+					</div>
+					<div class="field">
+						<label class="label">Name</label>
+						<div class="control has-icons-left">
+							<input class="input new-company name" placeholder="Enter the company's name">
+							<span class="icon is-small is-left"><i class="fas fa-address-card"></i></span>
+						</div>
+					</div>
+					<div class="field">
+						<label class="label">Description (optional)</label>
+						<div class="control has-icons-left">
+							<input class="input new-company description" placeholder="Enter the company's description">
+							<span class="icon is-small is-left"><i class="fas fa-quote-right"></i></span>
+						</div>
+					</div>
+				</section>
+				<footer class="modal-card-foot">
+					<button class="button is-success complete complete-new-company" disabled>Create</button>
+					<button class="button close-new-company">Cancel</button>
+				</footer>
+			</div>
+		</div>
 		<div class="columns">
 			<div class="column is-one-fifths companies hero is-fullheight companies-1"></div>
 			<div class="column is-one-fifths companies hero is-fullheight companies-2"></div>

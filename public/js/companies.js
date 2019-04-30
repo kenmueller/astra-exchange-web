@@ -100,9 +100,18 @@ document.addEventListener('DOMContentLoaded', () => {
 		
 	}
 
+	function completeNewCompany() {
+		
+	}
+
 	function removeAllNodes(element) {
 		while (element.firstChild)
 			element.removeChild(element.firstChild)
+	}
+
+	function resetAllInputs() {
+		document.querySelectorAll('.input').forEach(element => element.value = '')
+		document.querySelectorAll('.button.complete').forEach(element => element.disabled = true)
 	}
 
 	function resetPassword() {
@@ -110,5 +119,25 @@ document.addEventListener('DOMContentLoaded', () => {
 		alert(`Password reset email sent to ${user.email}`)
 	}
 
+	function showModal(modal) {
+		document.querySelectorAll(`.modal.${modal}`).forEach(element => element.classList.add('is-active'))
+	}
+
+	function hideModal(modal) {
+		document.querySelectorAll(`.modal.${modal}`).forEach(element => element.classList.remove('is-active'))
+	}
+
+	function showNewCompanyModal() {
+		showModal('new-company')
+	}
+
+	function hideNewCompanyModal() {
+		hideModal('new-company')
+		resetAllInputs()
+	}
+
 	document.querySelectorAll('.button.password-reset').forEach(element => element.addEventListener('click', resetPassword))
+	document.querySelectorAll('.action.new-company').forEach(element => element.addEventListener('click', showNewCompanyModal))
+	document.querySelectorAll('.close-new-company').forEach(element => element.addEventListener('click', hideNewCompanyModal))
+	document.querySelectorAll('.button.complete-new-company').forEach(element => element.addEventListener('click', completeNewCompany))
 })
