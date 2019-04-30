@@ -70,24 +70,26 @@ document.addEventListener('DOMContentLoaded', () => {
 			const div = document.createElement('div')
 			div.className = 'card company'
 			div.innerHTML = `
-				<div class="card-image">
-					<figure class="image">
-						<img src="${company.image}" alt="Company image">
-					</figure>
-				</div>
-				<div class="card-content">
-					<div class="media">
-						<div class="media-content">
-							<p class="title is-4">${company.name}</p>
-							<p class="subtitle is-6">${company.owner.name}</p>
+				<a href="/companies/${company.name.trim().replace(/\s+/g, '-').toLowerCase()}">
+					<div class="card-image">
+						<figure class="image">
+							<img src="${company.image}" alt="Company image">
+						</figure>
+					</div>
+					<div class="card-content">
+						<div class="media">
+							<div class="media-content">
+								<p class="title is-4">${company.name}</p>
+								<p class="subtitle is-6">${company.owner.name}</p>
+							</div>
+						</div>
+						<div class="content">
+							${company.description}
+							<br><br>
+							<b>${company.products.length} Product${company.products.length === 1 ? '' : 's'}</b>
 						</div>
 					</div>
-					<div class="content">
-						${company.description}
-						<br><br>
-						<b>${company.products.length} Product${company.products.length === 1 ? '' : 's'}</b>
-					</div>
-				</div>
+				</a>
 			`
 			document.querySelector(`.column.companies-${companyIndex % 4 + 1}`).appendChild(div)
 		}
