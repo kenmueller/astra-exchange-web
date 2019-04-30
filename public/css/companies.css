@@ -18,6 +18,10 @@ nav.navbar {
 	margin-top: 35px;
 	font-size: 20px;
 }
+.table.cart {
+	height: 300px;
+	overflow-y: scroll;
+}
 .companies {
 	display: block;
 	margin-top: 18px;
@@ -45,6 +49,14 @@ nav.navbar {
 }
 .companies-4 {
 	margin-right: 7px;
+}
+aside.sidebar {
+	position: relative;
+	height: calc(0px);
+}
+.button.check-out {
+	position: absolute;
+	bottom: 0;
 }
 .aside .main {
 	padding: 40px;
