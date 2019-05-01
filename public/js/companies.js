@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			const div = document.createElement('div')
 			div.className = 'card company'
 			div.innerHTML = `
-				<a href="/companies/${company.name.trim().replace(/\s+/g, '-').toLowerCase()}">
+				<a href="/companies/${company.name.trim().replace(/[\s.]+/g, '-').toLowerCase()}">
 					<div class="card-image">
 						<figure class="image">
 							<img src="${company.image}" alt="Company image" class="company-card image">
@@ -101,7 +101,21 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function completeNewCompany() {
-		
+		const files = document.getElementById('newcommitfile').files
+		if (newCommitMessage !== undefined && selectedRepository !== undefined && files.length !== 0) {
+			const publishCommitButton = document.getElementById('publishnewcommit')
+			publishCommitButton.classList.add('is-loading')
+			const commitVersion = document.getElementById('commitversion').value.trim()
+			const currentRepository = repositories[selectedRepository]
+			const generatedCommitVersion = commitVersion.length === 0 ? currentRepository.version : commitVersion
+			const commitRef = db.collection('users').doc(user.uid).collection('repositories').doc(currentRepository.id).collection('commits').add({ time: new Date(), message: newCommitMessage, version: generatedCommitVersion })
+			db.collection('users').doc(user.uid).collection('repositories').doc(currentRepository.id).update({ version: generatedCommitVersion })
+			storage.child(`users/${user.uid}/repositories/${currentRepository.id}/commits/${commitRef.id}`).put(files[0]).then(function(_snapshot) {
+				publishCommitButton.classList.remove('is-loading')
+				closeNewCommitModal()
+				newCommitMessage = null
+			})
+		}
 	}
 
 	function removeAllNodes(element) {
