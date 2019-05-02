@@ -1,12 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
 	const auth = firebase.auth()
+	const db = firebase.database()
 
 	auth.onAuthStateChanged(user => {
 		if (user)
-			firebase.database().ref(`users/${user.uid}/name`).on('value', snapshot => {
-				document.cookie = `auth=${snapshot.val()}; expires=Thu, 01 Jan 3000 00:00:00 GMT`
-				location.reload()
+			db.ref(`users/${user.uid}/name`).on('value', snapshot => {
+				if (snapshot.exists()) {
+					document.cookie = `auth=${snapshot.val()}; expires=Thu, 01 Jan 3000 00:00:00 GMT`
+					location.reload()
+				} else {
+					db.ref(`users/${user.uid}`).set({
+						name: document.getElementById('sign-up-name').value.trim(),
+						email: document.getElementById('sign-up-email').value.trim(),
+						balance: 0
+					}).then(location.reload)
+				}
 			})
+			
 	})
 
 	function showSignUpModal() {
