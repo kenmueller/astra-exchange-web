@@ -1,15 +1,17 @@
-const functions = require('firebase-functions')
-const admin = require('firebase-admin')
+import * as functions from 'firebase-functions'
+import * as admin from 'firebase-admin'
+import * as express from 'express'
+import * as moment from 'moment'
 admin.initializeApp()
-const app = require('express')()
-const moment = require('moment')
+
 const db = admin.database()
+const app = express()
 
 app.get('/users/:slug', (req, res) =>
 	db.ref(`slugs/users/${req.params.slug}`).on('value', snapshot =>
-		db.ref(`users/${snapshot.val()}`).on('value', userSnapshot => {
-			if (userSnapshot.exists()) {
-				const val = userSnapshot.val()
+		db.ref(`users/${snapshot!.val()}`).on('value', userSnapshot => {
+			if (userSnapshot!.exists()) {
+				const val = userSnapshot!.val()
 				return res.status(200).send(`
 					<!DOCTYPE html>
 					<html>
@@ -122,12 +124,12 @@ app.get('/users/:slug', (req, res) =>
 
 app.get('/companies/:slug', (req, res) =>
 	db.ref(`slugs/companies/${req.params.slug}`).on('value', snapshot =>
-		db.ref(`companies/${snapshot.val()}`).on('value', companySnapshot => {
-			if (companySnapshot.exists()) {
-				const val = companySnapshot.val()
+		db.ref(`companies/${snapshot!.val()}`).on('value', companySnapshot => {
+			if (companySnapshot!.exists()) {
+				const val = companySnapshot!.val()
 				const image = val.image ? val.image : '/images/astra.png'
 				return db.ref(`users/${val.owner}`).on('value', userSnapshot => {
-					const userVal = userSnapshot.val()
+					const userVal = userSnapshot!.val()
 					return res.status(200).send(`
 						<!DOCTYPE html>
 						<html>
@@ -230,7 +232,7 @@ app.get('/companies/:slug', (req, res) =>
 								<script src="/js/company.js"></script>
 								<script src="/js/base.js"></script>
 								<script>
-									company({ id: '${companySnapshot.key}', image: '${image}', name: '${val.name}', owner: { id: '${userSnapshot.key}', name: '${userVal.name}', email: '${userVal.email}', balance: ${userVal.balance} }, description: '${val.description}', products: [] })
+									company({ id: '${companySnapshot!.key}', image: '${image}', name: '${val.name}', owner: { id: '${userSnapshot!.key}', name: '${userVal.name}', email: '${userVal.email}', balance: ${userVal.balance} }, description: '${val.description}', products: [] })
 								</script>
 							</body>
 						</html>
@@ -256,31 +258,38 @@ exports.transactionCreated = functions.database.ref('transactions/{uid}/{transac
 			return db.ref(`cards/${from}`).once('value').then(cardSnapshot => {
 				const toBalance = balanceSnapshot.val() + amount
 				const newFrom = cardSnapshot.exists() ? cardSnapshot.val() : from
-				return context.params.uid === from
-					? Promise.all([
+				return Promise.all(context.params.uid === from
+					? [
 						db.ref(`transactions/${to}/${context.params.transactionId}`).set({ time: snapshot.val().time, from: newFrom, to: to, amount: amount, balance: toBalance, message: snapshot.val().message }),
-						db.ref(`users/${newFrom}/balance`).set(snapshot.val().balance),
-					])
-					: db.ref(`users/${to}/balance`).set(toBalance)
+						db.ref(`users/${newFrom}/balance`).set(snapshot.val().balance)
+					]
+					: [
+						db.ref(`users/${to}/balance`).set(toBalance)
+					]
+				)
 			})
 		})
 })
 
 exports.pendingCreated = functions.database.ref('pending/{pendingId}').onCreate((snapshot, context) => {
-	const from = snapshot.val().from
-	return db.ref(`cards/${from}`).once('value').then(cardSnapshot => {
-		const userId = cardSnapshot.val()
+	const val = snapshot.val()
+	const from = val.from
+	return db.ref(`cards/${from}`).once('value').then(userIdSnapshot => {
+		const userId = userIdSnapshot.val()
 		return db.ref(`users/${userId}/balance`).once('value').then(balanceSnapshot =>
 			db.ref(`users/${userId}/cards/${from}`).once('value').then(cardSnapshot => {
-				const amount = snapshot.val().amount
+				const amount = val.amount
 				const balance = balanceSnapshot.val()
 				const pin = cardSnapshot.val().pin
-				return amount <= balance && snapshot.val().pin === pin
-					? Promise.all([
+				return Promise.all(amount <= balance && snapshot.val().pin === pin
+					? [
 						db.ref(`transactions/${from}/${context.params.pendingId}`).set({ time: snapshot.val().time, from: from, to: snapshot.val().to, amount: amount, balance: balance - amount, message: `Paid with ${cardSnapshot.val().name}` }),
 						snapshot.ref.remove()
-					])
-					: snapshot.ref.remove()
+					]
+					: [
+						snapshot.ref.remove()
+					]
+				)
 			})
 		)
 	})
