@@ -33,15 +33,14 @@ document.addEventListener('DOMContentLoaded', () => {
 					updateSettings()
 				})
 			})
-			db.ref('users').on('child_added', snapshot => {
-				const val = snapshot.val()
-				const userId = snapshot.key
-				const newUser = { id: userId, name: val.name, email: val.email, balance: val.balance }
-				users.push(newUser)
-				updateUserDropdowns()
-				db.ref(`users/${userId}/balance`).on('value', balanceSnapshot => {
-					newUser.balance = Math.trunc(balanceSnapshot.val() * 100) / 100
-					updateLeaderboard()
+			exchange().users(users_ => {
+				users_.forEach(user => {
+					users.push(user)
+					updateUserDropdowns()
+					db.ref(`users/${user.id}/balance`).on('value', balanceSnapshot => {
+						user.balance = Math.trunc(balanceSnapshot.val() * 100) / 100
+						updateLeaderboard()
+					})
 				})
 			})
 			db.ref(`transactions/${id}`).on('child_added', snapshot => {

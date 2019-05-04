@@ -135,8 +135,8 @@
 			}
 		},
 		"users": {
-      		".read": true,
 			"$uid": {
+				".read": true,
 				".write": "!data.exists()",
 				"name": {
 					".validate": "newData.isString() && newData.val() !== ''"
