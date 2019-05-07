@@ -301,7 +301,7 @@ exports.userCreated = functions.database.ref('users/{uid}').onCreate((snapshot, 
 	return Promise.all([
 		db.ref(`users/${uid}/independence`).set(0),
 		db.ref(`emails/${val.email.replace('.', '%2e')}`).set(uid),
-		db.ref(`slugs/users/${val.name.trim().replace(/[\s.]+/g, '-').toLowerCase()}`).set(uid),
+		db.ref(`slugs/users/${slugify(val.name)}`).set(uid),
 		db.ref('cards').push(uid)
 	])
 })
@@ -314,10 +314,14 @@ exports.companyCreated = functions.database.ref('companies/{companyId}').onCreat
 	const companyId = context.params.companyId
 	const val = snapshot.val()
 	return Promise.all([
-		db.ref(`slugs/companies/${val.name.trim().replace(/[\s.]+/g, '-').toLowerCase()}`).set(companyId),
+		db.ref(`slugs/companies/${slugify(val.name)}`).set(companyId),
 		db.ref(`owners/companies/${val.owner}/${companyId}`).set(true)
 	])
 })
+
+function slugify(str: string): string {
+	return str.trim().replace(/\s+/g, '-').replace(/\.+/g, '').toLowerCase()
+}
 
 exports.users = functions.https.onRequest((_req, res) =>
 	db.ref('users').once('value', snapshot => {
