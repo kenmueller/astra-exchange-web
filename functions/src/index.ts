@@ -245,6 +245,20 @@ app.get('/companies/:slug', (req, res) =>
 
 exports.app = functions.https.onRequest(app)
 
+exports.authUserDeleted = functions.auth.user().onDelete(user =>
+	db.ref(`users/${user.uid}`).once('value', userSnapshot =>
+		db.ref(`users/${user.uid}/cards`).once('child_added', cardSnapshot => {
+			const userVal = userSnapshot.val()
+			return Promise.all([
+				db.ref(`cards/${cardSnapshot.key}`).remove(),
+				db.ref(`emails/${userVal.email.replace('.', '%2e')}`).remove(),
+				db.ref(`slugs/users/${slugify(userVal.name)}`).remove(),
+				db.ref(`users/${user.uid}`).remove()
+			])
+		})
+	)
+)
+
 exports.transactionCreated = functions.database.ref('transactions/{uid}/{transactionId}').onCreate((snapshot, context) => {
 	const to = snapshot.val().to
 	const amount = snapshot.val().amount
