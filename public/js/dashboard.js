@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	auth.onAuthStateChanged(user_ => {
 		if (user_) {
 			const id = user_.uid
+			user = { id }
 			document.querySelectorAll('.action.fine').forEach(element =>
 				id === 'h621pgey1vPfxrmoW5LUkZaHkhT2' ? element.classList.remove('is-hidden') : element.classList.add('is-hidden')
 			)
@@ -260,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	function completeSend() {
 		document.getElementById('complete-send').classList.add('is-loading')
-		const amount = parseInt(document.getElementById('send-amount').value)
+		const amount = parseFloat(document.getElementById('send-amount').value)
 		db.ref(`transactions/${user.id}`).push({ time: formatDate(), from: user.id, to: document.getElementById('send-recipient').value, amount: amount, balance: user.balance - amount, message: document.getElementById('send-message').value.trim() }).then(() => {
 			document.getElementById('complete-send').classList.remove('is-loading')
 			hideSendModal()
@@ -272,13 +273,13 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function sendChanged() {
-		const amount = parseInt(document.getElementById('send-amount').value)
+		const amount = parseFloat(document.getElementById('send-amount').value)
 		document.getElementById('complete-send').disabled = !(document.getElementById('send-recipient').selectedIndex !== 0 && amount && amount <= user.balance && (amount > 0 || user.id === 'h621pgey1vPfxrmoW5LUkZaHkhT2'))
 	}
 
 	function completeCreateInvoice() {
 		document.getElementById('complete-create-invoice').classList.add('is-loading')
-		const amount = parseInt(document.getElementById('create-invoice-amount').value)
+		const amount = parseFloat(document.getElementById('create-invoice-amount').value)
 		const to = document.getElementById('create-invoice-recipient').value
 		const invoice = { time: formatDate(), status: 'pending', from: user.id, to: to, amount: amount, message: document.getElementById('create-invoice-message').value.trim() }
 		const invoiceRef = db.ref(`invoices/${user.id}`).push(invoice).then(() => {
@@ -297,13 +298,13 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function createInvoiceChanged() {
-		const amount = parseInt(document.getElementById('create-invoice-amount').value)
+		const amount = parseFloat(document.getElementById('create-invoice-amount').value)
 		document.getElementById('complete-create-invoice').disabled = !(document.getElementById('create-invoice-recipient').selectedIndex !== 0 && amount && amount > 0)
 	}
 
 	function completeFine() {
 		document.getElementById('complete-fine').classList.add('is-loading')
-		const amount = parseInt(document.getElementById('fine-amount').value)
+		const amount = parseFloat(document.getElementById('fine-amount').value)
 		const to = document.getElementById('fine-recipient').value
 		db.ref(`transactions/${user.id}`).push({ time: formatDate(), from: user.id, to: document.getElementById('fine-recipient').value, amount: -amount, balance: user.balance + amount, message: `Fine for ${amount} Astra${amount === 1 ? '' : 's'}<br>Reason: ${document.getElementById('fine-reason').value.trim()}` }).then(() => {
 			document.getElementById('complete-fine').classList.remove('is-loading')
@@ -316,7 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function fineChanged() {
-		const amount = parseInt(document.getElementById('fine-amount').value)
+		const amount = parseFloat(document.getElementById('fine-amount').value)
 		document.getElementById('complete-fine').disabled = !(document.getElementById('fine-recipient').selectedIndex !== 0 && amount && amount > 0 && document.getElementById('fine-reason').value)
 	}
 
