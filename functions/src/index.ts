@@ -356,7 +356,7 @@ exports.transact = functions.https.onRequest((req, res) => {
 			return to
 				? db.ref(`users/${from}/balance`).once('value', fromSnapshot => {
 					if (fromSnapshot.exists()) {
-						const amount = parseInt(req.query.amount)
+						const amount = parseFloat(req.query.amount)
 						const balance = fromSnapshot.val()
 						return amount <= balance
 							? db.ref(`users/${to}`).once('value', toSnapshot => {
