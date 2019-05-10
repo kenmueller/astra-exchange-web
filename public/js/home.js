@@ -630,6 +630,17 @@ document.write(
 		</section>
 		<script src="/js/index.js"></script>
 		<script src="/js/base.js"></script>
+		<script src="https://unpkg.com/@vidy/embed/dist/embed.min.js"></script>
+   <script>
+	    document.addEventListener("DOMContentLoaded", function(event) {
+        console.log('Page loaded');
+        let vidy = new Vidy({
+          appid: '69941b81-7a3b-4a76-b385-df3b53f1bb61',
+          postid: 'astra-exchange',
+          autoload: true
+        });
+      });
+     </script>
 	</body>
 </html>
 		`
