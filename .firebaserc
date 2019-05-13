@@ -1,5 +1,17 @@
 {
-	"projects": {
-		"default": "astra-exchange"
-	}
+  "projects": {
+    "default": "astra-exchange"
+  },
+  "targets": {
+    "astra-exchange": {
+      "hosting": {
+        "astra-exchange": [
+          "astra-exchange"
+        ],
+        "opensource-astra-exchange": [
+          "opensource-astra-exchange"
+        ]
+      }
+    }
+  }
 }

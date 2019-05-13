@@ -1,0 +1,7 @@
+service cloud.firestore {
+	match /databases/{database}/documents {
+		match /opensource/{url} {
+			allow read, write
+		}
+	}
+}
