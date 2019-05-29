@@ -12,11 +12,11 @@ export const opensource = functions.https.onRequest((req, res) => {
 		? urlParts.length === 1
 			? editIndex(res)
 			: app(req, res)
-		: firestore.doc(`opensource/${url.length === 0 ? '\\' : url.replace('/', '\\')}`).get().then(page =>
+		: firestore.doc(`opensource/${urlParts.length === 1 ? '\\' : url.replace('/', '\\')}`).get().then(page =>
 			res.status(200).send(page.exists
 				? page.data()!.html
 				: createPage(
-					`Create ${url.length === 0 ? 'index' : url}`,
+					`Create ${urlParts.length === 1 ? 'index' : url}`,
 					`
 						.textarea.new.html {
 							height: 400px;
@@ -41,7 +41,7 @@ export const opensource = functions.https.onRequest((req, res) => {
 							complete.classList.add('is-loading')
 							return textarea.value.trim().length === 0
 								? Promise.resolve().then(() => complete.classList.remove('is-loading'))
-								: firestore.doc('opensource/${url.length === 0 ? '\\\\' : url.replace('/', '\\\\')}').set({ html: textarea.value }).then(() => location.reload())
+								: firestore.doc('opensource/${urlParts.length === 1 ? '\\\\' : url.replace('/', '\\\\')}').set({ html: textarea.value }).then(() => location.reload())
 						})
 					`
 				)
@@ -87,7 +87,7 @@ app.get('/edit/:url', (req, res) => {
 function editIndex(res: functions.Response): Promise<void | functions.Response> {
 	return firestore.doc('opensource/\\').get().then(page => page.exists
 		? res.status(200).send(createPage(
-			`Edit index`,
+			'Edit index',
 			`
 				.textarea.edit.html {
 					height: 400px;
