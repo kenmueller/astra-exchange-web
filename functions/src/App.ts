@@ -2,12 +2,13 @@ import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
 import * as express from 'express'
 
+const app = express()
+const _app = functions.https.onRequest(app)
+export { _app as app }
+
 const db = admin.database()
-const expressApp = express()
 
-export const app = functions.https.onRequest(expressApp)
-
-expressApp.get('/users/:slug', (req, res) =>
+app.get('/users/:slug', (req, res) =>
 	db.ref(`slugs/users/${req.params.slug}`).on('value', snapshot =>
 		db.ref(`users/${snapshot!.val()}`).on('value', userSnapshot => {
 			if (userSnapshot!.exists()) {
@@ -122,7 +123,7 @@ expressApp.get('/users/:slug', (req, res) =>
 	)
 )
 
-expressApp.get('/companies/:slug', (req, res) =>
+app.get('/companies/:slug', (req, res) =>
 	db.ref(`slugs/companies/${req.params.slug}`).on('value', snapshot =>
 		db.ref(`companies/${snapshot!.val()}`).on('value', companySnapshot => {
 			if (companySnapshot!.exists()) {
