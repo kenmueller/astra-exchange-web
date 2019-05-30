@@ -13,10 +13,9 @@
 		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 		<link rel="stylesheet" href="/css/navbar.css">
-		<link rel="stylesheet" href="/css/documentation.css">
-		<link rel="stylesheet" href="/css/prism.css">
+		<link rel="stylesheet" href="/css/user.css">
 		<link rel="icon" type="image/png" href="/images/astra.png">
-		<title>Documentation - Astra Exchange</title>
+		<title>{{ user.name }} - Astra Exchange</title>
 	</head>
 	<body>
 		<nav class="navbar" role="navigation" aria-label="main navigation">
@@ -30,7 +29,7 @@
 			</div>
 			<div id="navbar" class="navbar-menu">
 				<div class="navbar-start">
-					<a class="navbar-item companies is-hidden" href="/companies">Companies</a>
+					<a class="navbar-item" href="/companies">Companies</a>
 					<a class="navbar-item" href="/documentation">API Documentation</a>
 					<div class="navbar-item has-dropdown is-hoverable">
 						<a class="navbar-link">iOS Apps</a>
@@ -56,71 +55,6 @@
 				</div>
 			</div>
 		</nav>
-		<div class="modal sign-up">
-			<div class="modal-background close-sign-up"></div>
-			<div class="modal-card">
-				<header class="modal-card-head">
-					<p class="modal-card-title">Sign up</p>
-					<button class="delete close-sign-up" aria-label="close"></button>
-				</header>
-				<section class="modal-card-body">
-					<div class="field">
-						<label class="label">Name</label>
-						<div class="control has-icons-left">
-							<input class="input" id="sign-up-name" type="text" placeholder="Enter name">
-							<span class="icon is-small is-left"><i class="fas fa-user"></i></span>
-						</div>
-					</div>
-					<div class="field">
-						<label class="label">Email</label>
-						<div class="control has-icons-left">
-							<input class="input" id="sign-up-email" type="email" placeholder="Enter email">
-							<span class="icon is-small is-left"><i class="fas fa-at"></i></span>
-						</div>
-					</div>
-					<div class="field">
-						<label class="label">Password</label>
-						<div class="control has-icons-left">
-							<input class="input" id="sign-up-password" type="password" placeholder="Enter password">
-							<span class="icon is-small is-left"><i class="fas fa-key"></i></span>
-						</div>
-					</div>
-				</section>
-				<footer class="modal-card-foot">
-					<button class="button is-success auth complete-sign-up" id="complete-sign-up" disabled>Sign up</button>
-					<button class="button close-sign-up">Cancel</button>
-				</footer>
-			</div>
-		</div>
-		<div class="modal sign-in">
-			<div class="modal-background close-sign-in"></div>
-			<div class="modal-card">
-				<header class="modal-card-head">
-					<p class="modal-card-title">Sign in</p>
-					<button class="delete close-sign-in" aria-label="close"></button>
-				</header>
-				<section class="modal-card-body">
-					<div class="field">
-						<label class="label">Email</label>
-						<div class="control has-icons-left">
-							<input class="input" id="sign-in-email" type="email" placeholder="Enter email">
-							<span class="icon is-small is-left"><i class="fas fa-at"></i></span>
-						</div>
-					</div>
-					<div class="field">
-						<label class="label">Password</label>
-						<div class="control has-icons-left">
-							<input class="input" id="sign-in-password" type="password" placeholder="Enter password">
-							<span class="icon is-small is-left"><i class="fas fa-key"></i></span>
-						</div>
-					</div>
-				</section>
-				<footer class="modal-card-foot">
-					<button class="button is-success auth complete-sign-in" id="complete-sign-in" disabled>Sign in</button>
-					<button class="button close-sign-in">Cancel</button>
-				</footer>
-			</div>
-		</div>
 		<div class="modal settings">
 			<div class="modal-background close-settings"></div>
 			<div class="modal-card">
@@ -153,34 +87,17 @@
 				<footer class="modal-card-foot">
 					<a class="button is-primary password-reset"><strong>Send a password reset email</strong></a>
 				</footer>
-			</div>
+			</div> 
 		</div>
-		<div class="container">
-			<div class="columns">
-				<div class="column is-3">
-					<aside class="menu is-hidden-mobile">
-						<p class="menu-label">api documentation</p>
-						<ul class="menu-list docs"></ul>
-					</aside>
-				</div>
-				<div class="column is-9">
-					<div class="box">
-						<article class="has-text-centered">
-							<h1 class="title doc-title"></h1>
-						</article>
-						<article>
-							<br>
-							<div class="doc-body"></div>
-							<br>
-							<h1 class="subtitle">Need help? Email ken@astra.exchange</h1>
-						</article>
-					</div>
-				</div>
-			</div>
-		</div>
-		<script src="/js/documentation.js"></script>
+		<h1>Name: {{ user.name }}</h1>
+		<br>
+		<h2>Email: {{ user.email }}</h2>
+		<br>
+		<p>Balance: {{ user.balance }}</p>
+		<!-- <script src="/js/user.js"></script> -->
 		<script src="/js/base.js"></script>
-		<script src="/js/auth.js"></script>
-		<script src="/js/prism.js"></script>
+		<script>
+			user({ id: '{{ user.id }}', name: '{{ user.name }}', email: '{{ user.email }}', balance: '{{ user.balance }}' })
+		</script>
 	</body>
 </html>
