@@ -435,6 +435,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		hideModal('leaderboard')
 	}
 
+	function showBazaarTables() {
+		location.href = '/tables'
+	}
+
 	function resetPassword() {
 		auth.sendPasswordResetEmail(user.email)
 		alert(`Password reset email sent to ${user.email}`)
@@ -460,6 +464,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.querySelectorAll('.button.complete-send').forEach(element => element.addEventListener('click', completeSend))
 	document.querySelectorAll('.button.complete-create-invoice').forEach(element => element.addEventListener('click', completeCreateInvoice))
 	document.querySelectorAll('.button.complete-fine').forEach(element => element.addEventListener('click', completeFine))
+	document.querySelectorAll('.action.bazaar-tables').forEach(element => element.addEventListener('click', showBazaarTables))
 	document.getElementById('send-recipient').addEventListener('change', sendChanged)
 	document.getElementById('send-amount').addEventListener('input', sendChanged)
 	document.getElementById('create-invoice-recipient').addEventListener('change', createInvoiceChanged)

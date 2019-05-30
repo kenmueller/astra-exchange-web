@@ -142,6 +142,10 @@ document.write(
 							<li><a class="action your-id">Your ID</a></li>
 							<li><a class="action leaderboard">Leaderboard</a></li>
 						</ul>
+						<p class="menu-label">events</p>
+						<ul class="menu-list">
+							<li><a class="action bazaar-tables">Bazaar Tables</a></li>
+						</ul>
 					</aside>
 				</div>
 				<div class="column is-9">
