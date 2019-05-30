@@ -1,10 +1,10 @@
-*,
-body {
+*, body {
 	font-family: 'Open Sans';
 }
 .main {
 	display: flex;
 	justify-content: space-around;
+	height: 760px;
 }
 .table-element {
 	width: 50px;
@@ -208,10 +208,10 @@ main {
 }
 .table-container {
 	width: 600px;
-	height: 720px;
+	height: 725px;
 	display: inline-block;
 	border-style: solid;
-	margin-top: -50px;
+	margin-top: 0px;
 }
 .english-label {
 	height: 200px;

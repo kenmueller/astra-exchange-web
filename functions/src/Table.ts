@@ -12,21 +12,21 @@ export const orderTable = functions.https.onCall((data, context) =>
 					canBuy
 						? db.ref(`tables/${data.table}`).once('value').then(table => {
 							const val = table.val()
-							val.owner
-								? Promise.resolve()
+							return val.owner
+								? Promise.reject()
 								: db.ref(`users/${context.auth!.uid}/balance`).once('value').then(balance =>
 									val.price > balance.val()
-										? Promise.resolve()
+										? Promise.reject()
 										: db.ref(`tables/${data.table}`).update({
 											owner: context.auth!.uid
 										})
 								)
 						})
-						: Promise.resolve()
+						: Promise.reject()
 				)
-				: Promise.resolve()
+				: Promise.reject()
 		)
-		: Promise.resolve()
+		: Promise.reject()
 )
 
 export const tableOrderCreated = functions.database.ref('tables/{table}/owner').onCreate((_snapshot, context) => {
