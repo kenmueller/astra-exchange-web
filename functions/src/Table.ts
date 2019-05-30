@@ -13,20 +13,20 @@ export const orderTable = functions.https.onCall((data, context) =>
 						? db.ref(`tables/${data.table}`).once('value').then(table => {
 							const val = table.val()
 							return val.owner
-								? Promise.reject()
+								? Promise.resolve('This table already has an owner')
 								: db.ref(`users/${context.auth!.uid}/balance`).once('value').then(balance =>
 									val.price > balance.val()
-										? Promise.reject()
+										? Promise.resolve('You don\'t have enough Astras')
 										: db.ref(`tables/${data.table}`).update({
 											owner: context.auth!.uid
-										})
+										}) as Promise<undefined>
 								)
 						})
-						: Promise.reject()
+						: Promise.resolve('You\'ve already bought 2 tables')
 				)
-				: Promise.reject()
+				: Promise.resolve('You need to wait for the bazaar to order tables')
 		)
-		: Promise.reject()
+		: Promise.resolve('Bad request')
 )
 
 export const tableOrderCreated = functions.database.ref('tables/{table}/owner').onCreate((_snapshot, context) => {

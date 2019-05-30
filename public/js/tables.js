@@ -63,9 +63,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		if (!currentTable) return
 		setOrderTableElement('complete', element => element.classList.add('is-loading'))
 		const stopLoading = () => setOrderTableElement('complete', element => element.classList.remove('is-loading'))
-		functions.httpsCallable('orderTable')({ table: currentTable.id }).then(() => {
+		functions.httpsCallable('orderTable')({ table: currentTable.id }).then(result => {
 			stopLoading()
-			hideOrderTableModal()
+			result.data ? alert(result.data) : hideOrderTableModal()
 		}).catch(stopLoading)
 	}
 
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		currentTable = tables[table]
 		if (!currentTable) return
 		const hasOwner = currentTable.owner !== undefined
-		setOrderTableElement('title', element => element.innerHTML = `Order table ${currentTable.id}`)
+		setOrderTableElement('title', element => element.innerHTML = `Order Table ${currentTable.id}`)
 		setOrderTableElement('name', element => element.innerHTML = currentTable.name)
 		setOrderTableElement('price', element => element.innerHTML = `${currentTable.price} Astra${currentTable.price === 1 ? '' : 's'}`)
 		setOrderTableElement('owner-field', element => element.style.display = hasOwner ? 'block' : 'none')
