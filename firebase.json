@@ -32,6 +32,10 @@
 					"destination": "/api/all.min.js"
 				},
 				{
+					"source": "/tables",
+					"destination": "/tables.html"
+				},
+				{
 					"source": "**",
 					"function": "app"
 				}
@@ -44,6 +48,10 @@
 				{
 					"source": "/companies.html",
 					"destination": "/companies"
+				},
+				{
+					"source": "/tables.html",
+					"destination": "/tables"
 				},
 				{
 					"source": "/notes",
