@@ -1,0 +1,374 @@
+*,
+body {
+	font-family: 'Open Sans';
+}
+.main {
+	display: flex;
+	justify-content: space-around;
+}
+.table-element {
+	width: 50px;
+	height: 40px;
+	border-style: solid;
+	border-radius: 3px;
+	border-width: 2px;
+	text-align: center;
+	line-height: 35px;
+	vertical-align: middle;
+	margin-top: 15px;
+	margin-left: 10px;
+	margin-bottom: 0px;
+}
+.tables {
+	width: 600px;
+	height: 720px;
+	display: inline-block;
+	border-style: solid;
+	margin-top: -50px;
+}
+.english-label {
+	height: 200px;
+	width: 200px;
+	border-radius: 2px;
+	background: #009e60;
+	border-style: solid;
+	border-width: 0.3px;
+	border-color: black;
+	color: white;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 190px;
+	font-size: 25px;
+	margin-left: 120px;
+	margin-top: 30px;
+}
+.lobby-label {
+	border-radius: 2px;
+	border-width: 0.3px;
+	border-color: black;
+	width: 150px;
+	height: 50px;
+	background: rgba(255, 255, 0, 0.5);
+	margin-left: 370px;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 50px;
+	margin-top: -190px;
+}
+.kitchen-label {
+	border-radius: 2px;
+	border-width: 0.3px;
+	border-color: black;
+	width: 150px;
+	height: 130px;
+	background: #add8e6;
+	margin-left: 400px;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 120px;
+	margin-top: 280px;
+}
+.app-data {
+	height: 600px;
+	width: 200px;
+	display: inline-block;
+}
+.owner-label,
+.cost-label {
+	font-size: 30px;
+}
+.data-box {
+	font-size: 30px;
+	text-align: center;
+	line-height: 140px;
+	width: 250px;
+	height: 150px;
+	border-style: solid;
+	border-radius: 4px;
+}
+.table-element:hover {
+	opacity: 0.8;
+	cursor: pointer;
+}
+.reserve-table {
+	width: 250px;
+	height: 70px;
+	margin-top: 10px;
+	margin: auto;
+	display: block;
+	margin-top: 30px;
+	background: white;
+	font-size: 20px;
+	font-family: 'Open Sans';
+}
+.app-data {
+	width: 250px;
+}
+.rot90 {
+	transform: rotate(90deg);
+}
+#T8,
+#T7,
+#T9,
+#T10 {
+	display: inline-block;
+}
+#T7 {
+	margin-left: 30px;
+}
+#T1 {
+	margin-top: -170px;
+}
+#AT {
+	background: rgba(0, 0, 255, 0.5);
+	width: 200px;
+	height: 100px;
+	border-radius: 5px;
+	margin-top: -100px;
+	margin-left: 330px;
+	text-align: middle;
+	color: white;
+	line-height: 60px;
+	padding-top: 16px;
+}
+#K0 {
+	margin-top: -150px;
+	margin-left: 490px;
+}
+#K1 {
+	margin-top: -77px;
+	margin-left: 435px;
+}
+#K2 {
+	margin-left: 365px;
+	margin-top: -40px;
+}
+#K3 {
+	margin-left: 335px;
+	margin-top: -100px;
+}
+#K4 {
+	margin-left: 335px;
+	margin-top: -100px;
+}
+.lockers-label {
+	width: 140px;
+	height: 50px;
+	background: lightgray;
+	margin-left: 405px;
+	margin-top: -250px;
+	position: absolute;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 45px;
+}
+#K5 {
+	margin-left: 335px;
+	margin-top: -100px;
+}
+#T11 {
+	margin-top: -120px;
+	margin-left: 50px;
+}
+#T12 {
+	margin-top: -40px;
+	margin-left: 110px;
+}
+#CR {
+	width: 180px;
+	height: 100px;
+	margin-left: 350px;
+	margin-top: -180px;
+	background: rgba(255, 0, 0, 0.5);
+	border-width: 1px;
+	color: white;
+	font-size: 22px;
+	padding-top: 10px;
+}
+*,
+body {
+	font-family: 'Open Sans';
+}
+main {
+	display: flex;
+	justify-content: space-around;
+}
+.table-element {
+	width: 50px;
+	height: 40px;
+	border-style: solid;
+	border-radius: 3px;
+	border-width: 2px;
+	text-align: center;
+	line-height: 35px;
+	vertical-align: middle;
+	margin-top: 15px;
+	margin-left: 10px;
+	margin-bottom: 0px;
+}
+.table-container {
+	width: 600px;
+	height: 720px;
+	display: inline-block;
+	border-style: solid;
+	margin-top: -50px;
+}
+.english-label {
+	height: 200px;
+	width: 200px;
+	border-radius: 2px;
+	background: #009e60;
+	border-style: solid;
+	border-width: 0.3px;
+	border-color: black;
+	color: white;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 190px;
+	font-size: 25px;
+	margin-left: 120px;
+	margin-top: 30px;
+}
+.lobby-label {
+	border-radius: 2px;
+	border-width: 0.3px;
+	border-color: black;
+	width: 150px;
+	height: 50px;
+	background: rgba(255, 255, 0, 0.5);
+	margin-left: 370px;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 50px;
+	margin-top: -190px;
+}
+.kitchen-label {
+	border-radius: 2px;
+	border-width: 0.3px;
+	border-color: black;
+	width: 150px;
+	height: 130px;
+	background: #add8e6;
+	margin-left: 400px;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 120px;
+	margin-top: 280px;
+}
+.app-data {
+	height: 600px;
+	width: 200px;
+	display: inline-block;
+}
+.owner-label,
+.cost-label {
+	font-size: 30px;
+}
+.data-box {
+	font-size: 30px;
+	text-align: center;
+	line-height: 140px;
+	width: 250px;
+	height: 150px;
+	border-style: solid;
+	border-radius: 4px;
+}
+.table-element:hover {
+	opacity: 0.8;
+	cursor: pointer;
+}
+.reserve-table {
+	width: 250px;
+	height: 70px;
+	margin-top: 10px;
+	margin: auto;
+	display: block;
+	margin-top: 30px;
+	background: white;
+	font-size: 20px;
+	font-family: 'Open Sans';
+}
+.app-data {
+	width: 250px;
+}
+.rot90 {
+	transform: rotate(90deg);
+}
+#T8,
+#T7,
+#T9,
+#T10 {
+	display: inline-block;
+}
+#T7 {
+	margin-left: 30px;
+}
+#T1 {
+	margin-top: -170px;
+}
+#AT {
+	background: rgba(0, 0, 255, 0.5);
+	width: 200px;
+	height: 100px;
+	border-radius: 5px;
+	margin-top: -100px;
+	margin-left: 330px;
+	text-align: middle;
+	color: white;
+	line-height: 60px;
+	padding-top: 16px;
+}
+#K0 {
+	margin-top: -150px;
+	margin-left: 490px;
+}
+#K1 {
+	margin-top: -77px;
+	margin-left: 435px;
+}
+#K2 {
+	margin-left: 365px;
+	margin-top: -40px;
+}
+#K3 {
+	margin-left: 335px;
+	margin-top: -100px;
+}
+#K4 {
+	margin-left: 335px;
+	margin-top: -100px;
+}
+.lockers-label {
+	width: 140px;
+	height: 50px;
+	background: lightgray;
+	margin-left: 405px;
+	margin-top: -250px;
+	position: absolute;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 45px;
+}
+#K5 {
+	margin-left: 335px;
+	margin-top: -100px;
+}
+#T11 {
+	margin-top: -120px;
+	margin-left: 50px;
+}
+#T12 {
+	margin-top: -40px;
+	margin-left: 110px;
+}
+#CR {
+	width: 180px;
+	height: 100px;
+	margin-left: 350px;
+	margin-top: -180px;
+	background: rgba(255, 0, 0, 0.5);
+	border-width: 1px;
+	color: white;
+	font-size: 22px;
+	padding-top: 10px;
+}
