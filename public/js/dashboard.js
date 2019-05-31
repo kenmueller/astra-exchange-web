@@ -15,6 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
 		if (user_) {
 			const id = user_.uid
 			user = { id }
+			new QRCode(document.querySelector('.your-id.qr-code'), {
+				text: id,
+				width: 400,
+				height: 400
+			})
 			document.querySelectorAll('.action.fine').forEach(element =>
 				id === 'h621pgey1vPfxrmoW5LUkZaHkhT2' ? element.classList.remove('is-hidden') : element.classList.add('is-hidden')
 			)

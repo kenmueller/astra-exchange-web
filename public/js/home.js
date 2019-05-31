@@ -372,7 +372,7 @@ document.write(
 					<button class="delete close-your-id" aria-label="close"></button>
 				</header>
 				<section class="modal-card-body">
-
+					<div class="your-id qr-code"></div>
 				</section>
 				<footer class="modal-card-foot"></footer>
 			</div>
@@ -501,6 +501,7 @@ document.write(
 			</div>
 		</div>
 		<script src="/api/all.min.js"></script>
+		<script src="/js/qrcode.js"></script>
 		<script src="/js/dashboard.js"></script>
 		<script src="/js/base.js"></script>
 	</body>
