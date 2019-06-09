@@ -28,7 +28,7 @@
 				},
 				{
 					"source": "/api",
-					"destination": "/api/all.min.js"
+					"destination": "/api/all.js"
 				},
 				{
 					"source": "/tables",
