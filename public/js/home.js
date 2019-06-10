@@ -500,7 +500,7 @@ document.write(
 				</footer>
 			</div>
 		</div>
-		<script src="/api/all.min.js"></script>
+		<script src="/api/all.js"></script>
 		<script src="/js/qrcode.js"></script>
 		<script src="/js/dashboard.js"></script>
 		<script src="/js/base.js"></script>
