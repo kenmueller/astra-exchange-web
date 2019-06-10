@@ -141,7 +141,7 @@
 			}
 		},
 		"users": {
-			".read": "auth !== null",
+			".read": true,
 			"$uid": {
 				".write": "!data.exists()",
 				"name": {
