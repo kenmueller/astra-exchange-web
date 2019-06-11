@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		setOrderTableElement('name', element => element.innerHTML = currentTable.name)
 		setOrderTableElement('price', element => element.innerHTML = `${currentTable.price} Astra${currentTable.price === 1 ? '' : 's'}`)
 		setOrderTableElement('owner-field', element => element.style.display = hasOwner ? 'block' : 'none')
-		setOrderTableElement('owner', element => element.innerHTML = hasOwner ? currentTable.owner.name : '')
+		setOrderTableElement('owner', element => element.innerHTML = hasOwner ? `${currentTable.owner.name}${currentTable.owner.id === user.id ? ' (you)' : ''}` : '')
 		setOrderTableElement('complete', element => element.disabled = hasOwner)
 		document.querySelectorAll('.modal.order-table').forEach(element => element.classList.add('is-active'))
 	}
