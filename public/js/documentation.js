@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			const id = user_.uid
 			db.ref(`users/${id}`).on('value', snapshot => {
 				const val = snapshot.val()
-                user = { id: id, name: val.name, email: val.email, balance: val.balance, independence: val.independence, card: null }
+                user = { id, name: val.name, email: val.email, balance: val.balance, independence: val.independence, card: null }
                 document.cookie = `auth=${user.name}; expires=Thu, 01 Jan 3000 00:00:00 GMT`
 				updateSettings()
 				db.ref(`users/${id}/cards`).on('child_added', cardSnapshot => {
@@ -41,9 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
 			a.innerHTML = doc.title
 			const li = document.createElement('li')
 			li.appendChild(a)
-			document.querySelectorAll('.menu-list.docs').forEach(element => element.appendChild(li))
-			if (i_ === 0) selectDoc(0)
-		}
+            document.querySelectorAll('.menu-list.docs').forEach(element => element.appendChild(li))
+        }
+        const selectedDocIndex = new URLSearchParams(location.search).get('i') || 0
+        selectDoc(selectedDocIndex < docs.length ? selectedDocIndex : 0)
 	}
 
 	function removeAllNodes(element) {
@@ -74,7 +75,15 @@ function selectDoc(index) {
 	document.querySelectorAll('.menu-list.docs').forEach(element => element.childNodes[index].childNodes[0].classList.add('is-active'))
 	const doc = docs[index]
 	document.querySelectorAll('.doc-title').forEach(element => element.innerHTML = doc.title)
-	document.querySelectorAll('.doc-body').forEach(element => element.innerHTML = doc.body)
+    document.querySelectorAll('.doc-body').forEach(element => element.innerHTML = doc.body)
+    let updatedSearchParams = new URLSearchParams(location.search)
+    if (index)
+        updatedSearchParams.set('i', index)
+    else
+        updatedSearchParams.delete('i')
+    const searchParamsString = updatedSearchParams.toString()
+    const newUrl = `${location.protocol}//${location.host}${location.pathname}${searchParamsString.length ? `?${searchParamsString}` : ''}`
+    history.pushState({ path: newUrl }, '', newUrl)
 }
 
 function tryItSignIn() {
