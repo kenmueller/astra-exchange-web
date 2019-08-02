@@ -87,23 +87,25 @@ function selectDoc(index) {
 }
 
 function tryItSignIn() {
+    document.querySelector('.try-it-sign-in-button').classList.add('is-loading')
     fetch(`https://cors-anywhere.herokuapp.com/https://us-central1-astra-exchange.cloudfunctions.net/user?email=${document.getElementById('try-it-email').value}&pin=${document.getElementById('try-it-pin').value}`).then(response => {
+        document.querySelector('.try-it-sign-in-button').classList.remove('is-loading')
         switch (response.status) {
-            case 200:
-                return response.json().then(json =>
-                    alert(`Hello, ${json.name}`)
-                )
-            case 400:
-                alert('Invalid parameters')
-                break
-            case 404:
-                alert('Invalid email')
-                break
-            case 401:
-                alert('Invalid pin')
-                break
-            default:
-                alert('Unknown error. Please try again')
+        case 200:
+            return response.json().then(json => {
+                alert(`Your private user data: {\n    id: ${json.id},\n    name: ${json.name},\n    email: ${json.email},\n    balance: ${json.balance},\n    independence: ${json.independence},\n    pin: ${json.pin}\n}`)
+            })
+        case 400:
+            alert('Invalid parameters')
+            break
+        case 404:
+            alert('Invalid email')
+            break
+        case 401:
+            alert('Invalid pin')
+            break
+        default:
+            alert('Unknown error. Please try again')
         }
     })
 }
@@ -306,29 +308,35 @@ exchange.transact(pin: string,
 		body: `
             <h1 class="subtitle">Using the <code>exchange.userWithId</code> function</h1>
 <pre>
-exchange.userWithId('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234', user => {
+exchange.userWithId('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234').then(user => {
     console.log(user)
-}, (status, response) => {
-    alert(\`\${status} error: \${response}\`)
+}).catch(error => {
+    alert(\`status: \${error.status}, message: \${error.message}\`)
+})
+
+exchange.userWithId('e95Y6tKOvIS7CBlEdBn2UknzxMQ2').then(user => {
+    console.log(user) // Only logs public user data since a pin was not specified
+}).catch(error => {
+    alert(\`status: \${error.status}, message: \${error.message}\`)
 })
 </pre>
             <br>
-            <p><b>Type signature (user is a <b>user object</b>):</b></p>
+            <p><b>Type signature (user is a <a onclick="selectDoc(2)">user object</a>):</b></p>
             <br>
 <pre>
-userWithId(id: string,
-           pin: string|null,
-           success: (user: any[]) => void,
-           failure: (status: int, response: string) => void)
+exchange.userWithId(id: string,
+                    pin: string) // Optional or <span style="color: red;">null</span> if you only want public data
 </pre>
+            <br>
+            <p><b>Returns a <code>Promise</code></b></p>
+            <br>
+            <p><b>The <code>.then</code> block takes a <a onclick="selectDoc(2)">user object</a></b></p>
+            <br>
+            <p><b>The <code>.catch</code> block takes an error of type <code>{ status: number, message: string }</code></b></p>
 			<br>
             <p>First parameter: the user's ID.</p>
             <br>
-            <p>Second: the user's pin. (make it <code>null</code> to only receive public data)</p>
-            <br>
-            <p>Third: (the first function): The success function. This function is called if the user was gotten successfully. It takes in a <b>user object</b> (will see shortly)</p>
-            <br>
-            <p>Seventh (last parameter): The error function. This function is called if there was an error when the user was gotten. It takes in 2 inputs, the first one being the error code (status), and the second being the error message (SEE BELOW).</p>
+            <p>Second: the user's pin. (Don't pass in a pin or make it <code>null</code> to only receive public data)</p>
             <br>
             <h1 class="subtitle">Possible errors</h1>
             <p><b>400:</b> Invalid parameters</p>
@@ -339,45 +347,51 @@ userWithId(id: string,
             <h1 class="subtitle">User Object</h1>
             <p><b>Public fields:</b></p>
             <br>
-            <p><b>id</b> string</p>
-            <p><b>name</b> string</p>
-            <p><b>email</b> string</p>
-            <p><b>balance</b> number</p>
+            <p><b>id:</b> string</p>
+            <p><b>name:</b> string</p>
+            <p><b>email:</b> string</p>
+            <p><b>balance:</b> number</p>
             <br>
             <p><b>Private fields (must specify pin):</b></p>
             <br>
-            <p><b>id</b> string</p>
-            <p><b>name</b> string</p>
-            <p><b>email</b> string</p>
-            <p><b>balance</b> number</p>
-            <p><b>independence</b> number (between 0-3, 0 means pending)</p>
-            <p><b>pin</b> string (length is 4)</p>
+            <p><b>id:</b> string</p>
+            <p><b>name:</b> string</p>
+            <p><b>email:</b> string</p>
+            <p><b>balance:</b> number</p>
+            <p><b>independence:</b> number (between 0-3, 0 means pending)</p>
+            <p><b>pin:</b> string (length is 4)</p>
             <br>
             <h1 class="subtitle">Using the <code>exchange.userWithEmail</code> function</h1>
 <pre>
-exchange.userWithEmail('ken@adastraschool.org', '1234', user => {
+exchange.userWithEmail('ken@adastraschool.org', '1234').then(user => {
     console.log(user)
-}, (status, response) => {
-    alert(\`\${status} error: \${response}\`)
+}).catch(error => {
+    alert(\`status: \${error.status}, message: \${error.message}\`)
+})
+
+exchange.userWithEmail('ken@adastraschool.org').then(user => {
+    console.log(user) // Only logs public user data since a pin was not specified
+}).catch(error => {
+    alert(\`status: \${error.status}, message: \${error.message}\`)
 })
 </pre>
             <br>
-            <p><b>Type signature (user is a <b>user object</b>):</b></p>
+            <p><b>Type signature (user is a <a onclick="selectDoc(2)">user object</a>):</b></p>
             <br>
 <pre>
-userWithEmail(email: string,
-              pin: string|null,
-              success: (user: any[]) => void,
-              failure: (status: int, response: string) => void)
+exchange.userWithEmail(id: string,
+                       pin: string) // Optional or <span style="color: red;">null</span> if you only want public data
 </pre>
+            <br>
+            <p><b>Returns a <code>Promise</code></b></p>
+            <br>
+            <p><b>The <code>.then</code> block takes a <a onclick="selectDoc(2)">user object</a></b></p>
+            <br>
+            <p><b>The <code>.catch</code> block takes an error of type <code>{ status: number, message: string }</code></b></p>
 			<br>
             <p>First parameter: the user's email.</p>
             <br>
-            <p>Second: the user's pin. (make it <code>null</code> to only receive public data)</p>
-            <br>
-            <p>Third: (the first function): The success function. This function is called if the user was gotten successfully. It takes in a <b>user object</b> (see above)</p>
-            <br>
-            <p>Seventh (last parameter): The error function. This function is called if there was an error when the user was gotten. It takes in 2 inputs, the first one being the error code (status), and the second being the error message (SEE BELOW).</p>
+            <p>Second: the user's pin. Don't pass in a pin or make it <code>null</code> to only receive public data)</p>
             <br>
             <h1 class="subtitle">Possible errors</h1>
             <p><b>400:</b> Invalid parameters</p>
@@ -390,11 +404,10 @@ userWithEmail(email: string,
             <br>
 <pre>
 function authenticate(email, pin) {
-    exchange.userWithEmail(email, pin, user => {
-        // Sign in successful
-        location.href = '/dashboard'
-    }, (status, response) => {
-        alert(response)
+    exchange.userWithEmail(email, pin).then(user => {
+        location.href = '/dashboard' // Sign in successful
+    }).catch(error => {
+        alert(error.message) // Sign in unsuccessful
     })
 }
 </pre>
@@ -410,7 +423,7 @@ function authenticate(email, pin) {
                     <input class="input" id="try-it-pin" type="password" placeholder="Enter your pin">
                 </div>
             </div>
-            <a class="button is-info" onclick="tryItSignIn()"><strong>Sign in</strong></a>
+            <a class="button is-info try-it-sign-in-button" onclick="tryItSignIn()"><b>Sign in</b></a>
             <br><br>
             <h1 class="title">Sample code</h1>
 <pre>
@@ -422,19 +435,23 @@ function authenticate(email, pin) {
     &lt;/head&gt;
     &lt;body&gt;
         &lt;h1&gt;Sign in&lt;/h1&gt;
-        &lt;input class="input" id="email-input" type="email" placeholder="Enter your email"&gt;
+        &lt;input id="email-input" type="email" placeholder="Enter your email"&gt;
         &lt;br&gt;
-        &lt;input class="input" id="pin-input" type="password" placeholder="Enter your pin"&gt;
+        &lt;input id="pin-input" type="password" placeholder="Enter your pin"&gt;
         &lt;br&gt;&lt;br&gt;
-        &lt;button onclick="authenticate(document.getElementById('email-input').value, document.getElementById('pin-input').value)"&gt;Sign in&lt;/button&gt;
+        &lt;button id="sign-in-button"&gt;Sign in&lt;/button&gt;
         &lt;script&gt;
             function authenticate(email, pin) {
-                exchange.userWithEmail(email, pin, user =&gt; {
+                exchange.userWithEmail(email, pin).then(user =&gt; {
                     alert(\`Hello, \${user.name}\`)
-                }, (status, response) =&gt; {
-                    alert(response)
+                }).catch(error =&gt; {
+                    alert(error.message)
                 })
             }
+
+            document.getElementById('sign-in-button').addEventListener('click', () =>
+                authenticate(document.getElementById('email-input').value, document.getElementById('pin-input').value)
+            )
         &lt;/script&gt;
     &lt;/body&gt;
 &lt;/html&gt;
@@ -444,29 +461,29 @@ function authenticate(email, pin) {
             <p>Returns the entire transaction history of the specified user</p>
             <br>
 <pre>
-exchange.transactions('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234', transactions => {
+exchange.transactions('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234').then(transactions => {
     console.log(transactions)
-}, (status, response) => {
-    alert(\`\${status} error: \${response}\`)
+}).catch(error => {
+    alert(\`status: \${error.status}, message: \${error.message}\`)
 })
 </pre>
             <br>
-            <p><b>Type signature (transactions is a list of <b>transaction objects</b>):</b></p>
+            <p><b>Type signature (transactions is a list of <a onclick="selectDoc(2)">transaction objects</a>):</b></p>
             <br>
 <pre>
-transactions(id: string,
-             pin: string,
-             success: (transactions: any[]) => void,
-             failure: (status: int, response: string) => void)
+exchange.transactions(id: string,
+                      pin: string)
 </pre>
+            <br>
+            <p><b>Returns a <code>Promise</code></b></p>
+            <br>
+            <p><b>The <code>.then</code> block takes a list of <a onclick="selectDoc(2)">transaction objects</a></b></p>
+            <br>
+            <p><b>The <code>.catch</code> block takes an error of type <code>{ status: number, message: string }</code></b></p>
 			<br>
             <p>First parameter: the user's ID.</p>
             <br>
             <p>Second: the user's pin. (<b>cannot</b> be <code>null</code>)</p>
-            <br>
-            <p>Third: (the first function): The success function. This function is called if the user was gotten successfully. It takes in a list of <b>transaction objects</b> (see below)</p>
-            <br>
-            <p>Seventh (last parameter): The error function. This function is called if there was an error when the transactions was gotten. It takes in 2 inputs, the first one being the error code (status), and the second being the error message (SEE BELOW).</p>
             <br>
             <h1 class="subtitle">Possible errors</h1>
             <p><b>400:</b> Invalid parameters</p>
@@ -475,15 +492,13 @@ transactions(id: string,
             <p><b>500:</b> Unknown error. Please try again</p>
             <br>
             <h1 class="subtitle">Transaction Object</h1>
-            <p><b>Fields:</b></p>
-            <br>
-            <p><b>id</b> string</p>
-            <p><b>time</b> string (date created as a string)</p>
-            <p><b>from</b> string (user ID)</p>
-            <p><b>to</b> string (user ID)</p>
-            <p><b>amount</b> number (how much money is being sent)</p>
-            <p><b>balance</b> number (the new balance of the user after applying this transaction)</p>
-            <p><b>message</b> string (can be blank)</p>
+            <p><b>id:</b> string</p>
+            <p><b>time:</b> string (date created as a string)</p>
+            <p><b>from:</b> string (sender's user ID)</p>
+            <p><b>to:</b> string (recipient's user ID)</p>
+            <p><b>amount:</b> number (how much money is being sent)</p>
+            <p><b>balance:</b> number (the new balance of the user after applying this transaction)</p>
+            <p><b>message:</b> string (can be blank)</p>
 		`
 	},
 	{
