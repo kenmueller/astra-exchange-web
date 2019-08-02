@@ -6,7 +6,7 @@ const exchange = (function() {
 			)
 		)
 
-	this.transact = (pin, from, to, amount, message) =>
+	this.transact = (pin, from, to, amount, message = undefined) =>
 		fetch(`https://cors-anywhere.herokuapp.com/https://us-central1-astra-exchange.cloudfunctions.net/transact?pin=${pin}&from=${from}&to=${to}&amount=${amount}${message ? `&message=${message}` : ''}`).then(response => {
 			switch (response.status) {
 			case 200:
