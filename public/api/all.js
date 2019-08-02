@@ -24,7 +24,7 @@ const exchange = (function() {
 			}
 		})
 
-	this.userWithId = (id, pin) =>
+	this.userWithId = (id, pin = undefined) =>
 		fetch(`https://cors-anywhere.herokuapp.com/https://us-central1-astra-exchange.cloudfunctions.net/user?id=${id}${pin ? `&pin=${pin}` : ''}`).then(response => {
 			switch (response.status) {
 			case 200:
@@ -42,7 +42,7 @@ const exchange = (function() {
 			}
 		})
 
-	this.userWithEmail = (email, pin) =>
+	this.userWithEmail = (email, pin = undefined) =>
 		fetch(`https://cors-anywhere.herokuapp.com/https://us-central1-astra-exchange.cloudfunctions.net/user?email=${email}${pin ? `&pin=${pin}` : ''}`).then(response => {
 			switch (response.status) {
 			case 200:
