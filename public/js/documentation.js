@@ -136,7 +136,7 @@ exchange.transact(pin: string,
                   from: string,
                   to: string,
                   amount: number,
-                  message: string) // Optional
+                  message: string) // Optional or <span style="color: red;">null</span>
 </pre>
             <br>
             <p><b>Returns a <code>Promise</code></b></p>
@@ -260,38 +260,38 @@ exchange.users()
 		body: `
 			<h1 class="subtitle">Using the <code>exchange.transact</code> function</h1>
 <pre>
-exchange.transact('1234', 'e95Y6tKOvIS7CBlEdBn2UknzxMQ2', 'GwZX5OnFzGUl0UlXH97EGIeW70p1', 20, 'Take my money', () => {
+exchange.transact('1234', 'e95Y6tKOvIS7CBlEdBn2UknzxMQ2', 'GwZX5OnFzGUl0UlXH97EGIeW70p1', 20, 'Take my money').then(() => {
     alert('Successful transaction')
-}, (status, response) => {
-    alert(\`\${status} error: \${response}\`)
+}).catch(error => {
+    alert(\`status: \${error.status}, message: \${error.message}\`)
 })
 </pre>
             <br>
             <p><b>Type signature:</b></p>
             <br>
 <pre>
-transact(pin: string,
-         from: string,
-         to: string,
-         amount: double,
-         message: string|null,
-         success: () => void,
-         failure: (status: int, response: string) => void)
+exchange.transact(pin: string,
+                  from: string,
+                  to: string,
+                  amount: number,
+                  message: string) // Optional or <span style="color: red;">null</span>
 </pre>
+            <br>
+            <p><b>Returns a <code>Promise</code></b></p>
+            <br>
+            <p><b>The <code>.then</code> block takes no parameters</b></p>
+            <br>
+            <p><b>The <code>.catch</code> block takes an error of type <code>{ status: number, message: string }</code></b></p>
 			<br>
             <p>First parameter: the user's pin (must be a string).</p>
             <br>
-            <p>Second: the user's ID.</p>
+            <p>Second: the sender's ID.</p>
             <br>
             <p>Third: the recipient's ID.</p>
             <br>
             <p>Fourth: the amount (must be an number).</p>
             <br>
-            <p>Fifth: the message (can be left blank, or pass in null if you want).</p>
-            <br>
-            <p>Sixth (the first function): The success function. This function is called if the transaction was created successfully.</p>
-            <br>
-            <p>Seventh (last parameter): The error function. This function is called if there was an error when the transaction was created. It takes in 2 inputs, the first one being the error code (status), and the second being the error message (SEE BELOW).</p>
+            <p>Fifth: the message (Don't pass in a message if you don't have one, or pass in <code>null</code>).</p>
             <br>
             <h1 class="subtitle">Possible errors</h1>
             <p><b>400:</b> Invalid parameters</p>
