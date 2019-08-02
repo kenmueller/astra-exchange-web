@@ -119,104 +119,138 @@ const docs = [
             <br>
             <hr>
             <h1 class="subtitle">Making Transactions</h1>
-			<p>Using the <code>exchange().transact</code> function:</p>
+			<p>Using the <code>exchange.transact</code> function:</p>
             <br>
 <pre>
-exchange().transact('1234', 'e95Y6tKOvIS7CBlEdBn2UknzxMQ2', 'GwZX5OnFzGUl0UlXH97EGIeW70p1', 20, 'Take my money', () => {
+exchange.transact('1234', 'e95Y6tKOvIS7CBlEdBn2UknzxMQ2', 'GwZX5OnFzGUl0UlXH97EGIeW70p1', 20, 'Take my money').then(() => {
     alert('Successful transaction')
-}, (status, response) => {
-    alert(\`\${status} error: \${response}\`)
+}).catch(error => {
+    alert(\`status: \${error.status}, message: \${error.message}\`)
 })
 </pre>
             <br>
-            <p><b>Type signature (remember to put <code>exchange()</code> in front):</b></p>
+            <p><b>Type signature:</b></p>
             <br>
 <pre>
-transact(pin: string,
-         from: string,
-         to: string,
-         amount: double,
-         message: string|null,
-         success: () => void,
-         failure: (status: int, response: string) => void)
+exchange.transact(pin: string,
+                  from: string,
+                  to: string,
+                  amount: number,
+                  message: string) // Optional
 </pre>
+            <br>
+            <p><b>Returns a <code>Promise</code></b></p>
+            <br>
+            <p><b>The <code>.then</code> block takes no parameters</b></p>
+            <br>
+            <p><b>The <code>.catch</code> block takes an error of type <code>{ status: number, message: string }</code></b></p>
 			<br>
 			<a class="doc-link" onclick="selectDoc(1)">Read more</a>
 			<br><br><br>
 			<h1 class="subtitle">Accessing User Data</h1>
-			<p>Using the <code>exchange().userWithId</code> function (<b>IMPORTANT - </b>Set the pin as <code>null</code> to only get public user data):</p>
+			<p>Using the <code>exchange.userWithId</code> function (<b>IMPORTANT - </b>Set the pin as <code>null</code> or don't enter a value to only get public user data):</p>
             <br>
 <pre>
-exchange().userWithId('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234', user => {
+exchange.userWithId('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234').then(user => {
     console.log(user)
-}, (status, response) => {
-    alert(\`\${status} error: \${response}\`)
+}).catch(error => {
+    alert(\`status: \${error.status}, message: \${error.message}\`)
+})
+
+exchange.userWithId('e95Y6tKOvIS7CBlEdBn2UknzxMQ2').then(user => {
+    console.log(user) // Only logs public user data since a pin was not specified
+}).catch(error => {
+    alert(\`status: \${error.status}, message: \${error.message}\`)
 })
 </pre>
             <br>
             <p><b>Type signature (user is a <a onclick="selectDoc(2)">user object</a>):</b></p>
             <br>
 <pre>
-userWithId(id: string,
-           pin: string|null,
-           success: (user: any[]) => void,
-           failure: (status: int, response: string) => void)
+exchange.userWithId(id: string,
+                    pin: string) // Optional or <span style="color: red;">null</span> if you only want public data
 </pre>
             <br>
-            <p>Using the <code>exchange().userWithEmail</code> function (<b>IMPORTANT - </b>Set the pin as <code>null</code> to only get public user data):</p>
+            <p><b>Returns a <code>Promise</code></b></p>
+            <br>
+            <p><b>The <code>.then</code> block takes a <a onclick="selectDoc(2)">user object</a></b></p>
+            <br>
+            <p><b>The <code>.catch</code> block takes an error of type <code>{ status: number, message: string }</code></b></p>
+            <br>
+            <p>Using the <code>exchange.userWithEmail</code> function (<b>IMPORTANT - </b>Set the pin as <code>null</code> or don't enter a value to only get public user data):</p>
             <br>
 <pre>
-exchange().userWithEmail('ken@adastraschool.org', '1234', user => {
+exchange.userWithEmail('ken@adastraschool.org', '1234').then(user => {
     console.log(user)
-}, (status, response) => {
-    alert(\`\${status} error: \${response}\`)
+}).catch(error => {
+    alert(\`status: \${error.status}, message: \${error.message}\`)
+})
+
+exchange.userWithEmail('ken@adastraschool.org').then(user => {
+    console.log(user) // Only logs public user data since a pin was not specified
+}).catch(error => {
+    alert(\`status: \${error.status}, message: \${error.message}\`)
 })
 </pre>
             <br>
             <p><b>Type signature (user is a <a onclick="selectDoc(2)">user object</a>):</b></p>
             <br>
 <pre>
-userWithEmail(id: string,
-              pin: string|null,
-              success: (user: any[]) => void,
-              failure: (status: int, response: string) => void)
+exchange.userWithEmail(id: string,
+                       pin: string) // Optional or <span style="color: red;">null</span> if you only want public data
 </pre>
             <br>
-            <p>Using the <code>exchange().transactions</code> function to access all of a user's transactions:</p>
+            <p><b>Returns a <code>Promise</code></b></p>
+            <br>
+            <p><b>The <code>.then</code> block takes a <a onclick="selectDoc(2)">user object</a></b></p>
+            <br>
+            <p><b>The <code>.catch</code> block takes an error of type <code>{ status: number, message: string }</code></b></p>
+            <br>
+            <p>Using the <code>exchange.transactions</code> function to access all of a user's transactions:</p>
             <br>
 <pre>
-exchange().transactions('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234', transactions => {
+exchange.transactions('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234').then(transactions => {
     console.log(transactions)
-}, (status, response) => {
-    alert(\`\${status} error: \${response}\`)
+}).catch(error => {
+    alert(\`status: \${error.status}, message: \${error.message}\`)
 })
 </pre>
             <br>
             <p><b>Type signature (transactions is a list of <a onclick="selectDoc(2)">transaction objects</a>):</b></p>
             <br>
 <pre>
-transactions(id: string,
-             pin: string,
-             success: (transactions: any[]) => void,
-             failure: (status: int, response: string) => void)
+exchange.transactions(id: string,
+                      pin: string)
 </pre>
+            <br>
+            <p><b>Returns a <code>Promise</code></b></p>
+            <br>
+            <p><b>The <code>.then</code> block takes a list of <a onclick="selectDoc(2)">transaction objects</a></b></p>
+            <br>
+            <p><b>The <code>.catch</code> block takes an error of type <code>{ status: number, message: string }</code></b></p>
             <br>
             <a class="doc-link" onclick="selectDoc(2)">Read more</a>
             <br><br><br>
             <h1 class="subtitle">Retrieving all Users</h1>
-			<p>Using the <code>exchange().users</code> function (<b>NOTE - </b>Returns only public user data):</p>
+			<p>Using the <code>exchange.users</code> function (<b>NOTE - </b>Returns only public user data):</p>
             <br>
 <pre>
-exchange().users(users => {
-    console.log(users)
+exchange.users().then(users => {
+    console.log(users) // Only public user data
 })
 </pre>
             <br>
-            <p><b>Type signature (users is a list of <a onclick="selectDoc(3)">user objects</a>):</b></p>
+            <p><b>Type signature (users is a list of <a onclick="selectDoc(3)">user objects</a> with only public data):</b></p>
             <br>
 <pre>
-users(completion: (users: any[]) => void)
+exchange.users()
 </pre>
+            <br>
+            <p><b>Returns a <code>Promise</code></b></p>
+            <br>
+            <p><b>The <code>.then</code> block takes a list of <a onclick="selectDoc(3)">user objects</a> with only public data</b></p>
+            <br>
+            <p><b>The <code>.catch</code> block takes an error of type <code>{ status: number, message: string }</code></b></p>
             <br>
             <a class="doc-link" onclick="selectDoc(3)">Read more</a>
 		`
@@ -224,9 +258,9 @@ users(completion: (users: any[]) => void)
 	{
 		title: 'Making Transactions',
 		body: `
-			<h1 class="subtitle">Using the <code>exchange().transact</code> function</h1>
+			<h1 class="subtitle">Using the <code>exchange.transact</code> function</h1>
 <pre>
-exchange().transact('1234', 'e95Y6tKOvIS7CBlEdBn2UknzxMQ2', 'GwZX5OnFzGUl0UlXH97EGIeW70p1', 20, 'Take my money', () => {
+exchange.transact('1234', 'e95Y6tKOvIS7CBlEdBn2UknzxMQ2', 'GwZX5OnFzGUl0UlXH97EGIeW70p1', 20, 'Take my money', () => {
     alert('Successful transaction')
 }, (status, response) => {
     alert(\`\${status} error: \${response}\`)
@@ -270,9 +304,9 @@ transact(pin: string,
 	{
 		title: 'Authentication & User Data',
 		body: `
-            <h1 class="subtitle">Using the <code>exchange().userWithId</code> function</h1>
+            <h1 class="subtitle">Using the <code>exchange.userWithId</code> function</h1>
 <pre>
-exchange().userWithId('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234', user => {
+exchange.userWithId('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234', user => {
     console.log(user)
 }, (status, response) => {
     alert(\`\${status} error: \${response}\`)
@@ -319,9 +353,9 @@ userWithId(id: string,
             <p><b>independence</b> number (between 0-3, 0 means pending)</p>
             <p><b>pin</b> string (length is 4)</p>
             <br>
-            <h1 class="subtitle">Using the <code>exchange().userWithEmail</code> function</h1>
+            <h1 class="subtitle">Using the <code>exchange.userWithEmail</code> function</h1>
 <pre>
-exchange().userWithEmail('ken@adastraschool.org', '1234', user => {
+exchange.userWithEmail('ken@adastraschool.org', '1234', user => {
     console.log(user)
 }, (status, response) => {
     alert(\`\${status} error: \${response}\`)
@@ -356,7 +390,7 @@ userWithEmail(email: string,
             <br>
 <pre>
 function authenticate(email, pin) {
-    exchange().userWithEmail(email, pin, user => {
+    exchange.userWithEmail(email, pin, user => {
         // Sign in successful
         location.href = '/dashboard'
     }, (status, response) => {
@@ -395,7 +429,7 @@ function authenticate(email, pin) {
         &lt;button onclick="authenticate(document.getElementById('email-input').value, document.getElementById('pin-input').value)"&gt;Sign in&lt;/button&gt;
         &lt;script&gt;
             function authenticate(email, pin) {
-                exchange().userWithEmail(email, pin, user =&gt; {
+                exchange.userWithEmail(email, pin, user =&gt; {
                     alert(\`Hello, \${user.name}\`)
                 }, (status, response) =&gt; {
                     alert(response)
@@ -406,11 +440,11 @@ function authenticate(email, pin) {
 &lt;/html&gt;
 </pre>
             <br>
-            <h1 class="subtitle">Using the <code>exchange().transactions</code> function</h1>
+            <h1 class="subtitle">Using the <code>exchange.transactions</code> function</h1>
             <p>Returns the entire transaction history of the specified user</p>
             <br>
 <pre>
-exchange().transactions('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234', transactions => {
+exchange.transactions('e95Y6tKOvIS7CBlEdBn2UknzxMQ2', '1234', transactions => {
     console.log(transactions)
 }, (status, response) => {
     alert(\`\${status} error: \${response}\`)
@@ -455,11 +489,11 @@ transactions(id: string,
 	{
 		title: 'Retrieve all Users',
 		body: `
-            <h1 class="subtitle">Using the <code>exchange().users</code> function</h1>
+            <h1 class="subtitle">Using the <code>exchange.users</code> function</h1>
             <p>Returns every user's public data</p>
             <br>
 <pre>
-exchange().users(users => {
+exchange.users(users => {
     console.log(users)
 })
 </pre>
