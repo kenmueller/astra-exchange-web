@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			)
 			db.ref(`users/${id}`).on('value', snapshot => {
 				const val = snapshot.val()
-				user = { id: id, name: val.name, email: val.email, balance: val.balance, independence: val.independence, card: null }
+				user = { id, name: val.name, email: val.email, balance: val.balance, independence: val.independence, card: null }
 				document.querySelectorAll('.auth.user-link').forEach(element => element.innerHTML = user.name)
 				document.querySelectorAll('.user.name').forEach(element => element.innerHTML = `Hello, ${user.name}`)
 				document.querySelectorAll('.user.balance').forEach(element => element.innerHTML = Math.trunc(user.balance * 100) / 100)
