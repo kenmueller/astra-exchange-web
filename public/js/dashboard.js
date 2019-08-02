@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					updateSettings()
 				})
 			})
-			exchange().users(users_ => {
+			exchange.users().then(users_ => {
 				users_.forEach(user => {
 					users.push(user)
 					updateUserDropdowns()
