@@ -5,19 +5,23 @@ document.write(
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="copyright" content="2019 Ken Mueller">
+		<meta name="description" content="Astra Exchange for Ad Astra school. Located in Hawthorne">
+		<meta name="keywords" content="astra exchange,astra.exchange,astra,exchange,ad astra,ad,astra,ken mueller,ken,mueller">
 		<script defer src="/__/firebase/5.9.4/firebase-app.js"></script>
 		<script defer src="/__/firebase/5.9.4/firebase-auth.js"></script>
 		<script defer src="/__/firebase/5.9.4/firebase-database.js"></script>
 		<script defer src="/__/firebase/5.9.4/firebase-messaging.js"></script>
 		<script defer src="/__/firebase/5.9.4/firebase-storage.js"></script>
 		<script defer src="/__/firebase/init.js"></script>
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
 		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 		<script defer src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
 		<link rel="stylesheet" href="/css/navbar.css">
 		<link rel="stylesheet" href="/css/dashboard.css">
-		<link rel="icon" type="image/png" href="/images/astra.png">
+		<link rel="icon" href="/images/astra.png">
 		<title>Astra Exchange</title>
 	</head>
 	<body>
@@ -512,18 +516,22 @@ document.write(
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="copyright" content="2019 Ken Mueller">
+		<meta name="description" content="Astra Exchange for Ad Astra school. Located in Hawthorne">
+		<meta name="keywords" content="astra exchange,astra.exchange,astra,exchange,ad astra,ad,astra,ken mueller,ken,mueller">
 		<script defer src="/__/firebase/5.9.4/firebase-app.js"></script>
 		<script defer src="/__/firebase/5.9.4/firebase-auth.js"></script>
 		<script defer src="/__/firebase/5.9.4/firebase-database.js"></script>
 		<script defer src="/__/firebase/5.9.4/firebase-messaging.js"></script>
 		<script defer src="/__/firebase/5.9.4/firebase-storage.js"></script>
 		<script defer src="/__/firebase/init.js"></script>
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
 		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
 		<link rel="stylesheet" href="/css/navbar.css">
 		<link rel="stylesheet" href="/css/index.css">
-		<link rel="icon" type="image/png" href="/images/astra.png">
+		<link rel="icon" href="/images/astra.png">
 		<title>Astra Exchange</title>
 	</head>
 	<body>
