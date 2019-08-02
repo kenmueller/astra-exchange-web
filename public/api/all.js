@@ -1,96 +1,82 @@
-function exchange() {
-	this.users = completion =>
+const exchange = (function() {
+	this.users = () =>
 		fetch('https://cors-anywhere.herokuapp.com/https://us-central1-astra-exchange.cloudfunctions.net/users').then(response =>
-			response.json().then(json =>
-				completion(json)
+			response.json().catch(() =>
+				Promise.reject({ status: 500, message: 'Unknown error. Please try again' })
 			)
 		)
 
-	this.transact = (pin, from, to, amount, message, success, failure) =>
+	this.transact = (pin, from, to, amount, message) =>
 		fetch(`https://cors-anywhere.herokuapp.com/https://us-central1-astra-exchange.cloudfunctions.net/transact?pin=${pin}&from=${from}&to=${to}&amount=${amount}${message ? `&message=${message}` : ''}`).then(response => {
 			switch (response.status) {
-				case 200:
-					success()
-					break
-				case 400:
-					failure(400, 'Invalid parameters')
-					break
-				case 404:
-					failure(404, 'Invalid user ID')
-					break
-				case 403:
-					failure(403, 'Insufficient balance')
-					break
-				case 401:
-					failure(401, 'Invalid pin')
-					break
-				default:
-					failure(500, 'Unknown error. Please try again')
+			case 200:
+				return Promise.resolve()
+			case 400:
+				return Promise.reject({ status: 400, message: 'Invalid parameters' })
+			case 404:
+				return Promise.reject({ status: 404, message: 'Invalid user ID' })
+			case 403:
+				return Promise.reject({ status: 403, message: 'Insufficient balance' })
+			case 401:
+				return Promise.reject({ status: 401, message: 'Invalid pin' })
+			default:
+				return Promise.reject({ status: 500, message: 'Unknown error. Please try again' })
 			}
 		})
 
-	this.userWithId = (id, pin, success, failure) =>
+	this.userWithId = (id, pin) =>
 		fetch(`https://cors-anywhere.herokuapp.com/https://us-central1-astra-exchange.cloudfunctions.net/user?id=${id}${pin ? `&pin=${pin}` : ''}`).then(response => {
 			switch (response.status) {
-				case 200:
-					return response.json().then(json =>
-						success(json)
-					)
-				case 400:
-					failure(400, 'Invalid parameters')
-					break
-				case 404:
-					failure(404, 'Invalid user ID')
-					break
-				case 401:
-					failure(401, 'Invalid pin')
-					break
-				default:
-					failure(500, 'Unknown error. Please try again')
+			case 200:
+				return response.json().catch(() =>
+					Promise.reject({ status: 500, message: 'Unknown error. Please try again' })
+				)
+			case 400:
+				return Promise.reject({ status: 400, message: 'Invalid parameters' })
+			case 404:
+				return Promise.reject({ status: 404, message: 'Invalid user ID' })
+			case 401:
+				return Promise.reject({ status: 401, message: 'Invalid pin' })
+			default:
+				return Promise.reject({ status: 500, message: 'Unknown error. Please try again' })
 			}
 		})
 
-	this.userWithEmail = (email, pin, success, failure) =>
+	this.userWithEmail = (email, pin) =>
 		fetch(`https://cors-anywhere.herokuapp.com/https://us-central1-astra-exchange.cloudfunctions.net/user?email=${email}${pin ? `&pin=${pin}` : ''}`).then(response => {
 			switch (response.status) {
-				case 200:
-					return response.json().then(json =>
-						success(json)
-					)
-				case 400:
-					failure(400, 'Invalid parameters')
-					break
-				case 404:
-					failure(404, 'Invalid email')
-					break
-				case 401:
-					failure(401, 'Invalid pin')
-					break
-				default:
-					failure(500, 'Unknown error. Please try again')
+			case 200:
+				return response.json().catch(() =>
+					Promise.reject({ status: 500, message: 'Unknown error. Please try again' })
+				)
+			case 400:
+				return Promise.reject({ status: 400, message: 'Invalid parameters' })
+			case 404:
+				return Promise.reject({ status: 404, message: 'Invalid email' })
+			case 401:
+				return Promise.reject({ status: 401, message: 'Invalid pin' })
+			default:
+				return Promise.reject({ status: 500, message: 'Unknown error. Please try again' })
 			}
 		})
 
-	this.transactions = (id, pin, success, failure) =>
+	this.transactions = (id, pin) =>
 		fetch(`https://cors-anywhere.herokuapp.com/https://us-central1-astra-exchange.cloudfunctions.net/transactions?id=${id}&pin=${pin}`).then(response => {
 			switch (response.status) {
-				case 200:
-					return response.json().then(json =>
-						success(json)
-					)
-				case 400:
-					failure(400, 'Invalid parameters')
-					break
-				case 404:
-					failure(404, 'Invalid user ID')
-					break
-				case 401:
-					failure(401, 'Invalid pin')
-					break
-				default:
-					failure(500, 'Unknown error. Please try again')
+			case 200:
+				return response.json().catch(() =>
+					Promise.reject({ status: 500, message: 'Unknown error. Please try again' })
+				)
+			case 400:
+				return Promise.reject({ status: 400, message: 'Invalid parameters' })
+			case 404:
+				return Promise.reject({ status: 404, message: 'Invalid user ID' })
+			case 401:
+				return Promise.reject({ status: 401, message: 'Invalid pin' })
+			default:
+				return Promise.reject({ status: 500, message: 'Unknown error. Please try again' })
 			}
 		})
 
 	return this
-}
+})()
