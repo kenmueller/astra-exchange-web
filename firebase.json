@@ -38,28 +38,6 @@
 					"source": "**",
 					"function": "app"
 				}
-			],
-			"redirects": [
-				{
-					"source": "/documentation.html",
-					"destination": "/documentation"
-				},
-				{
-					"source": "/companies.html",
-					"destination": "/companies"
-				},
-				{
-					"source": "/tables.html",
-					"destination": "/tables"
-				},
-				{
-					"source": "/notes",
-					"destination": "https://notes.astra.exchange"
-				},
-				{
-					"source": "/index.html",
-					"destination": "/"
-				}
 			]
 		},
 		{
