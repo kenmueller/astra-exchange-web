@@ -1,3 +1,4 @@
+.runtimeconfig.json
 lib/
 typings/
 node_modules/
