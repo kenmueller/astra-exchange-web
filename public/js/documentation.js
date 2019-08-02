@@ -239,6 +239,8 @@ exchange.transactions(id: string,
 <pre>
 exchange.users().then(users => {
     console.log(users) // Only public user data
+}).catch(error => {
+    alert(\`status: \${error.status}, message: \${error.message}\`)
 })
 </pre>
             <br>
@@ -508,26 +510,32 @@ exchange.transactions(id: string,
             <p>Returns every user's public data</p>
             <br>
 <pre>
-exchange.users(users => {
-    console.log(users)
+exchange.users().then(users => {
+    console.log(users) // Only public user data
+}).catch(error => {
+    alert(\`status: \${error.status}, message: \${error.message}\`)
 })
 </pre>
             <br>
-            <p><b>Type signature (users is a list of <b>user objects</b>):</b></p>
+            <p><b>Type signature (users is a list of <a onclick="selectDoc(3)">user objects</a> with only public data):</b></p>
             <br>
 <pre>
-users(completion: (users: any[]) => void)
+exchange.users()
 </pre>
             <br>
-            <p>Only parameter: The completion function. It takes in a list of <b>user objects</b> (see below).</p>
+            <p><b>Returns a <code>Promise</code></b></p>
+            <br>
+            <p><b>The <code>.then</code> block takes a list of <a onclick="selectDoc(3)">user objects</a> with only public data</b></p>
+            <br>
+            <p><b>The <code>.catch</code> block takes an error of type <code>{ status: number, message: string }</code></b></p>
             <br>
             <h1 class="subtitle">User Object</h1>
             <p><b>Public fields (if you want private fields, you must <a onclick="selectDoc(2)">get each user individually</a>):</b></p>
             <br>
-            <p><b>id</b> string</p>
-            <p><b>name</b> string</p>
-            <p><b>email</b> string</p>
-            <p><b>balance</b> number</p>
+            <p><b>id:</b> string</p>
+            <p><b>name:</b> string</p>
+            <p><b>email:</b> string</p>
+            <p><b>balance:</b> number</p>
 		`
 	}
 ]
