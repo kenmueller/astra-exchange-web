@@ -20,7 +20,7 @@ app.get('/users/:slug', (req, res) =>
 		db.ref(`users/${snapshot!.val()}`).on('value', userSnapshot => {
 			if (userSnapshot && userSnapshot.exists()) {
 				const val = userSnapshot.val()
-				return res.status(200).render('user.html', {
+				res.status(200).render('user.html', {
 					user: {
 						id: userSnapshot.key,
 						name: val.name,
@@ -28,7 +28,8 @@ app.get('/users/:slug', (req, res) =>
 						balance: val.balance
 					}
 				})
-			} else return res.status(404).redirect('/users')
+			} else
+				res.status(404).redirect('/users')
 		})
 	)
 )
@@ -41,7 +42,7 @@ app.get('/companies/:slug', (req, res) =>
 				const image = val.image ? val.image : '/images/astra.png'
 				return db.ref(`users/${val.owner}`).on('value', userSnapshot => {
 					const userVal = userSnapshot!.val()
-					return res.status(200).render('company.html', {
+					res.status(200).render('company.html', {
 						company: {
 							id: companySnapshot.key,
 							name: val.name,
@@ -56,7 +57,10 @@ app.get('/companies/:slug', (req, res) =>
 						}
 					})
 				})
-			} else return res.status(404).redirect('/companies')
+			} else {
+				res.status(404).redirect('/companies')
+				return Promise.resolve()
+			}
 		})
 	)
 )
