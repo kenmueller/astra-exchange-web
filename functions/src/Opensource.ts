@@ -30,7 +30,7 @@ export const opensource = functions.https.onRequest((req, res) => {
 			: app(req, res)
 		: firestore.doc(`opensource/${urlParts.length ? urlParts.join('\\') : '\\'}`).get().then(page => {
 			if (page.exists) {
-				const html = page.get('html')
+				const html: string | undefined = page.get('html')
 				res.status(html ? 200 : 500).send(html || '<!DOCTYPE html><html><head><title>An error occurred</title></head><body><h1>An error occurred</h1><p>Please reload the page</p><button onclick="location.reload()">Reload</button></body></html>')
 			} else {
 				const url = urlParts.join('/')
