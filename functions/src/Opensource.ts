@@ -45,7 +45,7 @@ export const opensource = functions.https.onRequest((req, res) => {
 						submit.addEventListener('click', () => {
 							submit.classList.add('is-loading')
 							const html = editor.getValue()
-							return (html.trim().length
+							(html.trim().length
 								? firestore.doc('opensource/${url.replace('/', '\\\\')}').set({ html })
 								: Promise.resolve()
 							).then(() => location.reload())
@@ -69,7 +69,7 @@ app.get('/edit/:url', (req, res) => {
 					submit.addEventListener('click', () => {
 						submit.classList.add('is-loading')
 						const html = editor.getValue()
-						return html.trim().length
+						html.trim().length
 							? ${firestoreDoc}update({ html }).then(() => submit.classList.remove('is-loading'))
 							: ${firestoreDoc}delete().then(() => location.reload())
 					})
@@ -82,34 +82,20 @@ app.get('/edit/:url', (req, res) => {
 
 function editIndex(res: functions.Response): Promise<void | functions.Response> {
 	return firestore.doc('opensource/\\').get().then(page => page.exists
-		? res.status(200).send(/*createPage(
-			'Edit index',
-			`
-				.textarea.edit.html {
-					height: 400px;
-				}
-				.button.edit.complete {
-					margin: auto;
-					display: block;
-				}
-			`,
-			`
-				<textarea class="textarea edit html" placeholder="Press submit to delete page"></textarea>
-				<br>
-				<a class="button is-large is-success edit complete"><strong>Submit</strong></a>
-			`,
-			`
-				const textarea = document.querySelector('.textarea.edit.html')
-				const complete = document.querySelector('.button.edit.complete')
-				textarea.value = \`${page.data()!.html}\`
-				complete.addEventListener('click', () => {
-					complete.classList.add('is-loading')
-					return textarea.value.trim().length === 0
-						? firestore.doc('opensource/\\\\').delete().then(() => location.reload())
-						: firestore.doc('opensource/\\\\').update({ html: textarea.value }).then(() => complete.classList.remove('is-loading'))
+		? res.status(200).send(createPage({
+			url: 'index',
+			title: 'Edit index',
+			html: page.get('html') || DEFAULT_HTML,
+			script: `
+				submit.addEventListener('click', () => {
+					submit.classList.add('is-loading')
+					const html = editor.getValue()
+					html.trim().length
+						? firestore.doc('opensource/\\\\').update({ html }).then(() => submit.classList.remove('is-loading'))
+						: firestore.doc('opensource/\\\\').delete().then(() => location.reload())
 				})
 			`
-		)*/)
+		}))
 		: res.status(404).redirect('/')
 	)
 }
