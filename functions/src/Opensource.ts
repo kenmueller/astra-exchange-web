@@ -148,7 +148,7 @@ function createPage({ url, title, style, body, script }: { url: string, title: s
 				<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 				<meta name="copyright" content="2019 Ken Mueller">
 				<meta name="description" content="Astra Exchange Open Source - ${url}">
-				<meta name="keywords" content="astra exchange,astra.exchange,astra,exchange,ad astra,ad,astra,astra exchange open source,open source,{{ url }},ken mueller,ken,mueller">
+				<meta name="keywords" content="astra exchange,astra.exchange,astra,exchange,ad astra,ad,astra,astra exchange open source,open source,${url},ken mueller,ken,mueller">
 				<script defer src="/__/firebase/5.8.4/firebase-app.js"></script>
 				<script defer src="/__/firebase/5.8.4/firebase-firestore.js"></script>
 				<script defer src="/__/firebase/init.js"></script>
