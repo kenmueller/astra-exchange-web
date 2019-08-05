@@ -58,66 +58,26 @@ export const opensource = functions.https.onRequest((req, res) => {
 
 app.get('/edit/:url', (req, res) => {
 	const url = req.params.url
-	return firestore.doc(`opensource/${url.replace('/', '\\')}`).get().then(page => page.exists
-		? res.status(200).send(/*createPage({
-			url,
-			title: `Edit ${url}`,
-			style: `
-				#editor {
-					height: 400px;
-				}
-				.button.edit.complete {
-					margin: auto;
-					display: block;
-					font-weight: bold;
-				}
-			`,
-			body: `<div id="editor"><xmp>${DEFAULT_HTML}</xmp></div><br><a class="button is-large is-success new complete">Create</a>`,
-			script: `
-				const editor = ace.edit('editor')
-				const complete = document.querySelector('.button.new.complete')
-				editor.setTheme('ace/theme/monokai')
-				editor.session.setMode('ace/mode/html')
-				complete.addEventListener('click', () => {
-					complete.classList.add('is-loading')
-					const html = editor.getValue()
-					return (html.trim().length
-						? firestore.doc('opensource/${url.replace('/', '\\\\')}').set({ html })
-						: Promise.resolve()
-					).then(() => location.reload())
-				})
-			`
-		}))
-		? res.status(200).send(/*createPage(
-			`Edit ${url}`,
-			`
-				.textarea.edit.html {
-					height: 400px;
-				}
-				.button.edit.complete {
-					margin: auto;
-					display: block;
-				}
-			`,
-			`
-				<textarea class="textarea edit html" placeholder="Press submit to delete page"></textarea>
-				<br>
-				<a class="button is-large is-success edit complete"><strong>Submit</strong></a>
-			`,
-			`
-				const textarea = document.querySelector('.textarea.edit.html')
-				const complete = document.querySelector('.button.edit.complete')
-				textarea.value = \`${page.data()!.html}\`
-				complete.addEventListener('click', () => {
-					complete.classList.add('is-loading')
-					return textarea.value.trim().length === 0
-						? firestore.doc('opensource/${url.replace('/', '\\\\')}').delete().then(() => location.reload())
-						: firestore.doc('opensource/${url.replace('/', '\\\\')}').update({ html: textarea.value }).then(() => complete.classList.remove('is-loading'))
-				})
-			`
-		)*/)
-		: res.status(404).redirect(`/${url}`)
-	)
+	return firestore.doc(`opensource/${url.replace('/', '\\')}`).get().then(page => {
+		if (page.exists) {
+			const firestoreDoc = `firestore.doc('opensource/${url.replace('/', '\\\\')}').`
+			res.status(200).send(createPage({
+				url,
+				title: `Edit ${url}`,
+				html: page.get('html') || DEFAULT_HTML,
+				script: `
+					submit.addEventListener('click', () => {
+						submit.classList.add('is-loading')
+						const html = editor.getValue()
+						return html.trim().length
+							? ${firestoreDoc}update({ html }).then(() => submit.classList.remove('is-loading'))
+							: ${firestoreDoc}delete().then(() => location.reload())
+					})
+				`
+			}))
+		} else
+			res.status(404).redirect(`/${url}`)
+	})
 })
 
 function editIndex(res: functions.Response): Promise<void | functions.Response> {
