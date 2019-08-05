@@ -33,7 +33,7 @@ export const opensource = functions.https.onRequest((req, res) => {
 				const html: string | undefined = page.get('html')
 				res.status(html ? 200 : 500).send(html || '<!DOCTYPE html><html><head><title>An error occurred</title></head><body><h1>An error occurred</h1><p>Please reload the page</p><button onclick="location.reload()">Reload</button></body></html>')
 			} else {
-				const url = urlParts.join('/')
+				const url = urlParts.length ? urlParts.join('/') : 'index'
 				res.status(200).send(createPage({
 					url,
 					title: `Create ${url}`,
@@ -47,7 +47,7 @@ export const opensource = functions.https.onRequest((req, res) => {
 							submit.classList.add('is-loading')
 							const html = editor.getValue()
 							return (html.trim().length
-								? firestore.doc('opensource/${url.replace('/', '\\\\')}').set({ html })
+								? firestore.doc('opensource/${urlParts.length ? urlParts.join('\\\\') : '\\\\'}').set({ html })
 								: Promise.resolve()
 							).then(() => location.reload())
 						})
