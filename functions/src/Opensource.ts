@@ -131,6 +131,7 @@ function createPage({ url, title, html, submitButtonTitle, script }: { url: stri
 				<script defer src="/ace/src-min/ace.js"></script>
 				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
 				<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
+				<link rel="icon" href="https://astra.exchange/images/astra.png">
 				<title>${title}</title>
 				<style>
 					html,
