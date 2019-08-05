@@ -39,24 +39,13 @@ export const opensource = functions.https.onRequest((req, res) => {
 				res.status(200).send(createPage({
 					url,
 					title: `Create ${url}`,
-					style: `
-						#editor {
-							height: 400px;
-						}
-						.button.new.complete {
-							margin: auto;
-							display: block;
-							font-weight: bold;
-						}
-					`,
-					body: `<div id="editor"><xmp>${DEFAULT_HTML}</xmp></div><br><a class="button is-large is-success new complete">Create</a>`,
+					html: DEFAULT_HTML,
 					script: `
-						const editor = ace.edit('editor')
-						const complete = document.querySelector('.button.new.complete')
-						editor.setTheme('ace/theme/monokai')
-						editor.session.setMode('ace/mode/html')
-						complete.addEventListener('click', () => {
-							complete.classList.add('is-loading')
+						editor.session.on('change', () =>
+							submit.disabled = !editor.getValue().trim().length
+						)
+						submit.addEventListener('click', () => {
+							submit.classList.add('is-loading')
 							const html = editor.getValue()
 							return (html.trim().length
 								? firestore.doc('opensource/${url.replace('/', '\\\\')}').set({ html })
@@ -72,6 +61,35 @@ export const opensource = functions.https.onRequest((req, res) => {
 app.get('/edit/:url', (req, res) => {
 	const url = req.params.url
 	return firestore.doc(`opensource/${url.replace('/', '\\')}`).get().then(page => page.exists
+		? res.status(200).send(/*createPage({
+			url,
+			title: `Edit ${url}`,
+			style: `
+				#editor {
+					height: 400px;
+				}
+				.button.edit.complete {
+					margin: auto;
+					display: block;
+					font-weight: bold;
+				}
+			`,
+			body: `<div id="editor"><xmp>${DEFAULT_HTML}</xmp></div><br><a class="button is-large is-success new complete">Create</a>`,
+			script: `
+				const editor = ace.edit('editor')
+				const complete = document.querySelector('.button.new.complete')
+				editor.setTheme('ace/theme/monokai')
+				editor.session.setMode('ace/mode/html')
+				complete.addEventListener('click', () => {
+					complete.classList.add('is-loading')
+					const html = editor.getValue()
+					return (html.trim().length
+						? firestore.doc('opensource/${url.replace('/', '\\\\')}').set({ html })
+						: Promise.resolve()
+					).then(() => location.reload())
+				})
+			`
+		}))
 		? res.status(200).send(/*createPage(
 			`Edit ${url}`,
 			`
@@ -138,7 +156,7 @@ function editIndex(res: functions.Response): Promise<void | functions.Response> 
 	)
 }
 
-function createPage({ url, title, style, body, script }: { url: string, title: string, style: string, body: string, script: string }): string {
+function createPage({ url, title, html, script }: { url: string, title: string, html: string, script: string }): string {
 	return `
 		<!DOCTYPE html>
 		<html>
@@ -169,7 +187,14 @@ function createPage({ url, title, style, body, script }: { url: string, title: s
 					.box {
 						margin-top: 20px;
 					}
-					${style}
+					#editor {
+						height: 400px;
+					}
+					.button.submit {
+						margin: auto;
+						display: block;
+						font-weight: bold;
+					}
 				</style>
 			</head>
 			<body>
@@ -177,14 +202,20 @@ function createPage({ url, title, style, body, script }: { url: string, title: s
 					<div class="columns">
 						<div class="column is-10 is-offset-1">
 							<div class="box">
-								${body}
+								<div id="editor"><xmp>${html}</xmp></div>
+								<br>
+								<button class="button is-large is-success submit">Create</button>
 							</div>
 						</div>
 					</div>
 				</div>
-				<script defer>
+				<script>
 					document.addEventListener('DOMContentLoaded', () => {
 						const firestore = firebase.firestore()
+						const editor = ace.edit('editor')
+						const submit = document.querySelector('.button.submit')
+						editor.setTheme('ace/theme/monokai')
+						editor.session.setMode('ace/mode/html')
 						${script}
 					})
 				</script>
