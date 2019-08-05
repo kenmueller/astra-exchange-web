@@ -38,6 +38,7 @@ export const opensource = functions.https.onRequest((req, res) => {
 					url,
 					title: `Create ${url}`,
 					html: DEFAULT_HTML,
+					submitButtonTitle: 'Create',
 					script: `
 						editor.session.on('change', () =>
 							submit.disabled = !editor.getValue().trim().length
@@ -65,6 +66,7 @@ app.get('/edit/:url', (req, res) => {
 				url,
 				title: `Edit ${url}`,
 				html: page.get('html') || DEFAULT_HTML,
+				submitButtonTitle: 'Submit',
 				script: `
 					submit.addEventListener('click', () => {
 						submit.classList.add('is-loading')
@@ -86,6 +88,7 @@ function editIndex(res: functions.Response): Promise<void | functions.Response> 
 			url: 'index',
 			title: 'Edit index',
 			html: page.get('html') || DEFAULT_HTML,
+			submitButtonTitle: 'Submit',
 			script: `
 				submit.addEventListener('click', () => {
 					submit.classList.add('is-loading')
@@ -100,7 +103,7 @@ function editIndex(res: functions.Response): Promise<void | functions.Response> 
 	)
 }
 
-function createPage({ url, title, html, script }: { url: string, title: string, html: string, script: string }): string {
+function createPage({ url, title, html, submitButtonTitle, script }: { url: string, title: string, html: string, submitButtonTitle: string, script: string }): string {
 	return `
 		<!DOCTYPE html>
 		<html>
@@ -148,7 +151,7 @@ function createPage({ url, title, html, script }: { url: string, title: string, 
 							<div class="box">
 								<div id="editor"><xmp>${html}</xmp></div>
 								<br>
-								<button class="button is-large is-success submit">Create</button>
+								<button class="button is-large is-success submit">${submitButtonTitle}</button>
 							</div>
 						</div>
 					</div>
