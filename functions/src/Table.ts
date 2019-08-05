@@ -4,30 +4,28 @@ import * as moment from 'moment'
 
 const db = admin.database()
 
-export const orderTable = functions.https.onCall((data, context) =>
-	context.auth && context.auth.uid && data.table
-		? isDuringBazaar().then(isDuring =>
-			isDuring
-				? canBuyTables(context.auth!.uid).then(canBuy =>
-					canBuy
-						? db.ref(`tables/${data.table}`).once('value').then(table => {
-							const val = table.val()
-							return val.owner
-								? Promise.resolve('This table already has an owner')
-								: db.ref(`users/${context.auth!.uid}/balance`).once('value').then(balance =>
-									val.price > balance.val()
-										? Promise.resolve('You don\'t have enough Astras')
-										: db.ref(`tables/${data.table}`).update({
-											owner: context.auth!.uid
-										}) as Promise<undefined>
-								)
-						})
-						: Promise.resolve('You\'ve already bought 2 tables')
-				)
-				: Promise.resolve('You need to wait for the bazaar to order tables')
-		)
-		: Promise.resolve('Bad request')
-)
+export const orderTable = functions.https.onCall((data, context) => {
+	if (!(context.auth && context.auth.uid && data.table)) return Promise.resolve('Bad request')
+	const uid = context.auth.uid
+	return isDuringBazaar().then(isDuring =>
+		isDuring
+			? canBuyTables(uid).then(canBuy =>
+				canBuy
+					? db.ref(`tables/${data.table}`).once('value').then(table => {
+						const val = table.val()
+						return val.owner
+							? Promise.resolve('This table already has an owner')
+							: db.ref(`users/${uid}/balance`).once('value').then(balance =>
+								val.price > balance.val()
+									? Promise.resolve('You don\'t have enough Astras')
+									: db.ref(`tables/${data.table}`).update({ owner: uid }) as Promise<undefined>
+							)
+					})
+					: Promise.resolve('You\'ve already bought 2 tables')
+			)
+			: Promise.resolve('You need to wait for the bazaar to order tables')
+	)
+})
 
 export const tableOrderCreated = functions.database.ref('tables/{table}/owner').onCreate((_snapshot, context) => {
 	const dateList = moment().format('lll').split(' ')
