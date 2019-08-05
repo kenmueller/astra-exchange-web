@@ -52,14 +52,14 @@ export const opensource = functions.https.onRequest((req, res) => {
 					body: `<div id="editor"><xmp>${DEFAULT_HTML}</xmp></div><br><a class="button is-large is-success new complete">Create</a>`,
 					script: `
 						const editor = ace.edit('editor')
+						const complete = document.querySelector('.button.new.complete')
 						editor.setTheme('ace/theme/monokai')
 						editor.session.setMode('ace/mode/html')
-						const editorDiv = document.querySelector('#editor')
-						const complete = document.querySelector('.button.new.complete')
 						complete.addEventListener('click', () => {
 							complete.classList.add('is-loading')
-							return (editorDiv.innerHTML.trim().length
-								? firestore.doc('opensource/${url.replace('/', '\\\\')}').set({ html: editorDiv.innerHTML })
+							const html = editor.getValue()
+							return (html.trim().length
+								? firestore.doc('opensource/${url.replace('/', '\\\\')}').set({ html })
 								: Promise.resolve()
 							).then(() => location.reload())
 						})
