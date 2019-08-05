@@ -1,8 +1,6 @@
 import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
 import * as express from 'express'
-// import * as sanitizeHtml from 'sanitize-html'
-// import { minify as minifyHtml } from 'html-minifier'
 
 const DEFAULT_HTML = `<!DOCTYPE html>
 <html>
