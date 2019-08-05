@@ -76,7 +76,9 @@ app.get('/edit/:url', (req, res) => {
 						const html = editor.getValue()
 						return html.trim().length
 							? ${firestoreDoc}update({ html }).then(() => submit.classList.remove('is-loading'))
-							: ${firestoreDoc}delete().then(() => location.reload())
+							: confirm('Are you sure you want to delete ${url}?\\nThis action cannot be undone')
+								? ${firestoreDoc}delete().then(() => location.reload())
+								: submit.classList.remove('is-loading')
 					})
 				`
 			}))
@@ -101,7 +103,9 @@ function editIndex(res: functions.Response): Promise<void | functions.Response> 
 					const html = editor.getValue()
 					return html.trim().length
 						? firestore.doc('opensource/\\\\').update({ html }).then(() => submit.classList.remove('is-loading'))
-						: firestore.doc('opensource/\\\\').delete().then(() => location.reload())
+						: confirm('Are you sure you want to delete index?\\nThis action cannot be undone')
+							? firestore.doc('opensource/\\\\').delete().then(() => location.reload())
+							: submit.classList.remove('is-loading')
 				})
 			`
 		}))
