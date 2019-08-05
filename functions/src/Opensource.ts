@@ -68,6 +68,9 @@ app.get('/edit/:url', (req, res) => {
 				html: page.get('html') || DEFAULT_HTML,
 				submitButtonTitle: 'Submit',
 				script: `
+					editor.session.on('change', () =>
+						submit.innerHTML = editor.getValue().trim().length ? 'Submit' : 'Delete'
+					)
 					submit.addEventListener('click', () => {
 						submit.classList.add('is-loading')
 						const html = editor.getValue()
@@ -90,6 +93,9 @@ function editIndex(res: functions.Response): Promise<void | functions.Response> 
 			html: page.get('html') || DEFAULT_HTML,
 			submitButtonTitle: 'Submit',
 			script: `
+				editor.session.on('change', () =>
+					submit.innerHTML = editor.getValue().trim().length ? 'Submit' : 'Delete'
+				)
 				submit.addEventListener('click', () => {
 					submit.classList.add('is-loading')
 					const html = editor.getValue()
