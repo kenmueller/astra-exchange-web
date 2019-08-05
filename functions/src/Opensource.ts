@@ -45,7 +45,7 @@ export const opensource = functions.https.onRequest((req, res) => {
 						submit.addEventListener('click', () => {
 							submit.classList.add('is-loading')
 							const html = editor.getValue()
-							(html.trim().length
+							return (html.trim().length
 								? firestore.doc('opensource/${url.replace('/', '\\\\')}').set({ html })
 								: Promise.resolve()
 							).then(() => location.reload())
@@ -69,7 +69,7 @@ app.get('/edit/:url', (req, res) => {
 					submit.addEventListener('click', () => {
 						submit.classList.add('is-loading')
 						const html = editor.getValue()
-						html.trim().length
+						return html.trim().length
 							? ${firestoreDoc}update({ html }).then(() => submit.classList.remove('is-loading'))
 							: ${firestoreDoc}delete().then(() => location.reload())
 					})
@@ -90,7 +90,7 @@ function editIndex(res: functions.Response): Promise<void | functions.Response> 
 				submit.addEventListener('click', () => {
 					submit.classList.add('is-loading')
 					const html = editor.getValue()
-					html.trim().length
+					return html.trim().length
 						? firestore.doc('opensource/\\\\').update({ html }).then(() => submit.classList.remove('is-loading'))
 						: firestore.doc('opensource/\\\\').delete().then(() => location.reload())
 				})
