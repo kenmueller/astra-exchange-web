@@ -177,8 +177,8 @@ document.write(
 							</div>
 							<div class="tile is-parent">
 								<article class="tile is-child box">
-									<p class="title user independence">...</p>
-									<p class="subtitle">Independence</p>
+									<p class="title user reputation">...</p>
+									<p class="subtitle">Reputation</p>
 								</article>
 							</div>
 							<div class="tile is-parent">
@@ -498,8 +498,8 @@ document.write(
 						<p class="settings balance"></p>
 					</div>
 					<div class="field">
-						<label class="label">Independence</label>
-						<p class="settings independence"></p>
+						<label class="label">Reputation</label>
+						<p class="settings reputation"></p>
 					</div>
 					<div class="field">
 						<label class="label">Pin</label>

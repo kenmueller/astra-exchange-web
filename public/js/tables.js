@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			const id = user_.uid
 			db.ref(`users/${id}`).on('value', snapshot => {
 				const val = snapshot.val()
-                user = { id, name: val.name, email: val.email, balance: val.balance, independence: val.independence, card: null }
+                user = { id, name: val.name, email: val.email, balance: val.balance, reputation: val.reputation, card: null }
                 document.cookie = `auth=${user.name}; expires=Thu, 01 Jan 3000 00:00:00 GMT`
 				updateSettings()
 				db.ref(`users/${id}/cards`).on('child_added', cardSnapshot => {
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		document.querySelectorAll('.settings.name').forEach(element => element.innerHTML = user.name)
 		document.querySelectorAll('.settings.email').forEach(element => element.innerHTML = user.email)
 		document.querySelectorAll('.settings.balance').forEach(element => element.innerHTML = Math.trunc(user.balance * 100) / 100)
-		document.querySelectorAll('.settings.independence').forEach(element => element.innerHTML = user.independence === 0 ? 'Pending' : user.independence)
+		document.querySelectorAll('.settings.reputation').forEach(element => element.innerHTML = user.reputation)
 		if (user.card) document.querySelectorAll('.settings.pin').forEach(element => element.innerHTML = user.card.pin)
 	}
 

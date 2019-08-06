@@ -25,11 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
 			)
 			db.ref(`users/${id}`).on('value', snapshot => {
 				const val = snapshot.val()
-				user = { id, name: val.name, email: val.email, balance: val.balance, independence: val.independence, card: null }
+				user = { id, name: val.name, email: val.email, balance: val.balance, reputation: val.reputation, card: null }
 				document.querySelectorAll('.auth.user-link').forEach(element => element.innerHTML = user.name)
 				document.querySelectorAll('.user.name').forEach(element => element.innerHTML = `Hello, ${user.name}`)
 				document.querySelectorAll('.user.balance').forEach(element => element.innerHTML = Math.trunc(user.balance * 100) / 100)
-				document.querySelectorAll('.user.independence').forEach(element => element.innerHTML = user.independence === 0 ? '---' : user.independence)
+				document.querySelectorAll('.user.reputation').forEach(element => element.innerHTML = user.reputation)
 				updateTransactionCount()
 				updateOpenInvoiceCount()
 				updateSettings()
@@ -353,7 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		document.querySelectorAll('.settings.name').forEach(element => element.innerHTML = user.name)
 		document.querySelectorAll('.settings.email').forEach(element => element.innerHTML = user.email)
 		document.querySelectorAll('.settings.balance').forEach(element => element.innerHTML = Math.trunc(user.balance * 100) / 100)
-		document.querySelectorAll('.settings.independence').forEach(element => element.innerHTML = user.independence === 0 ? 'Pending' : user.independence)
+		document.querySelectorAll('.settings.reputation').forEach(element => element.innerHTML = user.reputation)
 		if (user.card) {
 			document.querySelectorAll('.settings.pin').forEach(element => element.innerHTML = user.card.pin)
 		}

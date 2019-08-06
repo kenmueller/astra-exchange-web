@@ -9,6 +9,7 @@
 		<meta name="keywords" content="astra exchange,astra.exchange,astra,exchange,astra exchange hosting,ad astra,ad,astra,hosting,ken mueller,ken,mueller">
 		<script defer src="/__/firebase/5.9.4/firebase-app.js"></script>
 		<script defer src="/__/firebase/5.9.4/firebase-auth.js"></script>
+		<script defer src="/__/firebase/5.9.4/firebase-database.js"></script>
 		<script defer src="/__/firebase/5.9.4/firebase-firestore.js"></script>
 		<script defer src="/__/firebase/init.js"></script>
 		<link rel="stylesheet" href="https://unpkg.com/bulma@0.7.5/css/bulma.min.css">
@@ -46,8 +47,8 @@
 							</div>
 							<div class="navbar-end navbar-end-auth-buttons">
 								<div class="is-right buttons">
-									<a class="button is-outlined is-white navbar-auth-button-left navbar-auth-button sign-up">Sign up</a>
-									<a class="button is-outlined is-white navbar-auth-button-right navbar-auth-button sign-in">Sign in</a>
+									<a class="button is-outlined is-white navbar-auth-button-left navbar-auth-button auth sign-up">Sign up</a>
+									<a class="button is-outlined is-white navbar-auth-button-right navbar-auth-button auth sign-in">Sign in</a>
 									<a class="button is-outlined is-white navbar-auth-button-right navbar-auth-button sign-out is-hidden">Sign out</a>
 								</div>
 							</div>
@@ -82,27 +83,26 @@
 								<br><br>
 								Also, check out our <a href="/documentation">documentation</a> for a quick and easy tutorial.
 								<br><br>
-								<a class="button is-primary is-medium large-auth-button"><b>Sign up</b></a>
-								<a class="button is-info is-medium large-auth-button"><b>Sign in</b></a>
-								<a class="button is-primary is-medium console-button"><b>Console</b></a>
+								<a class="button is-primary is-medium large-auth-button auth sign-up"><b>Sign up</b></a>
+								<a class="button is-info is-medium large-auth-button auth sign-in"><b>Sign in</b></a>
+								<a class="button is-primary is-medium console-button" href="https://console.hosting.astra.exchange"><b>Console</b></a>
 							</p>
 						</article>
 					</div>
 				</div>
 				<div class="tile is-ancestor">
-						<div class="tile is-parent is-shady">
-							<article class="tile is-child notification is-white">
-								<p class="title">Easily create custom routes</p>
-								<p></p>
-								<p class="subtitle">
-									Using a single <code>routes.json</code> file, create nicely formatted URLs without a single line of code.
-									<br><br>
-									Download our <a href="#">Visual Studio Code extension</a> for code completion in <code>routes.json</code>
-									<br><br>
-									Our <a href="/documentation">documentation</a> is always there to help!
-								</p>
-							</article>
-						</div>
+					<div class="tile is-parent is-shady">
+						<article class="tile is-child notification is-white">
+							<p class="title">Easily create custom routes</p>
+							<p></p>
+							<p class="subtitle">
+								Using a single <code>routes.json</code> file, create nicely formatted URLs without a single line of code.
+								<br><br>
+								Download our <a href="#">Visual Studio Code extension</a> for code completion in <code>routes.json</code>
+								<br><br>
+								Our <a href="/documentation">documentation</a> is always there to help!
+							</p>
+						</article>
 					</div>
 				</div>
 			</div>
@@ -134,9 +134,75 @@
 				</div>
 			</div>
 		</footer>
+		<div class="modal sign-up">
+			<div class="modal-background close-sign-up"></div>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title"><b>Sign up</b></p>
+					<button class="delete close-sign-up" aria-label="close"></button>
+				</header>
+				<section class="modal-card-body">
+					<div class="field">
+						<label class="label">Name</label>
+						<div class="control has-icons-left">
+							<input class="input" id="sign-up-name" type="text" placeholder="Enter name">
+							<span class="icon is-small is-left"><i class="fas fa-user"></i></span>
+						</div>
+					</div>
+					<div class="field">
+						<label class="label">Email</label>
+						<div class="control has-icons-left">
+							<input class="input" id="sign-up-email" type="email" placeholder="Enter email">
+							<span class="icon is-small is-left"><i class="fas fa-at"></i></span>
+						</div>
+					</div>
+					<div class="field">
+						<label class="label">Password</label>
+						<div class="control has-icons-left">
+							<input class="input" id="sign-up-password" type="password" placeholder="Enter password">
+							<span class="icon is-small is-left"><i class="fas fa-key"></i></span>
+						</div>
+					</div>
+				</section>
+				<footer class="modal-card-foot">
+					<button class="button is-success auth complete-sign-up" id="complete-sign-up" disabled><b>Sign up</b></button>
+					<button class="button close-sign-up">Cancel</button>
+				</footer>
+			</div>
+		</div>
+		<div class="modal sign-in">
+			<div class="modal-background close-sign-in"></div>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title"><b>Sign in</b></p>
+					<button class="delete close-sign-in" aria-label="close"></button>
+				</header>
+				<section class="modal-card-body">
+					<div class="field">
+						<label class="label">Email</label>
+						<div class="control has-icons-left">
+							<input class="input" id="sign-in-email" type="email" placeholder="Enter email">
+							<span class="icon is-small is-left"><i class="fas fa-at"></i></span>
+						</div>
+					</div>
+					<div class="field">
+						<label class="label">Password</label>
+						<div class="control has-icons-left">
+							<input class="input" id="sign-in-password" type="password" placeholder="Enter password">
+							<span class="icon is-small is-left"><i class="fas fa-key"></i></span>
+						</div>
+					</div>
+				</section>
+				<footer class="modal-card-foot">
+					<button class="button is-success auth complete-sign-in" id="complete-sign-in" disabled><b>Sign in</b></button>
+					<button class="button close-sign-in">Cancel</button>
+				</footer>
+			</div>
+		</div>
 		<script src="/js/cookie.js"></script>
 		<script src="/js/toggle-auth-buttons.js"></script>
 		<script src="/js/toggle-navbar-burger.js"></script>
+		<script src="/js/auth.js"></script>
 		<script src="/js/index.js"></script>
 	</body>
 </html>

@@ -9,7 +9,7 @@ export const users = functions.https.onRequest((_req, res) =>
 		const val = snapshot.val()
 		return res.status(200).send(Object.keys(val).map(key => {
 			const userData = val[key]
-			return { id: key, name: userData.name, email: userData.email, balance: userData.balance }
+			return { id: key, name: userData.name, email: userData.email, balance: userData.balance, reputation: userData.reputation }
 		}))
 	})
 )
@@ -59,13 +59,14 @@ export const user = functions.https.onRequest((req, res) => {
 			if (!snapshot.exists()) return res.status(404).send(`No user with ID ${id}`)
 			const val = snapshot.val()
 			const pin: string | undefined = req.query.pin
+			const publicData = { id, name: val.name, email: val.email, balance: val.balance, reputation: val.reputation }
 			return pin
 				? db.ref(`users/${id}/cards`).once('child_added').then(cardSnapshot =>
 					pin === cardSnapshot.val().pin
-						? res.status(200).send({ id, name: val.name, email: val.email, balance: val.balance, independence: val.independence, pin })
+						? res.status(200).send(Object.assign(publicData, { pin }))
 						: res.status(401).send(`Invalid pin for user ${id}`)
 				)
-				: res.status(200).send({ id, name: val.name, email: val.email, balance: val.balance })
+				: res.status(200).send(publicData)
 		})
 	else {
 		const email: string | undefined = req.query.email
@@ -76,13 +77,14 @@ export const user = functions.https.onRequest((req, res) => {
 					return db.ref(`users/${userId}`).once('value').then(userSnapshot => {
 						const val = userSnapshot.val()
 						const pin: string | undefined = req.query.pin
+						const publicData = { id: userId, name: val.name, email: val.email, balance: val.balance, reputation: val.reputation }
 						return pin
 							? db.ref(`users/${userId}/cards`).once('child_added', cardSnapshot =>
 								pin === cardSnapshot.val().pin
-									? res.status(200).send({ id: userId, name: val.name, email: val.email, balance: val.balance, independence: val.independence, pin })
+									? res.status(200).send(Object.assign(publicData, { pin }))
 									: res.status(401).send(`Invalid pin for user ${userId}`)
 							)
-							: res.status(200).send({ id: userId, name: val.name, email: val.email, balance: val.balance }) as any
+							: res.status(200).send(publicData) as any
 					})
 			})
 			: res.status(400).send('Must specify the user ID or email')

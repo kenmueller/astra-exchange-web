@@ -153,8 +153,8 @@
 				"balance": {
 					".validate": "newData.val() === 0"
 				},
-				"independence": {
-					".read": "$uid === auth.uid"
+				"reputation": {
+					".read": "auth !== null"
 				},
 				"cards": {
 					".read": "$uid === auth.uid",
