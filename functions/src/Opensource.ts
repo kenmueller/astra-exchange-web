@@ -1,6 +1,5 @@
 import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
-import * as express from 'express'
 
 const DEFAULT_HTML = `<!DOCTYPE html>
 <html>
@@ -20,7 +19,6 @@ const DEFAULT_HTML = `<!DOCTYPE html>
 </html>`
 
 const firestore = admin.firestore()
-const app = express()
 
 export const opensource = functions.https.onRequest((req, res) => {
 	const urlParts = req.url.split('/').slice(1)
@@ -28,7 +26,7 @@ export const opensource = functions.https.onRequest((req, res) => {
 	return urlParts[0] === 'edit'
 		? urlParts.length === 1
 			? editIndex(res)
-			: app(req, res)
+			: editPage(urlParts.slice(1), res)
 		: firestore.doc(`opensource/${urlIsIndex ? '\\' : urlParts.join('\\')}`).get().then(page => {
 			if (page.exists) {
 				const html: string | undefined = page.get('html')
@@ -58,11 +56,11 @@ export const opensource = functions.https.onRequest((req, res) => {
 		})
 })
 
-app.get('/edit/:url', (req, res) => {
-	const url = req.params.url
-	return firestore.doc(`opensource/${url.replace('/', '\\')}`).get().then(page => {
+function editPage(urlParts: string[], res: functions.Response): Promise<void | functions.Response> {
+	return firestore.doc(`opensource/${urlParts.join('\\')}`).get().then(page => {
+		const url = urlParts.join('/')
 		if (page.exists) {
-			const firestoreDoc = `firestore.doc('opensource/${url.replace('/', '\\\\')}').`
+			const firestoreDoc = `firestore.doc('opensource/${urlParts.join('\\\\')}').`
 			res.status(200).send(createPage({
 				url,
 				title: `Edit ${url}`,
@@ -86,7 +84,7 @@ app.get('/edit/:url', (req, res) => {
 		} else
 			res.status(404).redirect(`/${url}`)
 	})
-})
+}
 
 function editIndex(res: functions.Response): Promise<void | functions.Response> {
 	return firestore.doc('opensource/\\').get().then(page => page.exists
