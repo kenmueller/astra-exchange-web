@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			tr.className = 'transaction'
 			tr.innerHTML = `
 				<td width="3%"><i class="fa fa-dollar-sign"></i></td>
-				<td style="text-transform: uppercase;"><strong>${transaction.amount < 0 ? 'fine' : outgoing ? 'outgoing' : 'incoming'}</strong></td>
+				<td style="text-transform: uppercase;"><b>${transaction.amount < 0 ? 'fine' : outgoing ? 'outgoing' : 'incoming'}</b></td>
 				<td>${snapshot.val()}</td>
 				<td>${absoluteAmount} Astra${absoluteAmount === 1 ? '' : 's'}</td>
 			`
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			tr.className = 'invoice'
 			tr.innerHTML = `
 				<td width="3%"><i class="fa fa-hand-holding-usd"></i></td>
-				<td style="text-transform: uppercase;"><strong>${invoice.status !== 'pending' ? invoice.status : outgoing ? 'outgoing' : 'incoming'}</strong></td>
+				<td style="text-transform: uppercase;"><b>${invoice.status !== 'pending' ? invoice.status : outgoing ? 'outgoing' : 'incoming'}</b></td>
 				<td>${snapshot.val()}</td>
 				<td>${invoice.amount} Astra${invoice.amount === 1 ? '' : 's'}</td>
 			`
@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			tr.className = 'transaction'
 			tr.innerHTML = `
 				<td width="3%"><i class="fa fa-dollar-sign"></i></td>
-				<td style="text-transform: uppercase;"><strong>${outgoing ? 'outgoing' : 'incoming'}</strong></td>
+				<td style="text-transform: uppercase;"><b>${outgoing ? 'outgoing' : 'incoming'}</b></td>
 				<td>${snapshot.val()}</td>
 				<td>${transaction.amount} Astra${transaction.amount === 1 ? '' : 's'}</td>
 			`
@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			tr.className = 'invoice'
 			tr.innerHTML = `
 				<td width="3%"><i class="fa fa-hand-holding-usd"></i></td>
-				<td style="text-transform: uppercase;"><strong>${outgoing ? 'outgoing' : 'incoming'}</strong></td>
+				<td style="text-transform: uppercase;"><b>${outgoing ? 'outgoing' : 'incoming'}</b></td>
 				<td>${snapshot.val()}</td>
 				<td>${invoice.amount} Astra${invoice.amount === 1 ? '' : 's'}</td>
 			`

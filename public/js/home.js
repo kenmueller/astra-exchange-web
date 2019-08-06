@@ -69,7 +69,7 @@ document.write(
 			<div class="modal-background close-sign-up"></div>
 			<div class="modal-card">
 				<header class="modal-card-head">
-					<p class="modal-card-title">Sign up</p>
+					<p class="modal-card-title"><b>Sign up</b></p>
 					<button class="delete close-sign-up" aria-label="close"></button>
 				</header>
 				<section class="modal-card-body">
@@ -96,7 +96,7 @@ document.write(
 					</div>
 				</section>
 				<footer class="modal-card-foot">
-					<button class="button is-success auth complete-sign-up" id="complete-sign-up" disabled>Sign up</button>
+					<button class="button is-success auth complete-sign-up" id="complete-sign-up" disabled><b>Sign up</b></button>
 					<button class="button close-sign-up">Cancel</button>
 				</footer>
 			</div>
@@ -105,7 +105,7 @@ document.write(
 			<div class="modal-background close-sign-in"></div>
 			<div class="modal-card">
 				<header class="modal-card-head">
-					<p class="modal-card-title">Sign in</p>
+					<p class="modal-card-title"><b>Sign in</b></p>
 					<button class="delete close-sign-in" aria-label="close"></button>
 				</header>
 				<section class="modal-card-body">
@@ -125,7 +125,7 @@ document.write(
 					</div>
 				</section>
 				<footer class="modal-card-foot">
-					<button class="button is-success auth complete-sign-in" id="complete-sign-in" disabled>Sign in</button>
+					<button class="button is-success auth complete-sign-in" id="complete-sign-in" disabled><b>Sign in</b></button>
 					<button class="button close-sign-in">Cancel</button>
 				</footer>
 			</div>
@@ -507,7 +507,7 @@ document.write(
 					</div>
 				</section>
 				<footer class="modal-card-foot">
-					<a class="button is-primary password-reset"><strong>Send a password reset email</strong></a>
+					<a class="button is-primary password-reset"><b>Send a password reset email</b></a>
 				</footer>
 			</div>
 		</div>
@@ -566,8 +566,8 @@ document.write(
 				<div class="navbar-end">
 					<div class="navbar-item">
 						<a class="button is-danger auth reset-password">Reset Password</a>
-						<a class="button is-primary auth sign-up">Sign up</a>
-						<a class="button is-info auth sign-in">Sign in</a>
+						<a class="button is-primary auth sign-up"><b>Sign up</b></a>
+						<a class="button is-info auth sign-in"><b>Sign in</b></a>
 					</div>
 				</div>
 			</div>
@@ -576,7 +576,7 @@ document.write(
 			<div class="modal-background close-sign-up"></div>
 			<div class="modal-card">
 				<header class="modal-card-head">
-					<p class="modal-card-title">Sign up</p>
+					<p class="modal-card-title"><b>Sign up</b></p>
 					<button class="delete close-sign-up" aria-label="close"></button>
 				</header>
 				<section class="modal-card-body">
@@ -603,7 +603,7 @@ document.write(
 					</div>
 				</section>
 				<footer class="modal-card-foot">
-					<button class="button is-success auth complete-sign-up" id="complete-sign-up" disabled>Sign up</button>
+					<button class="button is-success auth complete-sign-up" id="complete-sign-up" disabled><b>Sign up</b></button>
 					<button class="button close-sign-up">Cancel</button>
 				</footer>
 			</div>
@@ -612,7 +612,7 @@ document.write(
 			<div class="modal-background close-sign-in"></div>
 			<div class="modal-card">
 				<header class="modal-card-head">
-					<p class="modal-card-title">Sign in</p>
+					<p class="modal-card-title"><b>Sign in</b></p>
 					<button class="delete close-sign-in" aria-label="close"></button>
 				</header>
 				<section class="modal-card-body">
@@ -632,7 +632,7 @@ document.write(
 					</div>
 				</section>
 				<footer class="modal-card-foot">
-					<button class="button is-success auth complete-sign-in" id="complete-sign-in" disabled>Sign in</button>
+					<button class="button is-success auth complete-sign-in" id="complete-sign-in" disabled><b>Sign in</b></button>
 					<button class="button close-sign-in">Cancel</button>
 				</footer>
 			</div>
