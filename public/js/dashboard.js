@@ -444,6 +444,18 @@ document.addEventListener('DOMContentLoaded', () => {
 		location.href = '/tables'
 	}
 
+	function showApiDocumentation() {
+		location.href = '/documentation'
+	}
+
+	function showOpenSource() {
+		location.href = 'https://opensource.astra.exchange'
+	}
+
+	function showGitHub() {
+		location.href= 'https://github.com/kenmueller/astra-exchange-web'
+	}
+
 	function resetPassword() {
 		auth.sendPasswordResetEmail(user.email)
 		alert(`Password reset email sent to ${user.email}`)
@@ -470,6 +482,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.querySelectorAll('.button.complete-create-invoice').forEach(element => element.addEventListener('click', completeCreateInvoice))
 	document.querySelectorAll('.button.complete-fine').forEach(element => element.addEventListener('click', completeFine))
 	document.querySelectorAll('.action.bazaar-tables').forEach(element => element.addEventListener('click', showBazaarTables))
+	document.querySelectorAll('.action.api-documentation').forEach(element => element.addEventListener('click', showApiDocumentation))
+	document.querySelectorAll('.action.open-source').forEach(element => element.addEventListener('click', showOpenSource))
+	document.querySelectorAll('.action.github').forEach(element => element.addEventListener('click', showGitHub))
 	document.getElementById('send-recipient').addEventListener('change', sendChanged)
 	document.getElementById('send-amount').addEventListener('input', sendChanged)
 	document.getElementById('create-invoice-recipient').addEventListener('change', createInvoiceChanged)

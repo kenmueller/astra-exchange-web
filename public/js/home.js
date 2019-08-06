@@ -50,6 +50,7 @@ document.write(
 					</div>
 				</div>
 				<div class="navbar-end">
+					<a class="navbar-item" href="https://opensource.astra.exchange">Open Source</a>
 					<a class="navbar-item" href="/documentation">API Documentation</a>
 					<div class="navbar-item">
 						<div class="navbar-item has-dropdown is-hoverable auth user-dropdown is-hidden">
@@ -149,6 +150,12 @@ document.write(
 						<p class="menu-label">events</p>
 						<ul class="menu-list">
 							<li><a class="action bazaar-tables">Bazaar Tables</a></li>
+						</ul>
+						<p class="menu-label">other</p>
+						<ul class="menu-list">
+							<li><a class="action api-documentation">API Documentation</a></li>
+							<li><a class="action open-source">Open Source</a></li>
+							<li><a class="action github">GitHub</a></li>
 						</ul>
 					</aside>
 				</div>
@@ -546,6 +553,7 @@ document.write(
 			</div>
 			<div id="navbar" class="navbar-menu">
 				<div class="navbar-start">
+					<a class="navbar-item" href="https://opensource.astra.exchange">Open Source</a>
 					<a class="navbar-item" href="/documentation">API Documentation</a>
 					<div class="navbar-item has-dropdown is-hoverable">
 						<a class="navbar-link">iOS Apps</a>
