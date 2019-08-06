@@ -16,7 +16,6 @@ export const userCreated = functions.database.ref('users/{uid}').onCreate((snaps
 	const uid: string = context.params.uid
 	const val = snapshot.val()
 	return Promise.all([
-		db.ref(`users/${uid}/independence`).set(0),
 		db.ref(`emails/${User.normalizeEmail(val.email)}`).set(uid),
 		db.ref(`slugs/users/${Slug.slugify(val.name)}`).set(uid),
 		db.ref('cards').push(uid)
