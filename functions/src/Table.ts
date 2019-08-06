@@ -2,6 +2,8 @@ import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
 import * as moment from 'moment'
 
+import Reputation from './Reputation'
+
 const db = admin.database()
 
 export const orderTable = functions.https.onCall((data, context) => {
@@ -32,16 +34,20 @@ export const tableOrderCreated = functions.database.ref('tables/{table}/owner').
 	dateList.splice(3, 0, '@')
 	return db.ref(`tables/${context.params.table}`).once('value').then(table => {
 		const val = table.val()
-		return db.ref(`users/${val.owner}/balance`).once('value').then(balance =>
-			db.ref(`transactions/${val.owner}`).push({
-				time: dateList.join(' '),
-				from: val.owner,
-				to: 'h621pgey1vPfxrmoW5LUkZaHkhT2',
-				amount: val.price,
-				balance: balance.val() - val.price,
-				message: `Table ${table.key} ordered for ${val.price} Astra${val.price === 1 ? '' : 's'}`
-			})
-		)
+		const astraMessage = ` for ${val.price} Astra${val.price === 1 ? '' : 's'}`
+		return Promise.all([
+			db.ref(`users/${val.owner}/balance`).once('value').then(balance =>
+				db.ref(`transactions/${val.owner}`).push({
+					time: dateList.join(' '),
+					from: val.owner,
+					to: 'h621pgey1vPfxrmoW5LUkZaHkhT2',
+					amount: val.price,
+					balance: balance.val() - val.price,
+					message: `Table ${table.key} ordered${astraMessage}`
+				})
+			),
+			Reputation.pushWithAmount(val.owner, Reputation.normalize(val.price), `You bought table ${table.key}${astraMessage}`)
+		])
 	})
 })
 
