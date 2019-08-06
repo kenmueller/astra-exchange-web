@@ -69,6 +69,10 @@
 					"destination": "/index.html"
 				},
 				{
+					"source": "/documentation",
+					"destination": "/documentation.html"
+				},
+				{
 					"source": "**",
 					"function": "hosting"
 				}
