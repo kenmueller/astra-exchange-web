@@ -46,7 +46,7 @@ export const tableOrderCreated = functions.database.ref('tables/{table}/owner').
 })
 
 function isDuringBazaar(): Promise<boolean> {
-	const now = new Date().getTime()
+	const now = Date.now()
 	return db.ref(`bazaar/start`).once('value').then(start =>
 		now < start.val()
 			? false

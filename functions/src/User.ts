@@ -12,7 +12,7 @@ export default class User {
 }
 
 export const userCreated = functions.database.ref('users/{uid}').onCreate((snapshot, context) => {
-	const uid = context.params.uid
+	const uid: string = context.params.uid
 	const val = snapshot.val()
 	return Promise.all([
 		db.ref(`users/${uid}/independence`).set(0),
@@ -23,8 +23,8 @@ export const userCreated = functions.database.ref('users/{uid}').onCreate((snaps
 })
 
 export const userDeleted = functions.auth.user().onDelete(user =>
-	db.ref(`users/${user.uid}`).once('value', userSnapshot =>
-		db.ref(`users/${user.uid}/cards`).once('child_added', cardSnapshot => {
+	db.ref(`users/${user.uid}`).once('value').then(userSnapshot =>
+		db.ref(`users/${user.uid}/cards`).once('child_added').then(cardSnapshot => {
 			const userVal = userSnapshot.val()
 			return Promise.all([
 				db.ref(`cards/${cardSnapshot.key}`).remove(),

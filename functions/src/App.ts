@@ -42,7 +42,7 @@ app.get('/companies/:slug', (req, res) =>
 			? db.ref(`companies/${snapshot.val()}`).on('value', companySnapshot => {
 				if (companySnapshot && companySnapshot.exists()) {
 					const val = companySnapshot.val()
-					const image = val.image ? val.image : '/images/astra.png'
+					const image = val.image || '/images/astra.png'
 					return db.ref(`users/${val.owner}`).on('value', userSnapshot => {
 						if (!userSnapshot) {
 							res.sendStatus(500)

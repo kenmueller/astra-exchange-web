@@ -6,7 +6,7 @@ import Slug from './Slug'
 const db = admin.database()
 
 export const companyCreated = functions.database.ref('companies/{companyId}').onCreate((snapshot, context) => {
-	const companyId = context.params.companyId
+	const companyId: string = context.params.companyId
 	const val = snapshot.val()
 	return Promise.all([
 		db.ref(`slugs/companies/${Slug.slugify(val.name)}`).set(companyId),
