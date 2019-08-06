@@ -54,6 +54,25 @@
 					"function": "opensource"
 				}
 			]
+		},
+		{
+			"target": "hosting-astra-exchange",
+			"public": "hosting",
+			"ignore": [
+				"firebase.json",
+				"**/.*",
+				"**/node_modules/**"
+			],
+			"rewrites": [
+				{
+					"source": "/",
+					"destination": "/index.html"
+				},
+				{
+					"source": "**",
+					"function": "hosting"
+				}
+			]
 		}
 	],
 	"storage": {
