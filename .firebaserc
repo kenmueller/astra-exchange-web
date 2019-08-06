@@ -13,6 +13,9 @@
 				],
 				"hosting-astra-exchange": [
 					"hosting-astra-exchange"
+				],
+				"console-hosting-astra-exchange": [
+					"console-hosting-astra-exchange"
 				]
 			}
 		}

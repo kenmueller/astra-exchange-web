@@ -73,6 +73,15 @@
 					"function": "hosting"
 				}
 			]
+		},
+		{
+			"target": "console-hosting-astra-exchange",
+			"public": "console-hosting",
+			"ignore": [
+				"firebase.json",
+				"**/.*",
+				"**/node_modules/**"
+			]
 		}
 	],
 	"storage": {
