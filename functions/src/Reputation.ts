@@ -33,6 +33,10 @@ export default class Reputation {
 			)
 			: addDocument(reputation)
 	}
+
+	static normalize(value: number): number {
+		return ~~Math.sqrt(Math.max(1, value))
+	}
 }
 
 export enum ReputationAction {
