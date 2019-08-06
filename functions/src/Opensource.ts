@@ -21,7 +21,7 @@ const DEFAULT_HTML = `<!DOCTYPE html>
 const firestore = admin.firestore()
 
 export const opensource = functions.https.onRequest((req, res) => {
-	const urlParts = req.url.split('/').slice(1)
+	const urlParts = req.url.split('/').slice(1).filter(segment => segment.length)
 	const urlIsIndex = req.url === '/'
 	return urlParts[0] === 'edit'
 		? urlParts.length === 1
