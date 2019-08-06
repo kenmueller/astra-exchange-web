@@ -74,6 +74,9 @@ footer li:before {
 	font-weight: 600;
 	width: 90px;
 }
+.large-auth-button {
+	margin-right: 10px;
+}
 .navbar-auth-button:hover,
 .navbar-auth-button:focus,
 .hero-body .main-button:hover,
