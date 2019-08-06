@@ -2,6 +2,7 @@ import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
 
 import Slug from './Slug'
+import Reputation, { ReputationAction } from './Reputation'
 
 const db = admin.database()
 const firestore = admin.firestore()
@@ -18,7 +19,15 @@ export const userCreated = functions.database.ref('users/{uid}').onCreate((snaps
 	return Promise.all([
 		db.ref(`emails/${User.normalizeEmail(val.email)}`).set(uid),
 		db.ref(`slugs/users/${Slug.slugify(val.name)}`).set(uid),
-		db.ref('cards').push(uid)
+		db.ref('cards').push(uid),
+		firestore.doc(`users/${uid}`).set({
+			name: val.name,
+			email: val.email,
+			balance: val.balance,
+			reputation: val.reputation
+		}).then(() =>
+			Reputation.push(uid, ReputationAction.join, 'You joined Astra Exchange')
+		)
 	])
 })
 
