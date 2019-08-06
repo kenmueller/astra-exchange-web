@@ -131,42 +131,13 @@ function createPage({ url, title, html, submitButtonTitle, script }: { url: stri
 		<script defer src="/ace/src-min/ace.js"></script>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
+		<link rel="stylesheet" href="/css/index.css">
 		<link rel="icon" href="https://astra.exchange/images/astra.png">
 		<title>${title}</title>
-		<style>
-			html,
-			body {
-				font-family: 'Open Sans', serif;
-				font-size: 16px;
-				line-height: 1.5;
-				height: 100%;
-				background: #ECF0F3;
-			}
-			.box {
-				margin-top: 20px;
-			}
-			#editor {
-				height: 400px;
-			}
-			.button.submit {
-				margin: auto;
-				display: block;
-				font-weight: bold;
-			}
-		</style>
 	</head>
 	<body>
-		<div class="container">
-			<div class="columns">
-				<div class="column is-10 is-offset-1">
-					<div class="box">
-						<div id="editor"><xmp>${html}</xmp></div>
-						<br>
-						<button class="button is-large is-success submit">${submitButtonTitle}</button>
-					</div>
-				</div>
-			</div>
-		</div>
+		<button class="button is-info is-outlined submit">${submitButtonTitle}</button>
+		<div id="editor"><xmp>${html}</xmp></div>
 		<script>
 			document.addEventListener('DOMContentLoaded', () => {
 				const firestore = firebase.firestore()
@@ -174,6 +145,9 @@ function createPage({ url, title, html, submitButtonTitle, script }: { url: stri
 				const submit = document.querySelector('.button.submit')
 				editor.setTheme('ace/theme/monokai')
 				editor.session.setMode('ace/mode/html')
+				editor.setShowPrintMargin(false)
+				editor.getSession().setUseWrapMode(true)
+				editor.session.setOptions({ tabSize: 4, useSoftTabs: false })
 				${script}
 			})
 		</script>
