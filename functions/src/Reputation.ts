@@ -1,6 +1,7 @@
 import * as admin from 'firebase-admin'
 
 const firestore = admin.firestore()
+const db = admin.database()
 
 export default class Reputation {
 	static getAmountForAction(action: ReputationAction): Promise<number> {
@@ -10,23 +11,25 @@ export default class Reputation {
 		})
 	}
 
-	static push(uid: string, action: ReputationAction, description: string, extras?: { uid: string }, reputation?: number): Promise<FirebaseFirestore.WriteResult> {
+	static push(uid: string, action: ReputationAction, description: string, extras?: { uid: string }, reputation?: number): Promise<void> {
 		return Reputation.getAmountForAction(action).then(amount =>
 			Reputation.pushWithAmount(uid, amount, description, extras, reputation)
 		)
 	}
 
-	static pushWithAmount(uid: string, amount: number, description: string, extras?: { uid: string }, reputation?: number): Promise<FirebaseFirestore.WriteResult> {
+	static pushWithAmount(uid: string, amount: number, description: string, extras?: { uid: string }, reputation?: number): Promise<void> {
 		const date = new Date
-		const addDocument = (currentReputation: number) =>
-			firestore.collection(`users/${uid}/reputationHistory`).add(Object.assign({
+		const addDocument = (currentReputation: number) => {
+			const newReputation = currentReputation + amount
+			return firestore.collection(`users/${uid}/reputationHistory`).add(Object.assign({
 				date,
 				amount,
 				description,
-				after: currentReputation + amount
+				after: newReputation
 			}, extras)).then(_documentReference =>
-				firestore.doc(`users/${uid}`).update({ reputation: admin.firestore.FieldValue.increment(amount) })
+				db.ref(`users/${uid}/reputation`).set({ reputation: newReputation })
 			)
+		}
 		return reputation === undefined
 			? firestore.doc(`users/${uid}`).get().then(user =>
 				addDocument(user.get('reputation') || 0)

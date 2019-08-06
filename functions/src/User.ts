@@ -33,9 +33,12 @@ export const userCreated = functions.database.ref('users/{uid}').onCreate((snaps
 
 export const userUpdated = functions.database.ref('users/{uid}').onUpdate((change, context) => {
 	const val = change.after.val()
-	const data = { name: val.name, email: val.email, balance: val.balance, reputation: val.reputation }
-	const doc = firestore.doc(`users/${context.params.uid}`)
-	return doc.get().then(user => user.exists ? doc.update(data) : doc.set(data))
+	return firestore.doc(`users/${context.params.uid}`).update({
+		name: val.name,
+		email: val.email,
+		balance: val.balance,
+		reputation: val.reputation
+	})
 })
 
 export const userDeleted = functions.auth.user().onDelete(user =>
