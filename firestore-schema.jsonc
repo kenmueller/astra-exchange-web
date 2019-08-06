@@ -1,0 +1,15 @@
+{
+	"opensource": {
+		"ken\\mueller": { // Path with slashes replaced with back slashes
+			"html": "<p>This is my website</p>"
+		}
+	},
+	"users": {
+		"abc123": { // User ID
+			"name": "Ken Mueller", // (String) The user's name
+			"email": "ken@adastraschool.org", // (String) The user's email
+			"balance": 200, // (Int) The user's balance
+			"reputation": 200, // (Int) The user's reputation
+		}
+	}
+}

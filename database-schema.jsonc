@@ -1,0 +1,80 @@
+{
+	"bazaar": {
+		"end": 1231245314124, // (Int) Milliseconds since 1970 of when the next bazaar ends
+		"start": 1231241255 // (Int) Millisecondss since 1970 of when the next bazaar begins
+	},
+	"cards": {
+		"abc123": "def456" // (String) [Card ID : User ID]
+	},
+	"companies": {
+		"abc123": { // Company ID
+			"image": "https://mywebsite.com/image.png", // (String) Image URL (If empty, use default)
+			"name": "My Company", // (String) The name of the company
+			"description": "This is a company", // (String) The companies description
+			"owner": "def456" // (String) The owner's UID
+		}
+	},
+	"emails": {
+		"email@gmail.com": "def456" // (String) [Email : User ID]
+	},
+	"invoices": {
+		"def456": { // User ID
+			"abc123": { // Invoice ID
+				"amount": 1, // (Int) The invoice amount
+				"from": "def456", // (String) The sender's UID
+				"to": "ghi789", // (String) The receiver's UID
+				"message": "For the lollipop", // (String) The invoice's message
+				"status": "pending", // (String) The invoice's status. Can be "pending", "accepted", or "declined"
+				"time": "May 14, 2019 @ 8:18 PM" // (String) The time at which the invoice was sent
+			}
+		}
+	},
+	"slugs": {
+		"section": { // Section, like "users" or "companies"
+			"ken-mueller": "abc123" // (String) [Slug : User ID]
+		}
+	},
+	"tables": {
+		"AT": { // Table ID
+			"name": "Antarctica Table", // (String) The table's full name
+			"price": 4, // (Int) How much it costs to buy the table for the bazaar
+			"owner": "def456" // (String?) The table's owner. If unowned, removed field
+		}
+	},
+	"transactions": {
+		"def456": { // User ID
+			"abc123": { // Transaction ID
+				"amount": 1, // (Int) The transaction amount
+				"balance": 200, // (Int) The remaining balance after the user was credited with this transaction
+				"from": "def456", // (String) The sender's UID
+				"to": "ghi789", // (String) The receiver's UID
+				"message": "For the lollipop", // (String) The transaction's message
+				"time": "May 14, 2019 @ 8:18 PM" // (String) The time at which the transaction was sent
+			}
+		}
+	},
+	"users": {
+		"def456": { // User ID
+			"name": "Ken Mueller", // (String) The user's name
+			"email": "ken@adastraschool.org", // (String) The user's email
+			"balance": 200, // (Int) The user's balance
+			"reputation": 200, // (Int) The user's reputation
+			"cards": {
+				"ghi789": { // Card ID
+					"name": "Debit Card", // (String) The card's name
+					"pin": "2489" // (String) The card's pin
+				}
+			}
+		}
+	},
+	"version": { // DEPRECATED
+		"changes": "New version mechanism", // (String) The latest version's changes
+		"number": "1.4" // (String) The latest version number
+	},
+	"versions": {
+		"Astra-Exchange": { // Product
+			"changes": "New version", // (String) The latest version's changes
+			"number": "1.5" // (String) The latest version number
+		}
+	}
+}
