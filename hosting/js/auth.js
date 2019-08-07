@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			document.querySelectorAll('.auth.sign-up').forEach(element => element.classList.remove('is-hidden'))
 			document.querySelectorAll('.auth.sign-in').forEach(element => element.classList.remove('is-hidden'))
 			document.querySelectorAll('.console-button').forEach(element => element.classList.add('is-hidden'))
+			document.querySelectorAll('.auth.sign-out').forEach(element => element.classList.add('is-hidden'))
 		}
 	})
 
@@ -34,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		document.querySelectorAll('.auth.sign-up').forEach(element => element.classList.add('is-hidden'))
 		document.querySelectorAll('.auth.sign-in').forEach(element => element.classList.add('is-hidden'))
 		document.querySelectorAll('.console-button').forEach(element => element.classList.remove('is-hidden'))
+		document.querySelectorAll('.auth.sign-out').forEach(element => element.classList.remove('is-hidden'))
 		hideSignUpModal()
 		hideSignInModal()
 	}
