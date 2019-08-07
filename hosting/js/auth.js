@@ -73,11 +73,18 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function signUpTextFieldChanged() {
-		document.querySelector('#complete-sign-up').disabled = !(document.querySelector('#sign-up-name').value.trim().length && document.querySelector('#sign-up-email').value.trim().length && document.querySelector('#sign-up-password').value.trim().length)
+		document.querySelector('#complete-sign-up').disabled = !(
+			document.querySelector('#sign-up-name').value.trim().length &&
+			document.querySelector('#sign-up-email').value.trim().length &&
+			document.querySelector('#sign-up-password').value.trim().length > 5
+		)
 	}
 
 	function signInTextFieldChanged() {
-		document.querySelector('#complete-sign-in').disabled = !(document.querySelector('#sign-in-email').value.trim().length && document.querySelector('#sign-in-password').value.trim().length)
+		document.querySelector('#complete-sign-in').disabled = !(
+			document.querySelector('#sign-in-email').value.trim().length &&
+			document.querySelector('#sign-in-password').value.trim().length
+		)
 	}
 
 	document.querySelectorAll('.auth.sign-up').forEach(element => element.addEventListener('click', showSignUpModal))
