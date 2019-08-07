@@ -27,7 +27,7 @@ export default class Reputation {
 				description,
 				after: newReputation
 			}, extras)).then(_documentReference =>
-				db.ref(`users/${uid}/reputation`).set({ reputation: newReputation })
+				db.ref(`users/${uid}/reputation`).set(newReputation)
 			)
 		}
 		return reputation === undefined
