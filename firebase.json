@@ -69,6 +69,10 @@
 					"destination": "/index.html"
 				},
 				{
+					"source": "/console",
+					"destination": "/console.html"
+				},
+				{
 					"source": "/documentation",
 					"destination": "/documentation.html"
 				},
@@ -76,15 +80,6 @@
 					"source": "**",
 					"function": "hosting"
 				}
-			]
-		},
-		{
-			"target": "console-hosting-astra-exchange",
-			"public": "console-hosting",
-			"ignore": [
-				"firebase.json",
-				"**/.*",
-				"**/node_modules/**"
 			]
 		}
 	],
