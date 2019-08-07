@@ -5,31 +5,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	auth.onAuthStateChanged(user => {
 		if (user)
-			db.ref(`users/${user.uid}/name`).on('value', snapshot => {
+			db.ref(`users/${user.uid}/name`).once('value').then(snapshot => {
+				setCookie('uid', user.uid)
 				if (snapshot.exists()) {
-					setCookie('uid', user.uid)
 					setCookie('name', snapshot.val())
-					document.querySelectorAll('.console-button').forEach(element => element.classList.remove('is-hidden'))
+					handleSignIn()
 				} else {
-					db.ref(`users/${user.uid}`).set({
-						name: document.querySelector('#sign-up-name').value.trim(),
+					const name = document.querySelector('#sign-up-name').value.trim()
+					const setObject = {
+						name,
 						email: document.querySelector('#sign-up-email').value.trim(),
 						balance: 0
-					})
-					document.querySelectorAll('.auth.user-link').forEach(element => element.innerHTML = document.getElementById('sign-up-name').value.trim())
+					}
+					firestore.doc(`users/${user.uid}`).set(Object.assign(setObject, { reputation: 0 })).then(() =>
+						db.ref(`users/${user.uid}`).set(setObject)
+					).then(() => handleSignIn())
+					setCookie('name', name)
 				}
-				document.querySelectorAll('.auth.sign-up').forEach(element => element.classList.add('is-hidden'))
-				document.querySelectorAll('.auth.sign-in').forEach(element => element.classList.add('is-hidden'))
-				document.querySelectorAll('.auth.user-dropdown').forEach(element => element.classList.remove('is-hidden'))
-				hideSignUpModal()
-				hideSignInModal()
 			})
 		else {
 			document.querySelectorAll('.auth.sign-up').forEach(element => element.classList.remove('is-hidden'))
 			document.querySelectorAll('.auth.sign-in').forEach(element => element.classList.remove('is-hidden'))
-			document.querySelectorAll('.auth.dropdown').forEach(element => element.classList.add('is-hidden'))
+			document.querySelectorAll('.console-button').forEach(element => element.classList.add('is-hidden'))
 		}
 	})
+
+	function handleSignIn() {
+		document.querySelectorAll('.auth.sign-up').forEach(element => element.classList.add('is-hidden'))
+		document.querySelectorAll('.auth.sign-in').forEach(element => element.classList.add('is-hidden'))
+		document.querySelectorAll('.console-button').forEach(element => element.classList.remove('is-hidden'))
+		hideSignUpModal()
+		hideSignInModal()
+	}
 
 	function showSignUpModal() {
 		document.querySelectorAll('.modal.sign-up').forEach(element => element.classList.add('is-active'))
@@ -40,9 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function signUp() {
-		document.getElementById('complete-sign-up').classList.add('is-loading')
-		auth.createUserWithEmailAndPassword(document.getElementById('sign-up-email').value, document.getElementById('sign-up-password').value).catch(error => {
-			document.getElementById('complete-sign-up').classList.remove('is-loading')
+		setLoading(document.querySelector('#complete-sign-up'), true)
+		auth.createUserWithEmailAndPassword(document.querySelector('#sign-up-email').value, document.querySelector('#sign-up-password').value).catch(error => {
+			setLoading(document.querySelector('#complete-sign-up'), false)
 			alert(error)
 		})
 	}
@@ -56,19 +63,19 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function signIn() {
-		document.getElementById('complete-sign-in').classList.add('is-loading')
-		auth.signInWithEmailAndPassword(document.getElementById('sign-in-email').value, document.getElementById('sign-in-password').value).catch(error => {
-			document.getElementById('complete-sign-in').classList.remove('is-loading')
+		setLoading(document.querySelector('#complete-sign-in'), true)
+		auth.signInWithEmailAndPassword(document.querySelector('#sign-in-email').value, document.querySelector('#sign-in-password').value).catch(error => {
+			setLoading(document.querySelector('#complete-sign-in'), false)
 			alert(error)
 		})
 	}
 
 	function signUpTextFieldChanged() {
-		document.getElementById('complete-sign-up').disabled = !(document.getElementById('sign-up-name').value.trim().length && document.getElementById('sign-up-email').value.trim().length && document.getElementById('sign-up-password').value.trim().length)
+		document.querySelector('#complete-sign-up').disabled = !(document.querySelector('#sign-up-name').value.trim().length && document.querySelector('#sign-up-email').value.trim().length && document.querySelector('#sign-up-password').value.trim().length)
 	}
 
 	function signInTextFieldChanged() {
-		document.getElementById('complete-sign-in').disabled = !(document.getElementById('sign-in-email').value.trim().length && document.getElementById('sign-in-password').value.trim().length)
+		document.querySelector('#complete-sign-in').disabled = !(document.querySelector('#sign-in-email').value.trim().length && document.querySelector('#sign-in-password').value.trim().length)
 	}
 
 	document.querySelectorAll('.auth.sign-up').forEach(element => element.addEventListener('click', showSignUpModal))
