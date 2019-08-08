@@ -192,7 +192,7 @@ exchange.signIn(email: string,
             <br>
             <p>After a user is successfully signed in, you can view the user's data with <code>exchange.currentUser</code></p>
             <br>
-            <h1 class="subtitle">Sign out using the <code>exchange.signOut</code> function</h1>
+            <p><b>Sign out using the <code>exchange.signOut</code> function</b></p>
             <p>Signs out the current user and resets <code>exchange.currentUser</code> to <code>undefined</code></p>
             <br>
 <pre>
@@ -209,6 +209,35 @@ console.log(exchange.currentUser)
             <p><b>Returns nothing</b></p>
             <br>
             <p>If there is no user currently signed in, this function does nothing</p>
+            <br>
+            <p><b>Reloading the current user using <code>exchange.reloadCurrentUser()</code></b></p>
+            <br>
+            <p>Reloads the current user's data, updating <code>exchange.currentUser</code> and returning the updated user. <b>This function should be called on every webpage load, so your site keeps up with changes to the user's balance and reputation and other data.</b></p>
+            <br>
+<pre>
+// Old user data
+console.log(exchange.currentUser.balance)
+>>> 150
+
+exchange.reloadCurrentUser().then(user => {
+    console.log(user.balance)
+    // \`user\` and \`exchange.currentUser\` are both the same
+    console.log(exchange.currentUser.balance)
+}).catch(error => {
+    // Uh oh, an error occurred. The user updated their email or pin and needs to sign in again.
+    alert('Please sign in again')
+
+    // Log the error
+    console.log(error)
+})
+>>> 200
+</pre>
+            <br>
+            <p><b>Returns a <code>Promise</code></b></p>
+            <br>
+            <p><b>The <code>.then</code> block takes a <a onclick="selectDoc(2)">user object</a> with public and private data. It also updates <code>exchange.currentUser</code>. If there is no user signed in, <code>user</code> is <code>undefined</code></b></p>
+            <br>
+            <p><b>The <code>.catch</code> block takes an error of type <code>{ status: number, message: string }</code>. The catch block is typically called when the user needs to sign in again since their authentication info changed.</b></p>
             <br>
             <p><b>View an example on <a href="https://jsfiddle.net/phz65n3r/" target="_blank">jsfiddle</a></b></p>
             <br>
@@ -594,7 +623,35 @@ console.log(exchange.currentUser)
         <br>
         <p>If there is no user currently signed in, this function does nothing</p>
         <br>
-        <h1 class="subtitle">Example</h1>
+        <h1 class="subtitle">Reloading the current user using <code>exchange.reloadCurrentUser()</code></h1>
+        <p>Reloads the current user's data, updating <code>exchange.currentUser</code> and returning the updated user. <b>This function should be called on every webpage load, so your site keeps up with changes to the user's balance and reputation and other data.</b></p>
+        <br>
+<pre>
+// Old user data
+console.log(exchange.currentUser.balance)
+>>> 150
+
+exchange.reloadCurrentUser().then(user => {
+    console.log(user.balance)
+    // \`user\` and \`exchange.currentUser\` are both the same
+    console.log(exchange.currentUser.balance)
+}).catch(error => {
+    // Uh oh, an error occurred. The user updated their email or pin and needs to sign in again.
+    alert('Please sign in again')
+
+    // Log the error
+    console.log(error)
+})
+>>> 200
+</pre>
+            <br>
+            <p><b>Returns a <code>Promise</code></b></p>
+            <br>
+            <p><b>The <code>.then</code> block takes a <a onclick="selectDoc(2)">user object</a> with public and private data. It also updates <code>exchange.currentUser</code>. If there is no user signed in, <code>user</code> is <code>undefined</code></b></p>
+            <br>
+            <p><b>The <code>.catch</code> block takes an error of type <code>{ status: number, message: string }</code>. The catch block is typically called when the user needs to sign in again since their authentication info changed.</b></p>
+            <br>
+            <h1 class="subtitle">Example</h1>
 <pre>
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;
@@ -638,8 +695,8 @@ console.log(exchange.currentUser)
     &lt;/body&gt;
 &lt;/html&gt;
 </pre>
-        <br>
-        <p><b>View the example on <a href="https://jsfiddle.net/phz65n3r/" target="_blank">jsfiddle</a></b></p>
+            <br>
+            <p><b>View the example on <a href="https://jsfiddle.net/phz65n3r/" target="_blank">jsfiddle</a></b></p>
         `
     },
 	{
