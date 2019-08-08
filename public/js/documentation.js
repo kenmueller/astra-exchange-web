@@ -124,7 +124,96 @@ exchange.transact(pin: string,
             <p><b>The <code>.catch</code> block takes an error of type <code>{ status: number, message: string }</code></b></p>
 			<br>
 			<a class="doc-link" onclick="selectDoc(1)">Read more</a>
-			<br><br><br>
+            <br><br><br>
+            <h1 class="subtitle">Authentication</h1>
+            <p><b>Getting the current user using <code>exchange.currentUser</code></b></p>
+            <br>
+            <p>The current user is stored locally so you can access it on any new browser session</p>
+            <br>
+<pre>
+// Not signed in:
+console.log(exchange.currentUser)
+>>> undefined
+
+// Signed in:
+console.log(exchange.currentUser)
+>>> {
+    id: 'e95Y6tKOvIS7CBlEdBn2UknzxMQ2',
+    name: 'Ken Mueller',
+    email: 'ken@adastraschool.org',
+    balance: 300,
+    reputation: 60,
+    pin: '1234'
+}
+</pre>
+            <br>
+            <p><b>Checking if there is a user signed in using <code>exchange.isSignedIn()</code></b></p>
+            <br>
+            <p>A boolean value telling you if there is a user currently signed in. You can use this value to show the user different content based on whether they are signed in or not</p>
+            <br>
+<pre>
+// Not signed in:
+console.log(exchange.isSignedIn())
+>>> false
+
+// Signed in:
+console.log(exchange.isSignedIn())
+>>> true
+</pre>
+            <br>
+            <p><b>Authenticate users using the <code>exchange.signIn</code> function</b></p>
+            <br>
+            <p>Signs in a user with their email and pin, saving their data even when the page is closed</p>
+            <br>
+<pre>
+exchange.signIn('ken@adastraschool.org', '1234').then(user => {
+    console.log(user)
+    console.log(exchange.currentUser) // The current user signed in
+}).catch(error => {
+    // Sign in was unsuccessful, either email or pin was incorrect.
+    // You should tell the user to re-enter their information if this happens.
+    alert('Your email/pin was incorrect. Please try again')
+    console.log(\`status: \${error.status}, message: \${error.message}\`)
+})
+</pre>
+            <br>
+            <p><b>Type signature (user is a <a onclick="selectDoc(3)">user object</a> with public and private data):</b></p>
+            <br>
+<pre>
+exchange.signIn(email: string,
+                pin: string)
+</pre>
+            <br>
+            <p><b>Returns a <code>Promise</code></b></p>
+            <br>
+            <p><b>The <code>.then</code> block takes a <a onclick="selectDoc(3)">user object</a> with public and private data. It also updates <code>exchange.currentUser</code></b></p>
+            <br>
+            <p><b>The <code>.catch</code> block takes an error of type <code>{ status: number, message: string }</code></b></p>
+            <br>
+            <p>After a user is successfully signed in, you can view the user's data with <code>exchange.currentUser</code></p>
+            <br>
+            <h1 class="subtitle">Sign out using the <code>exchange.signOut</code> function</h1>
+            <p>Signs out the current user and resets <code>exchange.currentUser</code> to <code>undefined</code></p>
+            <br>
+<pre>
+// Signed in
+console.log(exchange.currentUser)
+>>> {...}
+
+exchange.signOut()
+
+console.log(exchange.currentUser)
+>>> undefined
+</pre>
+            <br>
+            <p><b>Returns nothing</b></p>
+            <br>
+            <p>If there is no user currently signed in, this function does nothing</p>
+            <br>
+            <p><b>View an example on <a href="https://jsfiddle.net/phz65n3r/" target="_blank">jsfiddle</a></b></p>
+            <br>
+            <a class="doc-link" onclick="selectDoc(1)">Read more</a>
+            <br><br><br>
 			<h1 class="subtitle">Accessing User Data</h1>
 			<p>Using the <code>exchange.userWithId</code> function (<b>IMPORTANT - </b>Set the pin as <code>null</code> or don't enter a value to only get public user data):</p>
             <br>
