@@ -28,3 +28,6 @@
 .subtitle, .doc-link {
 	font-weight: 600;
 }
+span.inline-code {
+	color: red;
+}

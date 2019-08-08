@@ -138,7 +138,7 @@ exchange.transact(pin: string,
                   from: string,
                   to: string,
                   amount: number,
-                  message: string) // Optional or <span style="color: red;">null</span>
+                  message: string) // Optional or <span class="inline-code">null</span>
 </pre>
             <br>
             <p><b>Returns a <code>Promise</code></b></p>
@@ -170,7 +170,7 @@ exchange.userWithId('e95Y6tKOvIS7CBlEdBn2UknzxMQ2').then(user => {
             <br>
 <pre>
 exchange.userWithId(id: string,
-                    pin: string) // Optional or <span style="color: red;">null</span> if you only want public data
+                    pin: string) // Optional or <span class="inline-code">null</span> if you only want public data
 </pre>
             <br>
             <p><b>Returns a <code>Promise</code></b></p>
@@ -199,7 +199,7 @@ exchange.userWithEmail('ken@adastraschool.org').then(user => {
             <br>
 <pre>
 exchange.userWithEmail(id: string,
-                       pin: string) // Optional or <span style="color: red;">null</span> if you only want public data
+                       pin: string) // Optional or <span class="inline-code">null</span> if you only want public data
 </pre>
             <br>
             <p><b>Returns a <code>Promise</code></b></p>
@@ -278,7 +278,7 @@ exchange.transact(pin: string,
                   from: string,
                   to: string,
                   amount: number,
-                  message: string) // Optional or <span style="color: red;">null</span>
+                  message: string) // Optional or <span class="inline-code">null</span>
 </pre>
             <br>
             <p><b>Returns a <code>Promise</code></b></p>
@@ -327,7 +327,7 @@ exchange.userWithId('e95Y6tKOvIS7CBlEdBn2UknzxMQ2').then(user => {
             <br>
 <pre>
 exchange.userWithId(id: string,
-                    pin: string) // Optional or <span style="color: red;">null</span> if you only want public data
+                    pin: string) // Optional or <span class="inline-code">null</span> if you only want public data
 </pre>
             <br>
             <p><b>Returns a <code>Promise</code></b></p>
@@ -382,7 +382,7 @@ exchange.userWithEmail('ken@adastraschool.org').then(user => {
             <br>
 <pre>
 exchange.userWithEmail(id: string,
-                       pin: string) // Optional or <span style="color: red;">null</span> if you only want public data
+                       pin: string) // Optional or <span class="inline-code">null</span> if you only want public data
 </pre>
             <br>
             <p><b>Returns a <code>Promise</code></b></p>
