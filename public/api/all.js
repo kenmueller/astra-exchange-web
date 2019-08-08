@@ -1,4 +1,24 @@
 const exchange = (function() {
+	const USER_COOKIE = '__astra-exchange-user'
+
+	const getCookie = name => {
+		const cookies = document.cookie.match(`(^|[^;]+)\\s*${name}\\s*=\\s*([^;]+)`)
+		return cookies ? cookies.pop() : undefined
+	}
+	
+	const setCookie = (name, value) =>
+		document.cookie = `${name}=${value}; expires=Thu, 01 Jan 3000 00:00:00 GMT`
+	
+	const removeCookie = name =>
+		document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT`
+
+	const getCurrentUser = () => {
+		const user = getCookie(USER_COOKIE)
+		return user ? JSON.parse(user) : undefined
+	}
+
+	this.currentUser = getCurrentUser()
+	
 	this.users = () =>
 		fetch('https://cors-anywhere.herokuapp.com/https://us-central1-astra-exchange.cloudfunctions.net/users').then(response =>
 			response.json().catch(() =>
@@ -77,6 +97,20 @@ const exchange = (function() {
 				return Promise.reject({ status: 500, message: 'Unknown error. Please try again' })
 			}
 		})
+
+	this.isSignedIn = () =>
+		(currentUser || getCookie(USER_COOKIE)) !== undefined
+
+	this.signIn = (email, pin) =>
+		userWithEmail(email, pin).then(user => {
+			setCookie(USER_COOKIE, JSON.stringify(user))
+			return currentUser = user
+		})
+
+	this.signOut = () => {
+		removeCookie(USER_COOKIE)
+		currentUser = undefined
+	}
 
 	return this
 })()
