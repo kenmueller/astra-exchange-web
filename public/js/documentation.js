@@ -86,30 +86,6 @@ function selectDoc(index) {
     history.pushState({ path: newUrl }, '', newUrl)
 }
 
-function tryItSignIn() {
-    document.querySelector('.try-it-sign-in-button').classList.add('is-loading')
-    fetch(`https://cors-anywhere.herokuapp.com/https://us-central1-astra-exchange.cloudfunctions.net/user?email=${document.getElementById('try-it-email').value}&pin=${document.getElementById('try-it-pin').value}`).then(response => {
-        document.querySelector('.try-it-sign-in-button').classList.remove('is-loading')
-        switch (response.status) {
-        case 200:
-            return response.json().then(json => {
-                alert(`Your private user data: {\n    id: ${json.id},\n    name: ${json.name},\n    email: ${json.email},\n    balance: ${json.balance},\n    reputation: ${json.reputation},\n    pin: ${json.pin}\n}`)
-            })
-        case 400:
-            alert('Invalid parameters')
-            break
-        case 404:
-            alert('Invalid email')
-            break
-        case 401:
-            alert('Invalid pin')
-            break
-        default:
-            alert('Unknown error. Please try again')
-        }
-    })
-}
-
 const docs = [
 	{
 		title: 'Getting Started',
@@ -306,7 +282,7 @@ exchange.transact(pin: string,
 		`
 	},
 	{
-		title: 'Authentication & User Data',
+		title: 'Getting User Data',
 		body: `
             <h1 class="subtitle">Using the <code>exchange.userWithId</code> function</h1>
 <pre>
@@ -401,64 +377,6 @@ exchange.userWithEmail(id: string,
             <p><b>401:</b> Invalid pin</p>
             <p><b>500:</b> Unknown error. Please try again</p>
             <br>
-            <h1 class="title">User Authentication</h1>
-            <p>When a user tries to sign in, run this code (edit accordingly)</p>
-            <br>
-<pre>
-function authenticate(email, pin) {
-    exchange.userWithEmail(email, pin).then(user => {
-        location.href = '/dashboard' // Sign in successful
-    }).catch(error => {
-        alert(error.message) // Sign in unsuccessful
-    })
-}
-</pre>
-            <br>
-            <h1 class="subtitle">Try it</h1>
-            <div class="field">
-                <div class="control">
-                    <input class="input" id="try-it-email" type="email" placeholder="Enter your email">
-                </div>
-            </div>
-            <div class="field">
-                <div class="control">
-                    <input class="input" id="try-it-pin" type="password" placeholder="Enter your pin">
-                </div>
-            </div>
-            <a class="button is-info try-it-sign-in-button" onclick="tryItSignIn()"><b>Sign in</b></a>
-            <br><br>
-            <h1 class="title">Sample code</h1>
-<pre>
-&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;head&gt;
-        &lt;script src="https://astra.exchange/api"&gt;&lt;/script&gt;
-        &lt;title&gt;Document&lt;/title&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;h1&gt;Sign in&lt;/h1&gt;
-        &lt;input id="email-input" type="email" placeholder="Enter your email"&gt;
-        &lt;br&gt;
-        &lt;input id="pin-input" type="password" placeholder="Enter your pin"&gt;
-        &lt;br&gt;&lt;br&gt;
-        &lt;button id="sign-in-button"&gt;Sign in&lt;/button&gt;
-        &lt;script&gt;
-            function authenticate(email, pin) {
-                exchange.userWithEmail(email, pin).then(user =&gt; {
-                    alert(\`Hello, \${user.name}\`)
-                }).catch(error =&gt; {
-                    alert(error.message)
-                })
-            }
-
-            document.getElementById('sign-in-button').addEventListener('click', () =>
-                authenticate(document.getElementById('email-input').value, document.getElementById('pin-input').value)
-            )
-        &lt;/script&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</pre>
-            <br>
             <h1 class="subtitle">Using the <code>exchange.transactions</code> function</h1>
             <p>Returns the entire transaction history of the specified user</p>
             <br>
@@ -502,9 +420,141 @@ exchange.transactions(id: string,
             <p><b>balance:</b> number (the new balance of the user after applying this transaction)</p>
             <p><b>message:</b> string (can be blank)</p>
 		`
-	},
+    },
+    {
+        title: 'Authentication',
+        body: `
+            <h1 class="subtitle">Getting the current user using <code>exchange.currentUser</code></h1>
+            <p>The current user is stored locally so you can access it on any new browser session</p>
+            <br>
+<pre>
+// Not signed in:
+console.log(exchange.currentUser)
+>>> undefined
+
+// Signed in:
+console.log(exchange.currentUser)
+>>> {
+    id: 'e95Y6tKOvIS7CBlEdBn2UknzxMQ2',
+    name: 'Ken Mueller',
+    email: 'ken@adastraschool.org',
+    balance: 300,
+    reputation: 60,
+    pin: '1234'
+}
+</pre>
+            <br>
+            <h1 class="subtitle">Checking if there is a user signed in using <code>exchange.isSignedIn()</code></h1>
+            <p>A boolean value telling you if there is a user currently signed in. You can use this value to show the user different content based on whether they are signed in or not</p>
+            <br>
+<pre>
+// Not signed in:
+console.log(exchange.isSignedIn())
+>>> false
+
+// Signed in:
+console.log(exchange.isSignedIn())
+>>> true
+</pre>
+            <br>
+            <h1 class="subtitle">Authenticate users using the <code>exchange.signIn</code> function</h1>
+            <p>Signs in a user with their email and pin, saving their data even when the page is closed</p>
+            <br>
+<pre>
+exchange.signIn('ken@adastraschool.org', '1234').then(user => {
+    console.log(user)
+    console.log(exchange.currentUser) // The current user signed in
+}).catch(error => {
+    // Sign in was unsuccessful, either email or pin was incorrect.
+    // You should tell the user to re-enter their information if this happens.
+    alert('Your email/pin was incorrect. Please try again')
+    console.log(\`status: \${error.status}, message: \${error.message}\`)
+})
+</pre>
+        <br>
+        <p><b>Type signature (user is a <a onclick="selectDoc(3)">user object</a> with public and private data):</b></p>
+        <br>
+<pre>
+exchange.signIn(email: string,
+                pin: string)
+</pre>
+        <br>
+        <p><b>Returns a <code>Promise</code></b></p>
+        <br>
+        <p><b>The <code>.then</code> block takes a <a onclick="selectDoc(3)">user object</a> with public and private data. It also updates <code>exchange.currentUser</code></b></p>
+        <br>
+        <p><b>The <code>.catch</code> block takes an error of type <code>{ status: number, message: string }</code></b></p>
+        <br>
+        <p>After a user is successfully signed in, you can view the user's data with <code>exchange.currentUser</code></p>
+        <br>
+        <h1 class="subtitle">Sign out using the <code>exchange.signOut</code> function</h1>
+        <p>Signs out the current user and resets <code>exchange.currentUser</code> to <code>undefined</code></p>
+        <br>
+<pre>
+// Signed in
+console.log(exchange.currentUser)
+>>> {...}
+
+exchange.signOut()
+
+console.log(exchange.currentUser)
+>>> undefined
+</pre>
+        <br>
+        <p><b>Returns nothing</b></p>
+        <br>
+        <p>If there is no user currently signed in, this function does nothing</p>
+        <br>
+        <h1 class="subtitle">Example</h1>
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;script src="https://astra.exchange/api"&gt;&lt;/script&gt;
+        &lt;title&gt;Example&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Sign in&lt;/h1&gt;
+        &lt;input id="email-input" type="email" placeholder="Enter your email"&gt;
+        &lt;br&gt;
+        &lt;input id="pin-input" type="password" placeholder="Enter your pin"&gt;
+        &lt;br&gt;&lt;br&gt;
+        &lt;button onclick="signIn()"&gt;Sign in&lt;/button&gt;
+        &lt;script&gt;
+            function signIn() {
+                // Getting the email and pin
+                const email = document.getElementById('email-input').value
+                const pin = document.getElementById('pin-input').value
+
+                // Signing the user in
+                exchange.signIn(email, pin).then(user =&gt; {
+                    // Successful sign in
+
+                    // Alert the user's name
+                    alert(\`Your name is \${user.name}\`)
+
+                    // Log the rest of the user's data. \`user\` and \`exchange.currentUser\` are the same
+                    console.log(exchange.currentUser)
+                }).catch(error =&gt; {
+                    // Unsuccessful sign in
+
+                    // Alert the user that their information was incorrect
+                    alert('Your email/pin was incorrect. Please try again')
+                    
+                    // Log the error so we can see exactly what error it was
+                    console.log(\`status: \${error.status}, message: \${error.message}\`)
+                })
+            }
+        &lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+        <br>
+        <p><b>View the example on <a href="https://jsfiddle.net/phz65n3r/" target="_blank">jsfiddle</a></b></p>
+        `
+    },
 	{
-		title: 'Retrieve all Users',
+		title: 'Retrieving all Users',
 		body: `
             <h1 class="subtitle">Using the <code>exchange.users</code> function</h1>
             <p>Returns every user's public data</p>
