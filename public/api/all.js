@@ -29,6 +29,8 @@ const exchange = (function() {
 	this.transact = (pin, from, to, amount, message = undefined) => {
 		if (typeof pin !== 'string')
 			return Promise.reject({ status: 400, message: '\'pin\' must be a string (parameter 1)' })
+		if (pin.length !== 4)
+			return Promise.reject({ status: 400, message: '\'pin\' must be 4 characters long (parameter 1)' })
 		if (typeof from !== 'string')
 			return Promise.reject({ status: 400, message: '\'from\' must be a string (parameter 2)' })
 		if (typeof to !== 'string')
@@ -60,6 +62,8 @@ const exchange = (function() {
 			return Promise.reject({ status: 400, message: '\'id\' must be a string (parameter 1)' })
 		if (!(typeof pin === 'string' || pin === null || pin === undefined))
 			return Promise.reject({ status: 400, message: '\'pin\' must be a string, null, undefined, or left blank (parameter 2)' })
+		if (typeof pin === 'string' && pin.length !== 4)
+			return Promise.reject({ status: 400, message: '\'pin\' must be 4 characters long (parameter 2)' })
 		return fetch(`https://cors-anywhere.herokuapp.com/https://us-central1-astra-exchange.cloudfunctions.net/user?id=${id}${pin ? `&pin=${pin}` : ''}`).then(response => {
 			switch (response.status) {
 			case 200:
@@ -83,6 +87,8 @@ const exchange = (function() {
 			return Promise.reject({ status: 400, message: '\'email\' must be a string (parameter 1)' })
 		if (!(typeof pin === 'string' || pin === null || pin === undefined))
 			return Promise.reject({ status: 400, message: '\'pin\' must be a string, null, undefined, or left blank (parameter 2)' })
+		if (typeof pin === 'string' && pin.length !== 4)
+			return Promise.reject({ status: 400, message: '\'pin\' must be 4 characters long (parameter 2)' })
 		return fetch(`https://cors-anywhere.herokuapp.com/https://us-central1-astra-exchange.cloudfunctions.net/user?email=${email}${pin ? `&pin=${pin}` : ''}`).then(response => {
 			switch (response.status) {
 			case 200:
@@ -106,6 +112,8 @@ const exchange = (function() {
 			return Promise.reject({ status: 400, message: '\'id\' must be a string (parameter 1)' })
 		if (typeof pin !== 'string')
 			return Promise.reject({ status: 400, message: '\'pin\' must be a string (parameter 2)' })
+		if (pin.length !== 4)
+			return Promise.reject({ status: 400, message: '\'pin\' must be 4 characters long (parameter 2)' })
 		return fetch(`https://cors-anywhere.herokuapp.com/https://us-central1-astra-exchange.cloudfunctions.net/transactions?id=${id}&pin=${pin}`).then(response => {
 			switch (response.status) {
 			case 200:
@@ -132,6 +140,8 @@ const exchange = (function() {
 			return Promise.reject({ status: 400, message: '\'email\' must be a string (parameter 1)' })
 		if (typeof pin !== 'string')
 			return Promise.reject({ status: 400, message: '\'pin\' must be a string (parameter 2)' })
+		if (pin.length !== 4)
+			return Promise.reject({ status: 400, message: '\'pin\' must be 4 characters long (parameter 2)' })
 		return userWithEmail(email, pin).then(user => {
 			setCookie(USER_COOKIE, JSON.stringify(user))
 			return currentUser = user
