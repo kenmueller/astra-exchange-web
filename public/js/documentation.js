@@ -177,7 +177,7 @@ exchange.signIn('ken@adastraschool.org', '1234').then(user => {
 })
 </pre>
             <br>
-            <p><b>Type signature (user is a <a onclick="selectDoc(3)">user object</a> with public and private data):</b></p>
+            <p><b>Type signature (user is a <a onclick="selectDoc(2)">user object</a> with public and private data):</b></p>
             <br>
 <pre>
 exchange.signIn(email: string,
@@ -186,7 +186,7 @@ exchange.signIn(email: string,
             <br>
             <p><b>Returns a <code>Promise</code></b></p>
             <br>
-            <p><b>The <code>.then</code> block takes a <a onclick="selectDoc(3)">user object</a> with public and private data. It also updates <code>exchange.currentUser</code></b></p>
+            <p><b>The <code>.then</code> block takes a <a onclick="selectDoc(2)">user object</a> with public and private data. It also updates <code>exchange.currentUser</code></b></p>
             <br>
             <p><b>The <code>.catch</code> block takes an error of type <code>{ status: number, message: string }</code></b></p>
             <br>
@@ -212,7 +212,7 @@ console.log(exchange.currentUser)
             <br>
             <p><b>View an example on <a href="https://jsfiddle.net/phz65n3r/" target="_blank">jsfiddle</a></b></p>
             <br>
-            <a class="doc-link" onclick="selectDoc(1)">Read more</a>
+            <a class="doc-link" onclick="selectDoc(3)">Read more</a>
             <br><br><br>
 			<h1 class="subtitle">Accessing User Data</h1>
 			<p>Using the <code>exchange.userWithId</code> function (<b>IMPORTANT - </b>Set the pin as <code>null</code> or don't enter a value to only get public user data):</p>
@@ -309,7 +309,7 @@ exchange.users().then(users => {
 })
 </pre>
             <br>
-            <p><b>Type signature (users is a list of <a onclick="selectDoc(3)">user objects</a> with only public data):</b></p>
+            <p><b>Type signature (users is a list of <a onclick="selectDoc(2)">user objects</a> with only public data):</b></p>
             <br>
 <pre>
 exchange.users()
@@ -317,11 +317,11 @@ exchange.users()
             <br>
             <p><b>Returns a <code>Promise</code></b></p>
             <br>
-            <p><b>The <code>.then</code> block takes a list of <a onclick="selectDoc(3)">user objects</a> with only public data</b></p>
+            <p><b>The <code>.then</code> block takes a list of <a onclick="selectDoc(2)">user objects</a> with only public data</b></p>
             <br>
             <p><b>The <code>.catch</code> block takes an error of type <code>{ status: number, message: string }</code></b></p>
             <br>
-            <a class="doc-link" onclick="selectDoc(3)">Read more</a>
+            <a class="doc-link" onclick="selectDoc(4)">Read more</a>
 		`
 	},
 	{
@@ -561,7 +561,7 @@ exchange.signIn('ken@adastraschool.org', '1234').then(user => {
 })
 </pre>
         <br>
-        <p><b>Type signature (user is a <a onclick="selectDoc(3)">user object</a> with public and private data):</b></p>
+        <p><b>Type signature (user is a <a onclick="selectDoc(2)">user object</a> with public and private data):</b></p>
         <br>
 <pre>
 exchange.signIn(email: string,
@@ -570,7 +570,7 @@ exchange.signIn(email: string,
         <br>
         <p><b>Returns a <code>Promise</code></b></p>
         <br>
-        <p><b>The <code>.then</code> block takes a <a onclick="selectDoc(3)">user object</a> with public and private data. It also updates <code>exchange.currentUser</code></b></p>
+        <p><b>The <code>.then</code> block takes a <a onclick="selectDoc(2)">user object</a> with public and private data. It also updates <code>exchange.currentUser</code></b></p>
         <br>
         <p><b>The <code>.catch</code> block takes an error of type <code>{ status: number, message: string }</code></b></p>
         <br>
@@ -656,7 +656,7 @@ exchange.users().then(users => {
 })
 </pre>
             <br>
-            <p><b>Type signature (users is a list of <a onclick="selectDoc(3)">user objects</a> with only public data):</b></p>
+            <p><b>Type signature (users is a list of <a onclick="selectDoc(2)">user objects</a> with only public data):</b></p>
             <br>
 <pre>
 exchange.users()
@@ -664,7 +664,7 @@ exchange.users()
             <br>
             <p><b>Returns a <code>Promise</code></b></p>
             <br>
-            <p><b>The <code>.then</code> block takes a list of <a onclick="selectDoc(3)">user objects</a> with only public data</b></p>
+            <p><b>The <code>.then</code> block takes a list of <a onclick="selectDoc(2)">user objects</a> with only public data</b></p>
             <br>
             <p><b>The <code>.catch</code> block takes an error of type <code>{ status: number, message: string }</code></b></p>
             <br>
