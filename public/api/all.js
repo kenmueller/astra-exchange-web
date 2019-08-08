@@ -133,7 +133,7 @@ const exchange = (function() {
 	}
 
 	this.isSignedIn = () =>
-		(currentUser || getCookie(USER_COOKIE)) !== undefined
+		currentUser !== undefined
 
 	this.signIn = (email, pin) => {
 		if (typeof email !== 'string')
@@ -152,6 +152,9 @@ const exchange = (function() {
 		removeCookie(USER_COOKIE)
 		currentUser = undefined
 	}
+
+	this.reloadCurrentUser = () =>
+		currentUser ? signIn(currentUser.email, currentUser.pin) : Promise.resolve(undefined)
 
 	return this
 })()
