@@ -94,6 +94,11 @@ const docs = [
             <p><b>Copy and paste into the <code>head</code> of your HTML file:</b></p>
             <br>
             <code>&lt;script src="https://astra.exchange/api"&gt;&lt;/script&gt;</code>
+            <br><br>
+            <h1 class="subtitle">For Node.js (npm)</h1>
+            <p><b><a href="https://www.npmjs.com/package/astra-exchange" target="_blank">Astra Exchange on npm</a></b></p>
+            <br>
+            <code>npm i astra-exchange</code>
             <br>
             <hr>
             <h1 class="subtitle">Making Transactions</h1>
@@ -531,7 +536,7 @@ exchange.transactions(id: string,
             <br>
             <h1 class="subtitle">Transaction Object</h1>
             <p><b>id:</b> string</p>
-            <p><b>time:</b> string (date created as a string)</p>
+            <p><b>time:</b> Date</p>
             <p><b>from:</b> string (sender's user ID)</p>
             <p><b>to:</b> string (recipient's user ID)</p>
             <p><b>amount:</b> number (how much money is being sent)</p>
