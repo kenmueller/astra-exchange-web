@@ -117,7 +117,11 @@ const exchange = (function() {
 		return fetch(`https://cors-anywhere.herokuapp.com/https://us-central1-astra-exchange.cloudfunctions.net/transactions?id=${id}&pin=${pin}`).then(response => {
 			switch (response.status) {
 			case 200:
-				return response.json().catch(() =>
+				return response.json().then(objects =>
+					objects.map(json =>
+						Object.assign(json, { time: new Date(Date.parse(json.time)) })
+					)
+				).catch(() =>
 					Promise.reject({ status: 500, message: 'Unknown error. Please try again' })
 				)
 			case 400:
