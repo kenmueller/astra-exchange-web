@@ -5,13 +5,15 @@ import * as moment from 'moment'
 const db = admin.database()
 
 export const users = functions.https.onRequest((_req, res) =>
-	db.ref('users').once('value').then(snapshot => {
-		const val = snapshot.val()
-		return res.status(200).send(Object.keys(val).map(key => {
-			const userData = val[key]
-			return { id: key, name: userData.name, email: userData.email, balance: userData.balance, reputation: userData.reputation }
-		}))
-	})
+	db.ref('users').once('value').then(snapshot =>
+		res.status(200).send(Object.entries(snapshot.val()).map(([key, userData]: [string, any]) => ({
+			id: key,
+			name: userData.name,
+			email: userData.email,
+			balance: userData.balance,
+			reputation: userData.reputation
+		})))
+	)
 )
 
 export const transact = functions.https.onRequest((req, res) => {
@@ -28,7 +30,7 @@ export const transact = functions.https.onRequest((req, res) => {
 			return amount <= balance
 				? db.ref(`users/${to}`).once('value').then(toSnapshot => {
 					if (!toSnapshot.exists()) return res.status(404).send(`No user with ID ${to}`)
-					const message = req.query.message
+					const message: string = req.query.message || ''
 					return db.ref(`users/${from}/cards`).once('child_added').then(cardSnapshot => {
 						if (pin !== cardSnapshot.val().pin) return res.status(401).send(`Invalid pin for user ${from}`)
 						const dateList = moment().format('lll').split(' ')
@@ -39,7 +41,7 @@ export const transact = functions.https.onRequest((req, res) => {
 							to,
 							amount,
 							balance: balance - amount,
-							message: message || ''
+							message
 						}).then(() =>
 							res.status(200).send('Successfully created transaction')
 						).catch(reason =>
@@ -53,7 +55,7 @@ export const transact = functions.https.onRequest((req, res) => {
 })
 
 export const user = functions.https.onRequest((req, res) => {
-	const id = req.query.id
+	const id: string | undefined = req.query.id
 	if (id)
 		return db.ref(`users/${id}`).once('value').then(snapshot => {
 			if (!snapshot.exists()) return res.status(404).send(`No user with ID ${id}`)
@@ -100,21 +102,17 @@ export const transactions = functions.https.onRequest((req, res) => {
 			userSnapshot.exists()
 				? db.ref(`users/${id}/cards`).once('child_added').then(cardSnapshot =>
 					pin === cardSnapshot.val().pin
-						? db.ref(`transactions/${id}`).once('value').then(transactionsSnapshot => {
-							const val = transactionsSnapshot.val()
-							return res.status(200).send(Object.keys(val).map(key => {
-								const transaction = val[key]
-								return {
-									id: key,
-									time: transaction.time,
-									from: transaction.from,
-									to: transaction.to,
-									amount: transaction.amount,
-									balance: transaction.balance,
-									message: transaction.message
-								}
-							}))
-						})
+						? db.ref(`transactions/${id}`).once('value').then(transactionsSnapshot =>
+							res.status(200).send(Object.entries(transactionsSnapshot.val()).map(([key, transaction]: [string, any]) => ({
+								id: key,
+								time: transaction.time,
+								from: transaction.from,
+								to: transaction.to,
+								amount: transaction.amount,
+								balance: transaction.balance,
+								message: transaction.message
+							})))
+						)
 						: res.status(401).send(`Invalid pin for user ${id}`)
 				)
 				: res.status(404).send(`No user with ID ${id}`)
