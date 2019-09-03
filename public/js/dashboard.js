@@ -341,9 +341,10 @@ document.addEventListener('DOMContentLoaded', () => {
 			const user_ = sortedUsers[i]
 			const tr = document.createElement('tr')
 			tr.innerHTML = `
-				<td width="3%"><strong>#${parseInt(i) + 1}</strong></i></td>
-				<td>${user_.name}</td>
-				<td><strong>${user_.balance}</strong></td>
+				<td width="3%"><b>#${parseInt(i) + 1}</b></i></td>
+				<td><b>${user_.name}</b></td>
+				<td><b>${user_.reputation}</b> Rep</td>
+				<td><b>${user_.balance}</b> Astras</td>
 			`
 			document.getElementById('leaderboard').appendChild(tr)
 		}
