@@ -24,7 +24,7 @@ export const userCreated = functions.database.ref('users/{uid}').onCreate((snaps
 			name: val.name,
 			email: val.email,
 			balance: val.balance,
-			reputation: val.reputation
+			reputation: 0
 		}).then(() =>
 			Reputation.push(uid, ReputationAction.join, 'You joined Astra Exchange')
 		)
