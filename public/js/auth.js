@@ -8,7 +8,12 @@ document.addEventListener('DOMContentLoaded', () => {
 				if (snapshot.exists()) {
 					document.querySelectorAll('.auth.user-link').forEach(element => element.innerHTML = snapshot.val())
 				} else {
-					db.ref(`users/${user.uid}`).set({ name: document.getElementById('sign-up-name').value.trim(), email: document.getElementById('sign-up-email').value.trim(), balance: 0 })
+					db.ref(`users/${user.uid}`).set({
+						name: document.getElementById('sign-up-name').value.trim(),
+						email: document.getElementById('sign-up-email').value.trim(),
+						balance: 0,
+						reputation: 0
+					})
 					document.querySelectorAll('.auth.user-link').forEach(element => element.innerHTML = document.getElementById('sign-up-name').value.trim())
 				}
 				document.querySelectorAll('.auth.sign-up').forEach(element => element.classList.add('is-hidden'))

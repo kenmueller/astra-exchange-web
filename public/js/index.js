@@ -12,8 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
 					db.ref(`users/${user.uid}`).set({
 						name: document.getElementById('sign-up-name').value.trim(),
 						email: document.getElementById('sign-up-email').value.trim(),
-						balance: 0
-					}).then(location.reload)
+						balance: 0,
+						reputation: 0
+					}).then(() => location.reload())
 				}
 			})
 			

@@ -15,9 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
 					const setObject = {
 						name,
 						email: document.querySelector('#sign-up-email').value.trim(),
-						balance: 0
+						balance: 0,
+						reputation: 0
 					}
-					firestore.doc(`users/${user.uid}`).set(Object.assign(setObject, { reputation: 0 })).then(() =>
+					firestore.doc(`users/${user.uid}`).set(setObject).then(() =>
 						db.ref(`users/${user.uid}`).set(setObject)
 					).then(() => handleSignIn())
 					setCookie('name', name)

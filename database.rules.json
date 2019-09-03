@@ -154,7 +154,7 @@
 					".validate": "newData.val() === 0"
 				},
 				"reputation": {
-					".read": "auth !== null"
+					".validate": "newData.val() === 0"
 				},
 				"cards": {
 					".read": "$uid === auth.uid",
