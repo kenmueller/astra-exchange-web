@@ -7,7 +7,7 @@ const exchange = (function() {
 	}
 
 	const setCookie = (name, value) =>
-		document.cookie = `${name}=${value}; expires=Thu, 01 Jan 3000 00:00:00 GMT`
+		document.cookie = `${name}=${value}; expires=Sat, 13 Sep 275760 00:00:00 GMT`
 
 	const removeCookie = name =>
 		document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT`
