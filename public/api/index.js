@@ -1,1 +1,164 @@
-!function(e){"object"==typeof exports&&"undefined"!=typeof module?module.exports=e():"function"==typeof define&&define.amd?define([],e):("undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this).exchange=e()}(function(){return function e(t,r,n){function s(a,i){if(!r[a]){if(!t[a]){var u="function"==typeof require&&require;if(!i&&u)return u(a,!0);if(o)return o(a,!0);var c=new Error("Cannot find module '"+a+"'");throw c.code="MODULE_NOT_FOUND",c}var f=r[a]={exports:{}};t[a][0].call(f.exports,function(e){return s(t[a][1][e]||e)},f,f.exports,e,t,r,n)}return r[a].exports}for(var o="function"==typeof require&&require,a=0;a<n.length;a++)s(n[a]);return s}({1:[function(e,t,r){function n(){throw new Error("setTimeout has not been defined")}function s(){throw new Error("clearTimeout has not been defined")}function o(e){if(f===setTimeout)return setTimeout(e,0);if((f===n||!f)&&setTimeout)return f=setTimeout,setTimeout(e,0);try{return f(e,0)}catch(t){try{return f.call(null,e,0)}catch(t){return f.call(this,e,0)}}}function a(){h&&d&&(h=!1,d.length?m=d.concat(m):g=-1,m.length&&i())}function i(){if(!h){var e=o(a);h=!0;for(var t=m.length;t;){for(d=m,m=[];++g<t;)d&&d[g].run();g=-1,t=m.length}d=null,h=!1,function(e){if(l===clearTimeout)return clearTimeout(e);if((l===s||!l)&&clearTimeout)return l=clearTimeout,clearTimeout(e);try{l(e)}catch(t){try{return l.call(null,e)}catch(t){return l.call(this,e)}}}(e)}}function u(e,t){this.fun=e,this.array=t}function c(){}var f,l,p=t.exports={};!function(){try{f="function"==typeof setTimeout?setTimeout:n}catch(e){f=n}try{l="function"==typeof clearTimeout?clearTimeout:s}catch(e){l=s}}();var d,m=[],h=!1,g=-1;p.nextTick=function(e){var t=new Array(arguments.length-1);if(arguments.length>1)for(var r=1;r<arguments.length;r++)t[r-1]=arguments[r];m.push(new u(e,t)),1!==m.length||h||o(i)},u.prototype.run=function(){this.fun.apply(null,this.array)},p.title="browser",p.browser=!0,p.env={},p.argv=[],p.version="",p.versions={},p.on=c,p.addListener=c,p.once=c,p.off=c,p.removeListener=c,p.removeAllListeners=c,p.emit=c,p.prependListener=c,p.prependOnceListener=c,p.listeners=function(e){return[]},p.binding=function(e){throw new Error("process.binding is not supported")},p.cwd=function(){return"/"},p.chdir=function(e){throw new Error("process.chdir is not supported")},p.umask=function(){return 0}},{}],2:[function(e,t,r){const n=e("axios").default;t.exports=function(){return this.currentUser=(()=>{const e=(e=>{const t=document.cookie.match(`(^|[^;]+)\\s*${e}\\s*=\\s*([^;]+)`);return t?t.pop():void 0})("__astra-exchange-user");return e?JSON.parse(e):void 0})(),this.users=(()=>n.get("https://us-central1-astra-exchange.cloudfunctions.net/users").then(e=>e.data)),this.transact=((e,t,r,s,o)=>"string"!=typeof e?Promise.reject({status:400,message:"'pin' must be a string (parameter 1)"}):4!==e.length?Promise.reject({status:400,message:"'pin' must be 4 characters long (parameter 1)"}):"string"!=typeof t?Promise.reject({status:400,message:"'from' must be a string (parameter 2)"}):"string"!=typeof r?Promise.reject({status:400,message:"'to' must be a string (parameter 3)"}):"number"!=typeof s?Promise.reject({status:400,message:"'amount' must be a number (parameter 4)"}):"string"!=typeof o&&null!=o?Promise.reject({status:400,message:"'message' must be a string, null, undefined, or left blank (parameter 5)"}):n.get(`https://us-central1-astra-exchange.cloudfunctions.net/transact?pin=${e}&from=${t}&to=${r}&amount=${s}${o?`&message=${o}`:""}`).then(e=>{switch(e.status){case 200:return Promise.resolve();case 400:return Promise.reject({status:400,message:"Invalid parameters"});case 404:return Promise.reject({status:404,message:"Invalid user ID"});case 403:return Promise.reject({status:403,message:"Insufficient balance"});case 401:return Promise.reject({status:401,message:"Invalid pin"});default:return Promise.reject({status:500,message:"Unknown error. Please try again"})}})),this.userWithId=((e,t)=>"string"!=typeof e?Promise.reject({status:400,message:"'id' must be a string (parameter 1)"}):"string"!=typeof t&&null!=t?Promise.reject({status:400,message:"'pin' must be a string, null, undefined, or left blank (parameter 2)"}):"string"==typeof t&&4!==t.length?Promise.reject({status:400,message:"'pin' must be 4 characters long (parameter 2)"}):n.get(`https://us-central1-astra-exchange.cloudfunctions.net/user?id=${e}${t?`&pin=${t}`:""}`).then(e=>{const{status:t,data:r}=e;switch(t){case 200:return r;case 400:return Promise.reject({status:400,message:"Invalid parameters"});case 404:return Promise.reject({status:404,message:"Invalid user ID"});case 401:return Promise.reject({status:401,message:"Invalid pin"});default:return Promise.reject({status:500,message:"Unknown error. Please try again"})}})),this.userWithEmail=((e,t)=>"string"!=typeof e?Promise.reject({status:400,message:"'email' must be a string (parameter 1)"}):"string"!=typeof t&&null!=t?Promise.reject({status:400,message:"'pin' must be a string, null, undefined, or left blank (parameter 2)"}):"string"==typeof t&&4!==t.length?Promise.reject({status:400,message:"'pin' must be 4 characters long (parameter 2)"}):n.get(`https://us-central1-astra-exchange.cloudfunctions.net/user?email=${e}${t?`&pin=${t}`:""}`).then(e=>{const{status:t,data:r}=e;switch(t){case 200:return r;case 400:return Promise.reject({status:400,message:"Invalid parameters"});case 404:return Promise.reject({status:404,message:"Invalid email"});case 401:return Promise.reject({status:401,message:"Invalid pin"});default:return Promise.reject({status:500,message:"Unknown error. Please try again"})}})),this.transactions=((e,t)=>"string"!=typeof e?Promise.reject({status:400,message:"'id' must be a string (parameter 1)"}):"string"!=typeof t?Promise.reject({status:400,message:"'pin' must be a string (parameter 2)"}):4!==t.length?Promise.reject({status:400,message:"'pin' must be 4 characters long (parameter 2)"}):n.get(`https://us-central1-astra-exchange.cloudfunctions.net/transactions?id=${e}&pin=${t}`).then(e=>{const{status:t,data:r}=e;switch(t){case 200:return r.map(e=>Object.assign(e,{time:new Date(Date.parse(e.time))}));case 400:return Promise.reject({status:400,message:"Invalid parameters"});case 404:return Promise.reject({status:404,message:"Invalid user ID"});case 401:return Promise.reject({status:401,message:"Invalid pin"});default:return Promise.reject({status:500,message:"Unknown error. Please try again"})}})),this.isSignedIn=(()=>void 0!==currentUser),this.signIn=((e,t)=>"string"!=typeof e?Promise.reject({status:400,message:"'email' must be a string (parameter 1)"}):"string"!=typeof t?Promise.reject({status:400,message:"'pin' must be a string (parameter 2)"}):4!==t.length?Promise.reject({status:400,message:"'pin' must be 4 characters long (parameter 2)"}):userWithEmail(e,t).then(e=>(((e,t)=>document.cookie=`${e}=${t}; expires=Sat, 13 Sep 275760 00:00:00 GMT`)("__astra-exchange-user",JSON.stringify(e)),currentUser=e))),this.signOut=(()=>{(e=>document.cookie=`${e}=; expires=Thu, 01 Jan 1970 00:00:00 GMT`)("__astra-exchange-user"),currentUser=void 0}),this.reloadCurrentUser=(()=>currentUser?signIn(currentUser.email,currentUser.pin):Promise.resolve(void 0)),this}()},{axios:3}],3:[function(e,t,r){t.exports=e("./lib/axios")},{"./lib/axios":5}],4:[function(e,t,r){"use strict";var n=e("./../utils"),s=e("./../core/settle"),o=e("./../helpers/buildURL"),a=e("./../helpers/parseHeaders"),i=e("./../helpers/isURLSameOrigin"),u=e("../core/createError");t.exports=function(t){return new Promise(function(r,c){var f=t.data,l=t.headers;n.isFormData(f)&&delete l["Content-Type"];var p=new XMLHttpRequest;if(t.auth){var d=t.auth.username||"",m=t.auth.password||"";l.Authorization="Basic "+btoa(d+":"+m)}if(p.open(t.method.toUpperCase(),o(t.url,t.params,t.paramsSerializer),!0),p.timeout=t.timeout,p.onreadystatechange=function(){if(p&&4===p.readyState&&(0!==p.status||p.responseURL&&0===p.responseURL.indexOf("file:"))){var e="getAllResponseHeaders"in p?a(p.getAllResponseHeaders()):null,n={data:t.responseType&&"text"!==t.responseType?p.response:p.responseText,status:p.status,statusText:p.statusText,headers:e,config:t,request:p};s(r,c,n),p=null}},p.onabort=function(){p&&(c(u("Request aborted",t,"ECONNABORTED",p)),p=null)},p.onerror=function(){c(u("Network Error",t,null,p)),p=null},p.ontimeout=function(){c(u("timeout of "+t.timeout+"ms exceeded",t,"ECONNABORTED",p)),p=null},n.isStandardBrowserEnv()){var h=e("./../helpers/cookies"),g=(t.withCredentials||i(t.url))&&t.xsrfCookieName?h.read(t.xsrfCookieName):void 0;g&&(l[t.xsrfHeaderName]=g)}if("setRequestHeader"in p&&n.forEach(l,function(e,t){void 0===f&&"content-type"===t.toLowerCase()?delete l[t]:p.setRequestHeader(t,e)}),t.withCredentials&&(p.withCredentials=!0),t.responseType)try{p.responseType=t.responseType}catch(e){if("json"!==t.responseType)throw e}"function"==typeof t.onDownloadProgress&&p.addEventListener("progress",t.onDownloadProgress),"function"==typeof t.onUploadProgress&&p.upload&&p.upload.addEventListener("progress",t.onUploadProgress),t.cancelToken&&t.cancelToken.promise.then(function(e){p&&(p.abort(),c(e),p=null)}),void 0===f&&(f=null),p.send(f)})}},{"../core/createError":11,"./../core/settle":15,"./../helpers/buildURL":19,"./../helpers/cookies":21,"./../helpers/isURLSameOrigin":23,"./../helpers/parseHeaders":25,"./../utils":27}],5:[function(e,t,r){"use strict";function n(e){var t=new a(e),r=o(a.prototype.request,t);return s.extend(r,a.prototype,t),s.extend(r,t),r}var s=e("./utils"),o=e("./helpers/bind"),a=e("./core/Axios"),i=e("./core/mergeConfig"),u=n(e("./defaults"));u.Axios=a,u.create=function(e){return n(i(u.defaults,e))},u.Cancel=e("./cancel/Cancel"),u.CancelToken=e("./cancel/CancelToken"),u.isCancel=e("./cancel/isCancel"),u.all=function(e){return Promise.all(e)},u.spread=e("./helpers/spread"),t.exports=u,t.exports.default=u},{"./cancel/Cancel":6,"./cancel/CancelToken":7,"./cancel/isCancel":8,"./core/Axios":9,"./core/mergeConfig":14,"./defaults":17,"./helpers/bind":18,"./helpers/spread":26,"./utils":27}],6:[function(e,t,r){"use strict";function n(e){this.message=e}n.prototype.toString=function(){return"Cancel"+(this.message?": "+this.message:"")},n.prototype.__CANCEL__=!0,t.exports=n},{}],7:[function(e,t,r){"use strict";function n(e){if("function"!=typeof e)throw new TypeError("executor must be a function.");var t;this.promise=new Promise(function(e){t=e});var r=this;e(function(e){r.reason||(r.reason=new s(e),t(r.reason))})}var s=e("./Cancel");n.prototype.throwIfRequested=function(){if(this.reason)throw this.reason},n.source=function(){var e;return{token:new n(function(t){e=t}),cancel:e}},t.exports=n},{"./Cancel":6}],8:[function(e,t,r){"use strict";t.exports=function(e){return!(!e||!e.__CANCEL__)}},{}],9:[function(e,t,r){"use strict";function n(e){this.defaults=e,this.interceptors={request:new a,response:new a}}var s=e("./../utils"),o=e("../helpers/buildURL"),a=e("./InterceptorManager"),i=e("./dispatchRequest"),u=e("./mergeConfig");n.prototype.request=function(e){"string"==typeof e?(e=arguments[1]||{}).url=arguments[0]:e=e||{},(e=u(this.defaults,e)).method=e.method?e.method.toLowerCase():"get";var t=[i,void 0],r=Promise.resolve(e);for(this.interceptors.request.forEach(function(e){t.unshift(e.fulfilled,e.rejected)}),this.interceptors.response.forEach(function(e){t.push(e.fulfilled,e.rejected)});t.length;)r=r.then(t.shift(),t.shift());return r},n.prototype.getUri=function(e){return e=u(this.defaults,e),o(e.url,e.params,e.paramsSerializer).replace(/^\?/,"")},s.forEach(["delete","get","head","options"],function(e){n.prototype[e]=function(t,r){return this.request(s.merge(r||{},{method:e,url:t}))}}),s.forEach(["post","put","patch"],function(e){n.prototype[e]=function(t,r,n){return this.request(s.merge(n||{},{method:e,url:t,data:r}))}}),t.exports=n},{"../helpers/buildURL":19,"./../utils":27,"./InterceptorManager":10,"./dispatchRequest":12,"./mergeConfig":14}],10:[function(e,t,r){"use strict";function n(){this.handlers=[]}var s=e("./../utils");n.prototype.use=function(e,t){return this.handlers.push({fulfilled:e,rejected:t}),this.handlers.length-1},n.prototype.eject=function(e){this.handlers[e]&&(this.handlers[e]=null)},n.prototype.forEach=function(e){s.forEach(this.handlers,function(t){null!==t&&e(t)})},t.exports=n},{"./../utils":27}],11:[function(e,t,r){"use strict";var n=e("./enhanceError");t.exports=function(e,t,r,s,o){var a=new Error(e);return n(a,t,r,s,o)}},{"./enhanceError":13}],12:[function(e,t,r){"use strict";function n(e){e.cancelToken&&e.cancelToken.throwIfRequested()}var s=e("./../utils"),o=e("./transformData"),a=e("../cancel/isCancel"),i=e("../defaults"),u=e("./../helpers/isAbsoluteURL"),c=e("./../helpers/combineURLs");t.exports=function(e){return n(e),e.baseURL&&!u(e.url)&&(e.url=c(e.baseURL,e.url)),e.headers=e.headers||{},e.data=o(e.data,e.headers,e.transformRequest),e.headers=s.merge(e.headers.common||{},e.headers[e.method]||{},e.headers||{}),s.forEach(["delete","get","head","post","put","patch","common"],function(t){delete e.headers[t]}),(e.adapter||i.adapter)(e).then(function(t){return n(e),t.data=o(t.data,t.headers,e.transformResponse),t},function(t){return a(t)||(n(e),t&&t.response&&(t.response.data=o(t.response.data,t.response.headers,e.transformResponse))),Promise.reject(t)})}},{"../cancel/isCancel":8,"../defaults":17,"./../helpers/combineURLs":20,"./../helpers/isAbsoluteURL":22,"./../utils":27,"./transformData":16}],13:[function(e,t,r){"use strict";t.exports=function(e,t,r,n,s){return e.config=t,r&&(e.code=r),e.request=n,e.response=s,e.isAxiosError=!0,e.toJSON=function(){return{message:this.message,name:this.name,description:this.description,number:this.number,fileName:this.fileName,lineNumber:this.lineNumber,columnNumber:this.columnNumber,stack:this.stack,config:this.config,code:this.code}},e}},{}],14:[function(e,t,r){"use strict";var n=e("../utils");t.exports=function(e,t){t=t||{};var r={};return n.forEach(["url","method","params","data"],function(e){void 0!==t[e]&&(r[e]=t[e])}),n.forEach(["headers","auth","proxy"],function(s){n.isObject(t[s])?r[s]=n.deepMerge(e[s],t[s]):void 0!==t[s]?r[s]=t[s]:n.isObject(e[s])?r[s]=n.deepMerge(e[s]):void 0!==e[s]&&(r[s]=e[s])}),n.forEach(["baseURL","transformRequest","transformResponse","paramsSerializer","timeout","withCredentials","adapter","responseType","xsrfCookieName","xsrfHeaderName","onUploadProgress","onDownloadProgress","maxContentLength","validateStatus","maxRedirects","httpAgent","httpsAgent","cancelToken","socketPath"],function(n){void 0!==t[n]?r[n]=t[n]:void 0!==e[n]&&(r[n]=e[n])}),r}},{"../utils":27}],15:[function(e,t,r){"use strict";var n=e("./createError");t.exports=function(e,t,r){var s=r.config.validateStatus;!s||s(r.status)?e(r):t(n("Request failed with status code "+r.status,r.config,null,r.request,r))}},{"./createError":11}],16:[function(e,t,r){"use strict";var n=e("./../utils");t.exports=function(e,t,r){return n.forEach(r,function(r){e=r(e,t)}),e}},{"./../utils":27}],17:[function(e,t,r){(function(r){"use strict";function n(e,t){!o.isUndefined(e)&&o.isUndefined(e["Content-Type"])&&(e["Content-Type"]=t)}var s,o=e("./utils"),a=e("./helpers/normalizeHeaderName"),i={"Content-Type":"application/x-www-form-urlencoded"},u={adapter:(void 0!==r&&"[object process]"===Object.prototype.toString.call(r)?s=e("./adapters/http"):"undefined"!=typeof XMLHttpRequest&&(s=e("./adapters/xhr")),s),transformRequest:[function(e,t){return a(t,"Accept"),a(t,"Content-Type"),o.isFormData(e)||o.isArrayBuffer(e)||o.isBuffer(e)||o.isStream(e)||o.isFile(e)||o.isBlob(e)?e:o.isArrayBufferView(e)?e.buffer:o.isURLSearchParams(e)?(n(t,"application/x-www-form-urlencoded;charset=utf-8"),e.toString()):o.isObject(e)?(n(t,"application/json;charset=utf-8"),JSON.stringify(e)):e}],transformResponse:[function(e){if("string"==typeof e)try{e=JSON.parse(e)}catch(e){}return e}],timeout:0,xsrfCookieName:"XSRF-TOKEN",xsrfHeaderName:"X-XSRF-TOKEN",maxContentLength:-1,validateStatus:function(e){return e>=200&&e<300},headers:{common:{Accept:"application/json, text/plain, */*"}}};o.forEach(["delete","get","head"],function(e){u.headers[e]={}}),o.forEach(["post","put","patch"],function(e){u.headers[e]=o.merge(i)}),t.exports=u}).call(this,e("_process"))},{"./adapters/http":4,"./adapters/xhr":4,"./helpers/normalizeHeaderName":24,"./utils":27,_process:1}],18:[function(e,t,r){"use strict";t.exports=function(e,t){return function(){for(var r=new Array(arguments.length),n=0;n<r.length;n++)r[n]=arguments[n];return e.apply(t,r)}}},{}],19:[function(e,t,r){"use strict";function n(e){return encodeURIComponent(e).replace(/%40/gi,"@").replace(/%3A/gi,":").replace(/%24/g,"$").replace(/%2C/gi,",").replace(/%20/g,"+").replace(/%5B/gi,"[").replace(/%5D/gi,"]")}var s=e("./../utils");t.exports=function(e,t,r){if(!t)return e;var o;if(r)o=r(t);else if(s.isURLSearchParams(t))o=t.toString();else{var a=[];s.forEach(t,function(e,t){null!=e&&(s.isArray(e)?t+="[]":e=[e],s.forEach(e,function(e){s.isDate(e)?e=e.toISOString():s.isObject(e)&&(e=JSON.stringify(e)),a.push(n(t)+"="+n(e))}))}),o=a.join("&")}if(o){var i=e.indexOf("#");-1!==i&&(e=e.slice(0,i)),e+=(-1===e.indexOf("?")?"?":"&")+o}return e}},{"./../utils":27}],20:[function(e,t,r){"use strict";t.exports=function(e,t){return t?e.replace(/\/+$/,"")+"/"+t.replace(/^\/+/,""):e}},{}],21:[function(e,t,r){"use strict";var n=e("./../utils");t.exports=n.isStandardBrowserEnv()?{write:function(e,t,r,s,o,a){var i=[];i.push(e+"="+encodeURIComponent(t)),n.isNumber(r)&&i.push("expires="+new Date(r).toGMTString()),n.isString(s)&&i.push("path="+s),n.isString(o)&&i.push("domain="+o),!0===a&&i.push("secure"),document.cookie=i.join("; ")},read:function(e){var t=document.cookie.match(new RegExp("(^|;\\s*)("+e+")=([^;]*)"));return t?decodeURIComponent(t[3]):null},remove:function(e){this.write(e,"",Date.now()-864e5)}}:{write:function(){},read:function(){return null},remove:function(){}}},{"./../utils":27}],22:[function(e,t,r){"use strict";t.exports=function(e){return/^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(e)}},{}],23:[function(e,t,r){"use strict";var n=e("./../utils");t.exports=n.isStandardBrowserEnv()?function(){function e(e){var t=e;return r&&(s.setAttribute("href",t),t=s.href),s.setAttribute("href",t),{href:s.href,protocol:s.protocol?s.protocol.replace(/:$/,""):"",host:s.host,search:s.search?s.search.replace(/^\?/,""):"",hash:s.hash?s.hash.replace(/^#/,""):"",hostname:s.hostname,port:s.port,pathname:"/"===s.pathname.charAt(0)?s.pathname:"/"+s.pathname}}var t,r=/(msie|trident)/i.test(navigator.userAgent),s=document.createElement("a");return t=e(window.location.href),function(r){var s=n.isString(r)?e(r):r;return s.protocol===t.protocol&&s.host===t.host}}():function(){return!0}},{"./../utils":27}],24:[function(e,t,r){"use strict";var n=e("../utils");t.exports=function(e,t){n.forEach(e,function(r,n){n!==t&&n.toUpperCase()===t.toUpperCase()&&(e[t]=r,delete e[n])})}},{"../utils":27}],25:[function(e,t,r){"use strict";var n=e("./../utils"),s=["age","authorization","content-length","content-type","etag","expires","from","host","if-modified-since","if-unmodified-since","last-modified","location","max-forwards","proxy-authorization","referer","retry-after","user-agent"];t.exports=function(e){var t,r,o,a={};return e?(n.forEach(e.split("\n"),function(e){if(o=e.indexOf(":"),t=n.trim(e.substr(0,o)).toLowerCase(),r=n.trim(e.substr(o+1)),t){if(a[t]&&s.indexOf(t)>=0)return;a[t]="set-cookie"===t?(a[t]?a[t]:[]).concat([r]):a[t]?a[t]+", "+r:r}}),a):a}},{"./../utils":27}],26:[function(e,t,r){"use strict";t.exports=function(e){return function(t){return e.apply(null,t)}}},{}],27:[function(e,t,r){"use strict";function n(e){return"[object Array]"===c.call(e)}function s(e){return null!==e&&"object"==typeof e}function o(e){return"[object Function]"===c.call(e)}function a(e,t){if(null!=e)if("object"!=typeof e&&(e=[e]),n(e))for(var r=0,s=e.length;r<s;r++)t.call(null,e[r],r,e);else for(var o in e)Object.prototype.hasOwnProperty.call(e,o)&&t.call(null,e[o],o,e)}var i=e("./helpers/bind"),u=e("is-buffer"),c=Object.prototype.toString;t.exports={isArray:n,isArrayBuffer:function(e){return"[object ArrayBuffer]"===c.call(e)},isBuffer:u,isFormData:function(e){return"undefined"!=typeof FormData&&e instanceof FormData},isArrayBufferView:function(e){return"undefined"!=typeof ArrayBuffer&&ArrayBuffer.isView?ArrayBuffer.isView(e):e&&e.buffer&&e.buffer instanceof ArrayBuffer},isString:function(e){return"string"==typeof e},isNumber:function(e){return"number"==typeof e},isObject:s,isUndefined:function(e){return void 0===e},isDate:function(e){return"[object Date]"===c.call(e)},isFile:function(e){return"[object File]"===c.call(e)},isBlob:function(e){return"[object Blob]"===c.call(e)},isFunction:o,isStream:function(e){return s(e)&&o(e.pipe)},isURLSearchParams:function(e){return"undefined"!=typeof URLSearchParams&&e instanceof URLSearchParams},isStandardBrowserEnv:function(){return("undefined"==typeof navigator||"ReactNative"!==navigator.product&&"NativeScript"!==navigator.product&&"NS"!==navigator.product)&&"undefined"!=typeof window&&"undefined"!=typeof document},forEach:a,merge:function e(){function t(t,n){"object"==typeof r[n]&&"object"==typeof t?r[n]=e(r[n],t):r[n]=t}for(var r={},n=0,s=arguments.length;n<s;n++)a(arguments[n],t);return r},deepMerge:function e(){function t(t,n){"object"==typeof r[n]&&"object"==typeof t?r[n]=e(r[n],t):r[n]="object"==typeof t?e({},t):t}for(var r={},n=0,s=arguments.length;n<s;n++)a(arguments[n],t);return r},extend:function(e,t,r){return a(t,function(t,n){e[n]=r&&"function"==typeof t?i(t,r):t}),e},trim:function(e){return e.replace(/^\s*/,"").replace(/\s*$/,"")}}},{"./helpers/bind":18,"is-buffer":28}],28:[function(e,t,r){t.exports=function(e){return null!=e&&null!=e.constructor&&"function"==typeof e.constructor.isBuffer&&e.constructor.isBuffer(e)}},{}]},{},[2])(2)});
+const exchange = (function() {
+	const USER_COOKIE = '__astra-exchange-user'
+
+	const getCookie = name => {
+		const cookies = document.cookie.match(`(^|[^;]+)\\s*${name}\\s*=\\s*([^;]+)`)
+		return cookies ? cookies.pop() : undefined
+	}
+
+	const setCookie = (name, value) =>
+		document.cookie = `${name}=${value}; expires=Sat, 13 Sep 275760 00:00:00 GMT`
+
+	const removeCookie = name =>
+		document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT`
+
+	const getCurrentUser = () => {
+		const user = getCookie(USER_COOKIE)
+		return user ? JSON.parse(user) : undefined
+	}
+
+	this.currentUser = getCurrentUser()
+
+	this.users = () =>
+		fetch('https://cors-anywhere.herokuapp.com/https://us-central1-astra-exchange.cloudfunctions.net/users').then(response =>
+			response.json().catch(() =>
+				Promise.reject({ status: 500, message: 'Unknown error. Please try again' })
+			)
+		)
+
+	this.transact = (pin, from, to, amount, message = undefined) => {
+		if (typeof pin !== 'string')
+			return Promise.reject({ status: 400, message: '\'pin\' must be a string (parameter 1)' })
+		if (pin.length !== 4)
+			return Promise.reject({ status: 400, message: '\'pin\' must be 4 characters long (parameter 1)' })
+		if (typeof from !== 'string')
+			return Promise.reject({ status: 400, message: '\'from\' must be a string (parameter 2)' })
+		if (typeof to !== 'string')
+			return Promise.reject({ status: 400, message: '\'to\' must be a string (parameter 3)' })
+		if (typeof amount !== 'number')
+			return Promise.reject({ status: 400, message: '\'amount\' must be a number (parameter 4)' })
+		if (!(typeof message === 'string' || message === null || message === undefined))
+			return Promise.reject({ status: 400, message: '\'message\' must be a string, null, undefined, or left blank (parameter 5)' })
+		return fetch(`https://cors-anywhere.herokuapp.com/https://us-central1-astra-exchange.cloudfunctions.net/transact?pin=${pin}&from=${from}&to=${to}&amount=${amount}${message ? `&message=${message}` : ''}`).then(response => {
+			switch (response.status) {
+			case 200:
+				return Promise.resolve()
+			case 400:
+				return Promise.reject({ status: 400, message: 'Invalid parameters' })
+			case 404:
+				return Promise.reject({ status: 404, message: 'Invalid user ID' })
+			case 403:
+				return Promise.reject({ status: 403, message: 'Insufficient balance' })
+			case 401:
+				return Promise.reject({ status: 401, message: 'Invalid pin' })
+			default:
+				return Promise.reject({ status: 500, message: 'Unknown error. Please try again' })
+			}
+		})
+	}
+
+	this.userWithId = (id, pin = undefined) => {
+		if (typeof id !== 'string')
+			return Promise.reject({ status: 400, message: '\'id\' must be a string (parameter 1)' })
+		if (!(typeof pin === 'string' || pin === null || pin === undefined))
+			return Promise.reject({ status: 400, message: '\'pin\' must be a string, null, undefined, or left blank (parameter 2)' })
+		if (typeof pin === 'string' && pin.length !== 4)
+			return Promise.reject({ status: 400, message: '\'pin\' must be 4 characters long (parameter 2)' })
+		return fetch(`https://cors-anywhere.herokuapp.com/https://us-central1-astra-exchange.cloudfunctions.net/user?id=${id}${pin ? `&pin=${pin}` : ''}`).then(response => {
+			switch (response.status) {
+			case 200:
+				return response.json().catch(() =>
+					Promise.reject({ status: 500, message: 'Unknown error. Please try again' })
+				)
+			case 400:
+				return Promise.reject({ status: 400, message: 'Invalid parameters' })
+			case 404:
+				return Promise.reject({ status: 404, message: 'Invalid user ID' })
+			case 401:
+				return Promise.reject({ status: 401, message: 'Invalid pin' })
+			default:
+				return Promise.reject({ status: 500, message: 'Unknown error. Please try again' })
+			}
+		})
+	}
+
+	this.userWithEmail = (email, pin = undefined) => {
+		if (typeof email !== 'string')
+			return Promise.reject({ status: 400, message: '\'email\' must be a string (parameter 1)' })
+		if (!(typeof pin === 'string' || pin === null || pin === undefined))
+			return Promise.reject({ status: 400, message: '\'pin\' must be a string, null, undefined, or left blank (parameter 2)' })
+		if (typeof pin === 'string' && pin.length !== 4)
+			return Promise.reject({ status: 400, message: '\'pin\' must be 4 characters long (parameter 2)' })
+		return fetch(`https://cors-anywhere.herokuapp.com/https://us-central1-astra-exchange.cloudfunctions.net/user?email=${email}${pin ? `&pin=${pin}` : ''}`).then(response => {
+			switch (response.status) {
+			case 200:
+				return response.json().catch(() =>
+					Promise.reject({ status: 500, message: 'Unknown error. Please try again' })
+				)
+			case 400:
+				return Promise.reject({ status: 400, message: 'Invalid parameters' })
+			case 404:
+				return Promise.reject({ status: 404, message: 'Invalid email' })
+			case 401:
+				return Promise.reject({ status: 401, message: 'Invalid pin' })
+			default:
+				return Promise.reject({ status: 500, message: 'Unknown error. Please try again' })
+			}
+		})
+	}
+
+	this.transactions = (id, pin) => {
+		if (typeof id !== 'string')
+			return Promise.reject({ status: 400, message: '\'id\' must be a string (parameter 1)' })
+		if (typeof pin !== 'string')
+			return Promise.reject({ status: 400, message: '\'pin\' must be a string (parameter 2)' })
+		if (pin.length !== 4)
+			return Promise.reject({ status: 400, message: '\'pin\' must be 4 characters long (parameter 2)' })
+		return fetch(`https://cors-anywhere.herokuapp.com/https://us-central1-astra-exchange.cloudfunctions.net/transactions?id=${id}&pin=${pin}`).then(response => {
+			switch (response.status) {
+			case 200:
+				return response.json().then(objects =>
+					objects.map(json =>
+						Object.assign(json, { time: new Date(Date.parse(json.time)) })
+					)
+				).catch(() =>
+					Promise.reject({ status: 500, message: 'Unknown error. Please try again' })
+				)
+			case 400:
+				return Promise.reject({ status: 400, message: 'Invalid parameters' })
+			case 404:
+				return Promise.reject({ status: 404, message: 'Invalid user ID' })
+			case 401:
+				return Promise.reject({ status: 401, message: 'Invalid pin' })
+			default:
+				return Promise.reject({ status: 500, message: 'Unknown error. Please try again' })
+			}
+		})
+	}
+
+	this.isSignedIn = () =>
+		currentUser !== undefined
+
+	this.signIn = (email, pin) => {
+		if (typeof email !== 'string')
+			return Promise.reject({ status: 400, message: '\'email\' must be a string (parameter 1)' })
+		if (typeof pin !== 'string')
+			return Promise.reject({ status: 400, message: '\'pin\' must be a string (parameter 2)' })
+		if (pin.length !== 4)
+			return Promise.reject({ status: 400, message: '\'pin\' must be 4 characters long (parameter 2)' })
+		return userWithEmail(email, pin).then(user => {
+			setCookie(USER_COOKIE, JSON.stringify(user))
+			return currentUser = user
+		})
+	}
+
+	this.signOut = () => {
+		removeCookie(USER_COOKIE)
+		currentUser = undefined
+	}
+
+	this.reloadCurrentUser = () =>
+		currentUser ? signIn(currentUser.email, currentUser.pin) : Promise.resolve(undefined)
+
+	return this
+})()
