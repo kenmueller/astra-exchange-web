@@ -1,6 +1,7 @@
 import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
 import * as express from 'express'
+import * as cors from 'cors'
 import { configure } from 'nunjucks'
 import { join } from 'path'
 
@@ -14,6 +15,8 @@ configure(join(__dirname, '../views'), {
 })
 
 const db = admin.database()
+
+app.use(cors())
 
 app.get('/users/:slug', (req, res) =>
 	db.ref(`slugs/users/${req.params.slug}`).on('value', snapshot =>
