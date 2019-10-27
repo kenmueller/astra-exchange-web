@@ -19,6 +19,10 @@
 			],
 			"rewrites": [
 				{
+					"source": "/api",
+					"destination": "/api/index.js"
+				},
+				{
 					"source": "/documentation",
 					"destination": "/documentation.html"
 				},
