@@ -4,8 +4,12 @@ import * as moment from 'moment'
 
 const db = admin.database()
 
-export const users = functions.https.onRequest((_req, res) =>
-	db.ref('users').once('value').then(snapshot =>
+const setHeaders = (res: functions.Response) =>
+	res.setHeader('Access-Control-Allow-Origin', '*')
+
+export const users = functions.https.onRequest((_req, res) => {
+	setHeaders(res)
+	return db.ref('users').once('value').then(snapshot =>
 		res.status(200).send(Object.entries(snapshot.val()).map(([key, userData]: [string, any]) => ({
 			id: key,
 			name: userData.name,
@@ -14,9 +18,10 @@ export const users = functions.https.onRequest((_req, res) =>
 			reputation: userData.reputation
 		})))
 	)
-)
+})
 
 export const transact = functions.https.onRequest((req, res) => {
+	setHeaders(res)
 	const pin: string | undefined = req.query.pin
 	if (!pin) return res.status(400).send('Must specify the pin')
 	const from: string | undefined = req.query.from
@@ -55,6 +60,7 @@ export const transact = functions.https.onRequest((req, res) => {
 })
 
 export const user = functions.https.onRequest((req, res) => {
+	setHeaders(res)
 	const id: string | undefined = req.query.id
 	if (id)
 		return db.ref(`users/${id}`).once('value').then(snapshot => {
@@ -94,6 +100,7 @@ export const user = functions.https.onRequest((req, res) => {
 })
 
 export const transactions = functions.https.onRequest((req, res) => {
+	setHeaders(res)
 	const pin: string | undefined = req.query.pin
 	if (!pin) return res.status(400).send('Must specify the pin')
 	const id: string | undefined = req.query.id
